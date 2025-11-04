@@ -5,6 +5,7 @@ Widget formLabel(
   String text, {
   bool isRequired = false,
   String tooltipMessage = '',
+  Color textColor = Colors.white,
 }) {
   return Row(
     children: [
@@ -14,7 +15,7 @@ Widget formLabel(
           style: TextStyle(
             fontFamily: 'montserrat',
             fontSize: 14,
-            color: AppTheme.primaryColor,
+            color: textColor,
             fontWeight: FontWeight.bold,
           ),
           children:

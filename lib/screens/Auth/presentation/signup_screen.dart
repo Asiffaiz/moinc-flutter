@@ -17,7 +17,8 @@ import 'package:moinc/screens/Auth/presentation/widgets/address_autocomplete.dar
 import 'package:moinc/screens/Auth/presentation/widgets/consent_checkbox.dart';
 import 'package:moinc/screens/Auth/presentation/widgets/country_dropdown.dart';
 import 'package:moinc/screens/Auth/presentation/widgets/phone_number_field.dart';
-import 'package:moinc/screens/Auth/presentation/widgets/widgets/social_auth_buttons_register.dart';
+import 'package:moinc/screens/Auth/presentation/widgets/social_auth_buttons_register.dart';
+
 import 'package:moinc/utils/form_label.dart';
 import 'package:moinc/utils/validators.dart';
 import 'package:moinc/widgets/password_text_field.dart';
@@ -324,7 +325,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         //<===============WORKING CODE WITHOUT VERIFICATION CODE===============>
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Create Account')),
+        backgroundColor: AppTheme.backgroundColor,
+        appBar: AppBar(
+          title: const Text('Create Account'),
+          backgroundColor: AppTheme.secondaryColor,
+          foregroundColor: AppTheme.primaryColor,
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Container(
@@ -346,7 +352,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     Text(
                       AppStrings.signUp,
-                      style: Theme.of(context).textTheme.displayLarge,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.displayLarge?.copyWith(color: Colors.white),
                     ),
 
                     // const SizedBox(height: 8),
@@ -360,13 +368,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     // Business Card Scan button
                     //   ScanWithBusinessCardSignup(),
                     const SizedBox(height: 22),
-                    formLabel(AppStrings.fullName, isRequired: true),
+                    formLabel(
+                      AppStrings.fullName,
+                      isRequired: true,
+                      textColor: Colors.white,
+                    ),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _fullNameController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: AppStrings.fullName,
+                        filled: true,
+                        fillColor: AppTheme.secondaryColor,
+                        hintStyle: TextStyle(color: Colors.white70),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                            width: 1,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                            width: 1,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                            width: 2,
+                          ),
+                        ),
                       ),
+                      style: TextStyle(color: Colors.white),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Full Name is required';
@@ -376,28 +413,90 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
 
                     const SizedBox(height: 16),
-                    formLabel(AppStrings.companyName, isRequired: true),
+                    formLabel(
+                      AppStrings.companyName,
+                      isRequired: true,
+                      textColor: Colors.white,
+                    ),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _companyNameController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: AppStrings.companyName,
+                        filled: true,
+                        fillColor: AppTheme.secondaryColor,
+                        hintStyle: TextStyle(color: Colors.white70),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                            width: 1,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                            width: 1,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                            width: 2,
+                          ),
+                        ),
                       ),
+                      style: TextStyle(color: Colors.white),
                     ),
                     const SizedBox(height: 16),
-                    formLabel(AppStrings.emailAddress, isRequired: true),
+                    formLabel(
+                      AppStrings.emailAddress,
+                      isRequired: true,
+                      textColor: Colors.white,
+                    ),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: AppStrings.emailAddress,
+                        filled: true,
+                        fillColor: AppTheme.secondaryColor,
+                        hintStyle: TextStyle(color: Colors.white70),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                            width: 1,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                            width: 1,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                            width: 2,
+                          ),
+                        ),
                       ),
+                      style: TextStyle(color: Colors.white),
                       // validator: Validators.validateEmail,
                       validator: Validators.validateEmail,
                     ),
                     const SizedBox(height: 16),
-                    formLabel(AppStrings.phoneNumber, isRequired: true),
+                    formLabel(
+                      AppStrings.phoneNumber,
+                      isRequired: true,
+                      textColor: Colors.white,
+                    ),
                     SizedBox(height: 10),
                     PhoneNumberField(
                       onPhoneNumberChanged: _handlePhoneNumberChange,
@@ -409,16 +508,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                     ),
                     const SizedBox(height: 24),
-                    formLabel(AppStrings.address, isRequired: true),
+                    formLabel(
+                      AppStrings.address,
+                      isRequired: true,
+                      textColor: Colors.white,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
                           _isPoBox ? 'PO Box' : 'Street Address',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey.shade600,
-                          ),
+                          style: TextStyle(fontSize: 14, color: Colors.white70),
                         ),
                         Transform.scale(
                           scale: 0.8, // Increase/decrease this for custom size
@@ -455,9 +555,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     _isPoBox
                         ? TextFormField(
                           controller: _addressController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: 'Enter PO Box number',
+                            filled: true,
+                            fillColor: AppTheme.secondaryColor,
+                            hintStyle: TextStyle(color: Colors.white70),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: AppTheme.primaryColor,
+                                width: 1,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: AppTheme.primaryColor,
+                                width: 1,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: AppTheme.primaryColor,
+                                width: 2,
+                              ),
+                            ),
                           ),
+                          style: TextStyle(color: Colors.white),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'PO Box is required';
@@ -472,16 +597,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           errorText: null,
                         ),
                     const SizedBox(height: 16),
-                    formLabel(AppStrings.apartment),
+                    formLabel(AppStrings.apartment, textColor: Colors.white),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _apartmentController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: AppStrings.apartment,
+                        filled: true,
+                        fillColor: AppTheme.secondaryColor,
+                        hintStyle: TextStyle(color: Colors.white70),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                            width: 1,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                            width: 1,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                            width: 2,
+                          ),
+                        ),
                       ),
+                      style: TextStyle(color: Colors.white),
                     ),
                     const SizedBox(height: 16),
-                    formLabel(AppStrings.city, isRequired: true),
+                    formLabel(
+                      AppStrings.city,
+                      isRequired: true,
+                      textColor: Colors.white,
+                    ),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _cityController,
@@ -496,7 +650,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    formLabel(AppStrings.state, isRequired: true),
+                    formLabel(
+                      AppStrings.state,
+                      isRequired: true,
+                      textColor: Colors.white,
+                    ),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _stateController,
@@ -511,7 +669,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    formLabel(AppStrings.zipCode, isRequired: true),
+                    formLabel(
+                      AppStrings.zipCode,
+                      isRequired: true,
+                      textColor: Colors.white,
+                    ),
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _zipCodeController,
@@ -526,7 +688,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    formLabel(AppStrings.country, isRequired: true),
+                    formLabel(
+                      AppStrings.country,
+                      isRequired: true,
+                      textColor: Colors.white,
+                    ),
                     SizedBox(height: 10),
                     CountryDropdown(
                       onCountrySelected: _handleCountrySelected,
@@ -549,7 +715,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          formLabel(AppStrings.password, isRequired: true),
+                          formLabel(
+                            AppStrings.password,
+                            isRequired: true,
+                            textColor: Colors.white,
+                          ),
                           SizedBox(height: 10),
                           PasswordTextField(
                             svgPath: 'assets/icons/ic_password.svg',
@@ -561,6 +731,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           formLabel(
                             AppStrings.confirmPassword,
                             isRequired: true,
+                            textColor: Colors.white,
                           ),
                           SizedBox(height: 10),
                           PasswordTextField(
@@ -617,6 +788,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 : _signUp,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.primaryColor,
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         child:
                             _isLoading
@@ -628,7 +804,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     color: Colors.white,
                                   ),
                                 )
-                                : const Text(AppStrings.signUp),
+                                : Text(
+                                  AppStrings.signUp,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  ),
+                                ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -641,14 +824,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 : () {
                                   context.push(AppConstants.loginRoute);
                                 },
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(AppStrings.alreadyHaveAccount),
+                            Text(
+                              AppStrings.alreadyHaveAccount,
+                              style: TextStyle(color: Colors.white),
+                            ),
                             SizedBox(width: 4),
                             Text(
                               AppStrings.signIn,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.primaryColor,
+                              ),
                             ),
                           ],
                         ),
