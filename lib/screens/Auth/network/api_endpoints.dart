@@ -70,8 +70,6 @@ class ApiEndpoints {
 
   // Add more endpoints as needed, organized by feature
 
-  static final String privacyPolicy =
-      '${NetworkUrls.webBaseUrl}/pages/privacyPolicy';
-  static final String termsAndConditions =
-      '${NetworkUrls.webBaseUrl}/pages/terms-of-service';
+  static final String privacyPolicy = 'https://www.moinc.ai/privacy';
+  static final String termsAndConditions = 'https://www.moinc.ai/terms';
 }

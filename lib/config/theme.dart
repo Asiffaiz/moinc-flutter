@@ -96,14 +96,15 @@ class AppTheme {
 
   // Input Decoration
   static InputDecoration inputDecoration({
-    required String labelText,
+    String? labelText,
     String? hintText,
     Widget? prefixIcon,
     Widget? suffixIcon,
   }) {
     return InputDecoration(
-      labelText: labelText,
+      // labelText: labelText,
       hintText: hintText,
+
       prefixIcon:
           prefixIcon != null
               ? IconTheme(
@@ -120,6 +121,7 @@ class AppTheme {
               : null,
       filled: true,
       fillColor: secondaryColor,
+
       labelStyle: bodyMedium.copyWith(color: Colors.white),
       hintStyle: bodyMedium.copyWith(color: Colors.white70),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

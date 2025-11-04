@@ -9,7 +9,7 @@ import 'package:moinc/screens/Auth/presentation/bloc/auth_bloc.dart';
 import 'package:moinc/screens/Auth/presentation/bloc/user_cubit.dart';
 import 'package:moinc/screens/Auth/presentation/signup_screen.dart';
 import 'package:moinc/screens/Auth/services/token_service.dart';
-import 'package:moinc/screens/dashboard_screen.dart';
+import 'package:moinc/screens/Dashboard/dashboard_screen.dart';
 import 'package:moinc/screens/Auth/presentation/login_screen.dart';
 import 'package:moinc/screens/profile_screen.dart';
 

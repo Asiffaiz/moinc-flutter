@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:moinc/config/constants.dart';
+import 'package:moinc/config/constants/strings.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/utils/form_label.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -65,34 +67,46 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 40),
+                const SizedBox(height: 16),
                 // Header
                 Center(
                   child: Column(
                     children: [
                       // Logo placeholder
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryColor,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            'M',
-                            style: AppTheme.headingLarge.copyWith(
-                              fontSize: 40,
-                              color: AppTheme.secondaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      // Container(
+                      //   width: 80,
+                      //   height: 80,
+                      //   decoration: BoxDecoration(
+                      //     color: AppTheme.primaryColor,
+                      //     borderRadius: BorderRadius.circular(16),
+                      //     boxShadow: [
+                      //       BoxShadow(
+                      //         color: Colors.black.withOpacity(0.1),
+                      //         blurRadius: 10,
+                      //         offset: const Offset(0, 4),
+                      //       ),
+                      //     ],
+                      //   ),
+                      //   child: Center(
+                      //     child: Text(
+                      //       'M',
+                      //       style: AppTheme.headingLarge.copyWith(
+                      //         fontSize: 40,
+                      //         color: AppTheme.secondaryColor,
+                      //         fontWeight: FontWeight.bold,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+
+                      // Logo
+                      Center(
+                        child: SizedBox(
+                          width: 110,
+                          height: 110,
+                          child: Image.asset(
+                            'assets/images/logo1.png',
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
@@ -122,12 +136,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Email Field
+                      formLabel(
+                        AppStrings.emailAddress,
+                        isRequired: false,
+                        textColor: Colors.white,
+                      ),
+                      SizedBox(height: 10),
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
+                        style: const TextStyle(color: Colors.white),
                         decoration: AppTheme.inputDecoration(
                           labelText: 'Email',
+
                           hintText: 'Enter your email',
+
                           prefixIcon: const Icon(
                             Icons.email_outlined,
                             color: Colors.white,
@@ -148,9 +171,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 20),
 
                       // Password Field
+                      formLabel(
+                        AppStrings.password,
+                        isRequired: false,
+                        textColor: Colors.white,
+                      ),
+                      SizedBox(height: 10),
                       TextFormField(
                         controller: _passwordController,
                         obscureText: !_isPasswordVisible,
+                        style: const TextStyle(color: Colors.white),
                         decoration: AppTheme.inputDecoration(
                           labelText: 'Password',
                           hintText: 'Enter your password',
@@ -194,6 +224,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                   });
                                 },
                                 activeColor: AppTheme.primaryColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                side: BorderSide(
+                                  color: AppTheme.primaryColor,
+                                  width: 2,
+                                ),
+                                // fillColor: WidgetStateProperty.resolveWith<
+                                //   Color
+                                // >((Set<WidgetState> states) {
+                                //   if (states.contains(WidgetState.selected)) {
+                                //     return AppTheme
+                                //         .primaryColor; // active color
+                                //   }
+                                //   return Colors
+                                //       .black; // 👈 inactive (unchecked) color
+                                // }),
                               ),
                               Text(
                                 'Remember me',

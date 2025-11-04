@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/countries.dart';
+import 'package:moinc/config/theme.dart';
 
 class CountryDropdown extends StatefulWidget {
   final Function(String) onCountrySelected;
@@ -105,9 +106,9 @@ class _CountryDropdownState extends State<CountryDropdown> {
           },
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppTheme.secondaryColor,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
+              border: Border.all(color: AppTheme.primaryColor),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
             child: Row(
@@ -119,8 +120,8 @@ class _CountryDropdownState extends State<CountryDropdown> {
                       fontSize: 14,
                       color:
                           _selectedCountry != null
-                              ? Colors.black87
-                              : Colors.grey,
+                              ? Colors.white
+                              : Colors.white70,
                     ),
                   ),
                 ),
@@ -128,7 +129,7 @@ class _CountryDropdownState extends State<CountryDropdown> {
                   _isDropdownOpen
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down,
-                  color: Colors.grey,
+                  color: AppTheme.primaryColor,
                 ),
               ],
             ),
@@ -138,12 +139,12 @@ class _CountryDropdownState extends State<CountryDropdown> {
           Container(
             margin: const EdgeInsets.only(top: 4),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppTheme.secondaryColor,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
+              border: Border.all(color: AppTheme.primaryColor),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withOpacity(0.2),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -159,18 +160,28 @@ class _CountryDropdownState extends State<CountryDropdown> {
                     controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Search country...',
-                      prefixIcon: const Icon(Icons.search, size: 20),
+                      hintStyle: TextStyle(color: Colors.white70),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        size: 20,
+                        color: Colors.white,
+                      ),
+                      filled: true,
+                      fillColor: AppTheme.secondaryColor,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderSide: BorderSide(color: AppTheme.primaryColor),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        borderSide: BorderSide(color: AppTheme.primaryColor),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(
+                          color: AppTheme.primaryColor,
+                          width: 2,
+                        ),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -192,7 +203,7 @@ class _CountryDropdownState extends State<CountryDropdown> {
                           country,
                           style: const TextStyle(
                             fontSize: 14,
-                            color: Colors.black87,
+                            color: Colors.white,
                           ),
                         ),
                         onTap: () {

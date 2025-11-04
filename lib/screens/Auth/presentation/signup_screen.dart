@@ -333,518 +333,525 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                vertical: isTablet ? 48 : 24,
-                horizontal: isTablet ? 48 : 0.0,
-              ),
-              constraints: BoxConstraints(
-                minHeight:
-                    screenSize.height -
-                    (MediaQuery.of(context).padding.top +
-                        MediaQuery.of(context).padding.bottom +
-                        kToolbarHeight),
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppStrings.signUp,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.displayLarge?.copyWith(color: Colors.white),
-                    ),
-
-                    // const SizedBox(height: 8),
-                    // Text(
-                    //   'Create an account to access our telecom services',
-                    //   style: Theme.of(
-                    //     context,
-                    //   ).textTheme.bodyLarge?.copyWith(color: Colors.black54),
-                    // ),
-                    const SocialAuthButtonsRegister(),
-                    // Business Card Scan button
-                    //   ScanWithBusinessCardSignup(),
-                    const SizedBox(height: 22),
-                    formLabel(
-                      AppStrings.fullName,
-                      isRequired: true,
-                      textColor: Colors.white,
-                    ),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _fullNameController,
-                      decoration: InputDecoration(
-                        hintText: AppStrings.fullName,
-                        filled: true,
-                        fillColor: AppTheme.secondaryColor,
-                        hintStyle: TextStyle(color: Colors.white70),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppTheme.primaryColor,
-                            width: 1,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppTheme.primaryColor,
-                            width: 1,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppTheme.primaryColor,
-                            width: 2,
-                          ),
-                        ),
+            child: Padding(
+              padding: const EdgeInsets.all(AppConstants.defaultPadding),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: isTablet ? 48 : 24,
+                  horizontal: isTablet ? 48 : 0.0,
+                ),
+                constraints: BoxConstraints(
+                  minHeight:
+                      screenSize.height -
+                      (MediaQuery.of(context).padding.top +
+                          MediaQuery.of(context).padding.bottom +
+                          kToolbarHeight),
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AppStrings.signUp,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.displayLarge?.copyWith(color: Colors.white),
                       ),
-                      style: TextStyle(color: Colors.white),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Full Name is required';
-                        }
-                        return null;
-                      },
-                    ),
 
-                    const SizedBox(height: 16),
-                    formLabel(
-                      AppStrings.companyName,
-                      isRequired: true,
-                      textColor: Colors.white,
-                    ),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _companyNameController,
-                      decoration: InputDecoration(
-                        hintText: AppStrings.companyName,
-                        filled: true,
-                        fillColor: AppTheme.secondaryColor,
-                        hintStyle: TextStyle(color: Colors.white70),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppTheme.primaryColor,
-                            width: 1,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppTheme.primaryColor,
-                            width: 1,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppTheme.primaryColor,
-                            width: 2,
-                          ),
-                        ),
+                      // const SizedBox(height: 8),
+                      // Text(
+                      //   'Create an account to access our telecom services',
+                      //   style: Theme.of(
+                      //     context,
+                      //   ).textTheme.bodyLarge?.copyWith(color: Colors.black54),
+                      // ),
+                      const SocialAuthButtonsRegister(),
+                      // Business Card Scan button
+                      //   ScanWithBusinessCardSignup(),
+                      const SizedBox(height: 22),
+                      formLabel(
+                        AppStrings.fullName,
+                        isRequired: true,
+                        textColor: Colors.white,
                       ),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    const SizedBox(height: 16),
-                    formLabel(
-                      AppStrings.emailAddress,
-                      isRequired: true,
-                      textColor: Colors.white,
-                    ),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        hintText: AppStrings.emailAddress,
-                        filled: true,
-                        fillColor: AppTheme.secondaryColor,
-                        hintStyle: TextStyle(color: Colors.white70),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppTheme.primaryColor,
-                            width: 1,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppTheme.primaryColor,
-                            width: 1,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppTheme.primaryColor,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                      style: TextStyle(color: Colors.white),
-                      // validator: Validators.validateEmail,
-                      validator: Validators.validateEmail,
-                    ),
-                    const SizedBox(height: 16),
-                    formLabel(
-                      AppStrings.phoneNumber,
-                      isRequired: true,
-                      textColor: Colors.white,
-                    ),
-                    SizedBox(height: 10),
-                    PhoneNumberField(
-                      onPhoneNumberChanged: _handlePhoneNumberChange,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a phone number';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    formLabel(
-                      AppStrings.address,
-                      isRequired: true,
-                      textColor: Colors.white,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          _isPoBox ? 'PO Box' : 'Street Address',
-                          style: TextStyle(fontSize: 14, color: Colors.white70),
-                        ),
-                        Transform.scale(
-                          scale: 0.8, // Increase/decrease this for custom size
-                          child: Switch(
-                            value: _isPoBox,
-                            onChanged: (value) {
-                              setState(() {
-                                _isPoBox = value;
-                              });
-                            },
-                          ),
-                        ),
-
-                        // SizedBox(
-                        //   height: 14,
-                        //   child: Switch(
-                        //     value: !_isPoBox,
-                        //     activeColor: AppColors.appButtonColor,
-                        //     onChanged: (value) {
-                        //       setState(() {
-                        //         _isPoBox = !value;
-                        //         // Clear address fields when switching modes
-                        //         if (_isPoBox) {
-                        //           _addressController.clear();
-                        //           _selectedAddress = null;
-                        //         }
-                        //       });
-                        //     },
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    _isPoBox
-                        ? TextFormField(
-                          controller: _addressController,
-                          decoration: InputDecoration(
-                            hintText: 'Enter PO Box number',
-                            filled: true,
-                            fillColor: AppTheme.secondaryColor,
-                            hintStyle: TextStyle(color: Colors.white70),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: AppTheme.primaryColor,
-                                width: 1,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: AppTheme.primaryColor,
-                                width: 1,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: AppTheme.primaryColor,
-                                width: 2,
-                              ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _fullNameController,
+                        decoration: InputDecoration(
+                          hintText: AppStrings.fullName,
+                          filled: true,
+                          fillColor: AppTheme.secondaryColor,
+                          hintStyle: TextStyle(color: Colors.white70),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 1,
                             ),
                           ),
-                          style: TextStyle(color: Colors.white),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'PO Box is required';
-                            }
-                            return null;
-                          },
-                        )
-                        : AddressAutocomplete(
-                          controller: _addressController,
-                          onAddressSelected: _handleAddressSelected,
-                          label: 'Address',
-                          errorText: null,
-                        ),
-                    const SizedBox(height: 16),
-                    formLabel(AppStrings.apartment, textColor: Colors.white),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _apartmentController,
-                      decoration: InputDecoration(
-                        hintText: AppStrings.apartment,
-                        filled: true,
-                        fillColor: AppTheme.secondaryColor,
-                        hintStyle: TextStyle(color: Colors.white70),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppTheme.primaryColor,
-                            width: 1,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 1,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 2,
+                            ),
                           ),
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppTheme.primaryColor,
-                            width: 1,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppTheme.primaryColor,
-                            width: 2,
-                          ),
-                        ),
+                        style: TextStyle(color: Colors.white),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Full Name is required';
+                          }
+                          return null;
+                        },
                       ),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    const SizedBox(height: 16),
-                    formLabel(
-                      AppStrings.city,
-                      isRequired: true,
-                      textColor: Colors.white,
-                    ),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _cityController,
-                      decoration: const InputDecoration(
-                        hintText: AppStrings.city,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'City is required';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    formLabel(
-                      AppStrings.state,
-                      isRequired: true,
-                      textColor: Colors.white,
-                    ),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _stateController,
-                      decoration: const InputDecoration(
-                        hintText: AppStrings.state,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'State/Province is required';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    formLabel(
-                      AppStrings.zipCode,
-                      isRequired: true,
-                      textColor: Colors.white,
-                    ),
-                    SizedBox(height: 10),
-                    TextFormField(
-                      controller: _zipCodeController,
-                      decoration: const InputDecoration(
-                        hintText: AppStrings.zipCode,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Zip/Postal Code is required';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    formLabel(
-                      AppStrings.country,
-                      isRequired: true,
-                      textColor: Colors.white,
-                    ),
-                    SizedBox(height: 10),
-                    CountryDropdown(
-                      onCountrySelected: _handleCountrySelected,
-                      initialCountryCode: _selectedCountry,
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Country is required';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 24),
 
-                    // Text(
-                    //   'Password ',
-                    //   style: Theme.of(context).textTheme.titleMedium
-                    //       ?.copyWith(fontWeight: FontWeight.bold),
-                    // ),
-                    if (!_hidePassowrdFields)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      const SizedBox(height: 16),
+                      formLabel(
+                        AppStrings.companyName,
+                        isRequired: true,
+                        textColor: Colors.white,
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _companyNameController,
+                        decoration: InputDecoration(
+                          hintText: AppStrings.companyName,
+                          filled: true,
+                          fillColor: AppTheme.secondaryColor,
+                          hintStyle: TextStyle(color: Colors.white70),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 1,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 1,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      const SizedBox(height: 16),
+                      formLabel(
+                        AppStrings.emailAddress,
+                        isRequired: true,
+                        textColor: Colors.white,
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          hintText: AppStrings.emailAddress,
+                          filled: true,
+                          fillColor: AppTheme.secondaryColor,
+                          hintStyle: TextStyle(color: Colors.white70),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 1,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 1,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                        style: TextStyle(color: Colors.white),
+                        // validator: Validators.validateEmail,
+                        validator: Validators.validateEmail,
+                      ),
+                      const SizedBox(height: 16),
+                      formLabel(
+                        AppStrings.phoneNumber,
+                        isRequired: true,
+                        textColor: Colors.white,
+                      ),
+                      SizedBox(height: 10),
+                      PhoneNumberField(
+                        onPhoneNumberChanged: _handlePhoneNumberChange,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a phone number';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      formLabel(
+                        AppStrings.address,
+                        isRequired: true,
+                        textColor: Colors.white,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          formLabel(
-                            AppStrings.password,
-                            isRequired: true,
-                            textColor: Colors.white,
+                          Text(
+                            _isPoBox ? 'PO Box' : 'Street Address',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white70,
+                            ),
                           ),
-                          SizedBox(height: 10),
-                          PasswordTextField(
-                            svgPath: 'assets/icons/ic_password.svg',
-                            label: AppStrings.password,
-                            controller: _passwordController,
-                            validator: Validators.validatePassword,
+                          Transform.scale(
+                            scale:
+                                0.8, // Increase/decrease this for custom size
+                            child: Switch(
+                              value: _isPoBox,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isPoBox = value;
+                                });
+                              },
+                            ),
                           ),
-                          const SizedBox(height: 16),
-                          formLabel(
-                            AppStrings.confirmPassword,
-                            isRequired: true,
-                            textColor: Colors.white,
-                          ),
-                          SizedBox(height: 10),
-                          PasswordTextField(
-                            svgPath: 'assets/icons/ic_password.svg',
-                            label: 'Confirm Password',
-                            controller: _confirmPasswordController,
-                            validator:
-                                (value) => Validators.validateConfirmPassword(
-                                  value,
-                                  _passwordController.text,
-                                ),
-                          ),
+
+                          // SizedBox(
+                          //   height: 14,
+                          //   child: Switch(
+                          //     value: !_isPoBox,
+                          //     activeColor: AppColors.appButtonColor,
+                          //     onChanged: (value) {
+                          //       setState(() {
+                          //         _isPoBox = !value;
+                          //         // Clear address fields when switching modes
+                          //         if (_isPoBox) {
+                          //           _addressController.clear();
+                          //           _selectedAddress = null;
+                          //         }
+                          //       });
+                          //     },
+                          //   ),
+                          // ),
                         ],
                       ),
-                    const SizedBox(height: 24),
-                    ConsentCheckbox(
-                      value: _dataConsentChecked,
-                      onChanged: (value) {
-                        setState(() {
-                          _dataConsentChecked = value ?? false;
-                          if (_dataConsentChecked) {
-                            _dataConsentError = null;
-                          }
-                        });
-                      },
-                      text:
-                          'I consent to OnBoardSoft LLC collecting my personal data in accordance with the Privacy Policy and contacting me via phone or email. By submitting this form, you agree to our Privacy Policy.',
-                      links: {'Privacy Policy': ApiEndpoints.privacyPolicy},
-                      isRequired: true,
-                      errorText: _dataConsentError,
-                    ),
-                    const SizedBox(height: 16),
-                    ConsentCheckbox(
-                      value: _marketingConsentChecked,
-                      onChanged: (value) {
-                        setState(() {
-                          _marketingConsentChecked = value ?? false;
-                        });
-                      },
-                      text:
-                          'I agree to receive marketing communications from OnBoardSoft LLC.',
-                      isRequired: false,
-                      errorText: _marketingConsentError,
-                    ),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed:
-                            _isLoading ||
-                                    (_dataConsentChecked == false ||
-                                        _marketingConsentChecked == false)
-                                ? null
-                                : _signUp,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.primaryColor,
-                          foregroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
+                      const SizedBox(height: 10),
+                      _isPoBox
+                          ? TextFormField(
+                            controller: _addressController,
+                            decoration: InputDecoration(
+                              hintText: 'Enter PO Box number',
+                              filled: true,
+                              fillColor: AppTheme.secondaryColor,
+                              hintStyle: TextStyle(color: Colors.white70),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: AppTheme.primaryColor,
+                                  width: 1,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: AppTheme.primaryColor,
+                                  width: 1,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: AppTheme.primaryColor,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            style: TextStyle(color: Colors.white),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'PO Box is required';
+                              }
+                              return null;
+                            },
+                          )
+                          : AddressAutocomplete(
+                            controller: _addressController,
+                            onAddressSelected: _handleAddressSelected,
+                            label: 'Address',
+                            errorText: null,
+                          ),
+                      const SizedBox(height: 16),
+                      formLabel(AppStrings.apartment, textColor: Colors.white),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _apartmentController,
+                        decoration: InputDecoration(
+                          hintText: AppStrings.apartment,
+                          filled: true,
+                          fillColor: AppTheme.secondaryColor,
+                          hintStyle: TextStyle(color: Colors.white70),
+                          border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 1,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 1,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 2,
+                            ),
                           ),
                         ),
-                        child:
-                            _isLoading
-                                ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                                : Text(
-                                  AppStrings.signUp,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  ),
-                                ),
+                        style: TextStyle(color: Colors.white),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    Align(
-                      alignment: Alignment.center,
-                      child: TextButton(
-                        onPressed:
-                            _isLoading
-                                ? null
-                                : () {
-                                  context.push(AppConstants.loginRoute);
-                                },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                      const SizedBox(height: 16),
+                      formLabel(
+                        AppStrings.city,
+                        isRequired: true,
+                        textColor: Colors.white,
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _cityController,
+                        decoration: const InputDecoration(
+                          hintText: AppStrings.city,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'City is required';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      formLabel(
+                        AppStrings.state,
+                        isRequired: true,
+                        textColor: Colors.white,
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _stateController,
+                        decoration: const InputDecoration(
+                          hintText: AppStrings.state,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'State/Province is required';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      formLabel(
+                        AppStrings.zipCode,
+                        isRequired: true,
+                        textColor: Colors.white,
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _zipCodeController,
+                        decoration: const InputDecoration(
+                          hintText: AppStrings.zipCode,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Zip/Postal Code is required';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      formLabel(
+                        AppStrings.country,
+                        isRequired: true,
+                        textColor: Colors.white,
+                      ),
+                      SizedBox(height: 10),
+                      CountryDropdown(
+                        onCountrySelected: _handleCountrySelected,
+                        initialCountryCode: _selectedCountry,
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Country is required';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Text(
+                      //   'Password ',
+                      //   style: Theme.of(context).textTheme.titleMedium
+                      //       ?.copyWith(fontWeight: FontWeight.bold),
+                      // ),
+                      if (!_hidePassowrdFields)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              AppStrings.alreadyHaveAccount,
-                              style: TextStyle(color: Colors.white),
+                            formLabel(
+                              AppStrings.password,
+                              isRequired: true,
+                              textColor: Colors.white,
                             ),
-                            SizedBox(width: 4),
-                            Text(
-                              AppStrings.signIn,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.primaryColor,
-                              ),
+                            SizedBox(height: 10),
+                            PasswordTextField(
+                              svgPath: 'assets/icons/ic_password.svg',
+                              label: AppStrings.password,
+                              controller: _passwordController,
+                              validator: Validators.validatePassword,
+                            ),
+                            const SizedBox(height: 16),
+                            formLabel(
+                              AppStrings.confirmPassword,
+                              isRequired: true,
+                              textColor: Colors.white,
+                            ),
+                            SizedBox(height: 10),
+                            PasswordTextField(
+                              svgPath: 'assets/icons/ic_password.svg',
+                              label: 'Confirm Password',
+                              controller: _confirmPasswordController,
+                              validator:
+                                  (value) => Validators.validateConfirmPassword(
+                                    value,
+                                    _passwordController.text,
+                                  ),
                             ),
                           ],
                         ),
+                      const SizedBox(height: 24),
+                      ConsentCheckbox(
+                        value: _dataConsentChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            _dataConsentChecked = value ?? false;
+                            if (_dataConsentChecked) {
+                              _dataConsentError = null;
+                            }
+                          });
+                        },
+                        text:
+                            'I consent to Moinc collecting my personal data in accordance with the Privacy Policy and contacting me via phone or email. By submitting this form, you agree to our Privacy Policy.',
+                        links: {'Privacy Policy': ApiEndpoints.privacyPolicy},
+                        isRequired: true,
+                        errorText: _dataConsentError,
                       ),
-                    ),
-                    // const SocialAuthButtons(),
-                  ],
+                      const SizedBox(height: 16),
+                      ConsentCheckbox(
+                        value: _marketingConsentChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            _marketingConsentChecked = value ?? false;
+                          });
+                        },
+                        text:
+                            'I agree to receive marketing communications from Moinc.',
+                        isRequired: false,
+                        errorText: _marketingConsentError,
+                      ),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed:
+                              _isLoading ||
+                                      (_dataConsentChecked == false ||
+                                          _marketingConsentChecked == false)
+                                  ? null
+                                  : _signUp,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.primaryColor,
+                            foregroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child:
+                              _isLoading
+                                  ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                  : Text(
+                                    AppStrings.signUp,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Align(
+                        alignment: Alignment.center,
+                        child: TextButton(
+                          onPressed:
+                              _isLoading
+                                  ? null
+                                  : () {
+                                    context.push(AppConstants.loginRoute);
+                                  },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                AppStrings.alreadyHaveAccount,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                AppStrings.signIn,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // const SocialAuthButtons(),
+                    ],
+                  ),
                 ),
               ),
             ),

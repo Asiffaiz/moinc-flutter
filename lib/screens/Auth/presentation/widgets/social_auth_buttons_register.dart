@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io' show Platform;
 
+import 'package:moinc/config/theme.dart';
 import 'package:moinc/screens/Auth/presentation/bloc/auth_bloc.dart';
 import 'package:moinc/screens/Auth/presentation/bloc/auth_event.dart';
 
@@ -33,7 +34,7 @@ class SocialAuthButtonsRegister extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'or continue with',
-                style: TextStyle(color: Colors.grey, fontSize: 12),
+                style: TextStyle(color: Colors.white70, fontSize: 12),
               ),
             ),
             Expanded(child: Divider()),
@@ -54,7 +55,8 @@ class _GoogleSignInButton extends StatelessWidget {
       },
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 12),
-        side: BorderSide(color: Colors.grey.shade300),
+        side: BorderSide(color: AppTheme.primaryColor),
+        backgroundColor: AppTheme.secondaryColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       child: Row(
@@ -73,12 +75,9 @@ class _GoogleSignInButton extends StatelessWidget {
             },
           ),
           const SizedBox(width: 8),
-          const Text(
+          Text(
             'Sign up with Google',
-            style: TextStyle(
-              color: Colors.black87,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
           ),
         ],
       ),

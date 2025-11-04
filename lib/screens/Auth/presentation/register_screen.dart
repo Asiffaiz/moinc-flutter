@@ -84,7 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 // Header
                 Text(
-                  'Join Moinc',
+                  'Join ${AppConstants.appName}',
                   style: AppTheme.headingMedium.copyWith(color: Colors.white),
                 ),
                 const SizedBox(height: 8),

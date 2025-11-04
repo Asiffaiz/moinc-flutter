@@ -106,7 +106,7 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
               offset: Offset(0, size.height + 5),
               child: Material(
                 elevation: 4,
-                color: Colors.white,
+                color: AppTheme.secondaryColor,
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
                   constraints: const BoxConstraints(maxHeight: 200),
@@ -120,7 +120,12 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
 
                       return ListTile(
                         dense: true,
-                        title: Text(description, style: AppTheme.bodyMedium),
+                        title: Text(
+                          description,
+                          style: AppTheme.bodyMedium.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
                         onTap: () async {
                           // When user taps an address prediction, fetch the full details
                           widget.controller.text = description;
@@ -189,21 +194,32 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
               labelText: widget.label,
               errorText: widget.errorText,
               filled: true,
-              fillColor: Colors.white,
+              fillColor: AppTheme.secondaryColor,
+              labelStyle: TextStyle(color: Colors.white),
+              hintStyle: TextStyle(color: Colors.white70),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 18,
               ),
-              prefixIcon: Icon(Icons.location_on, color: AppTheme.primaryColor),
+              prefixIcon: Icon(Icons.location_on, color: Colors.white),
               suffixIcon:
                   widget.controller.text.isNotEmpty
                       ? IconButton(
-                        icon: const Icon(Icons.clear),
+                        icon: const Icon(Icons.clear, color: Colors.white),
                         onPressed: _clearText,
                       )
                       : null,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppTheme.primaryColor, width: 1),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppTheme.primaryColor, width: 1),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppTheme.primaryColor, width: 2),
               ),
             ),
             onChanged: (_) => setState(() {}),
@@ -223,7 +239,10 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Text('Loading address details...'),
+                Text(
+                  'Loading address details...',
+                  style: TextStyle(color: Colors.white70),
+                ),
               ],
             ),
           ),

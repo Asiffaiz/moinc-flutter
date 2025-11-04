@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:moinc/config/theme.dart';
 import 'package:moinc/widgets/common_webview.dart';
 
 class ConsentCheckbox extends StatelessWidget {
@@ -34,6 +35,7 @@ class ConsentCheckbox extends StatelessWidget {
               child: Checkbox(
                 value: value,
                 onChanged: onChanged,
+                side: BorderSide(color: AppTheme.primaryColor, width: 2),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4),
                 ),
@@ -70,7 +72,7 @@ class ConsentCheckbox extends StatelessWidget {
     if (links == null || links!.isEmpty) {
       return Text(
         text,
-        style: const TextStyle(fontSize: 14, color: Colors.black87),
+        style: const TextStyle(fontSize: 14, color: Colors.white),
       );
     }
 
@@ -85,7 +87,7 @@ class ConsentCheckbox extends StatelessWidget {
       textSpans.add(
         TextSpan(
           text: parts[i],
-          style: const TextStyle(fontSize: 14, color: Colors.black87),
+          style: const TextStyle(fontSize: 14, color: Colors.white),
         ),
       );
 

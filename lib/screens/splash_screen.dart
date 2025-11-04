@@ -48,31 +48,42 @@ class _SplashScreenState extends State<SplashScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Logo placeholder (replace with actual logo)
-                Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryColor,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'M',
-                      style: AppTheme.headingLarge.copyWith(
-                        fontSize: 80,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                // Container(
+                //   width: 150,
+                //   height: 150,
+                //   decoration: BoxDecoration(
+                //     color: AppTheme.primaryColor,
+                //     borderRadius: BorderRadius.circular(20),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.black.withOpacity(0.2),
+                //         blurRadius: 20,
+                //         offset: const Offset(0, 10),
+                //       ),
+                //     ],
+                //   ),
+                //   child: Center(
+                //     child: Text(
+                //       'M',
+                //       style: AppTheme.headingLarge.copyWith(
+                //         fontSize: 80,
+                //         color: Colors.white,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                Center(
+                  child: SizedBox(
+                    width: 180,
+                    height: 180,
+                    child: Image.asset(
+                      'assets/images/logo1.png',
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 40),
                 Text(
                   AppConstants.appName,
