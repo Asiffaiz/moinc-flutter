@@ -86,19 +86,19 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                       height: 80,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: HexColor("#0033A0"),
-                        // boxShadow: [
-                        //   BoxShadow(
-                        //     color: Colors.purple.withOpacity(0.3),
-                        //     blurRadius: 10,
-                        //     spreadRadius: 2,
-                        //   ),
-                        // ],
+                        color: AppTheme.primaryColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppTheme.primaryColor.withOpacity(0.3),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                          ),
+                        ],
                       ),
                       child: const Icon(
                         Icons.person,
                         size: 45,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -228,8 +228,8 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                             height: 40,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: HexColor("#0033A0"),
-                                foregroundColor: Colors.white,
+                                backgroundColor: AppTheme.primaryColor,
+                                foregroundColor: Colors.black,
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 14,
                                   vertical: 4,
@@ -338,65 +338,56 @@ class _AudioCallScreenState extends State<AudioCallScreen>
     required String label,
     required VoidCallback onPressed,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: const Color.fromARGB(255, 211, 120, 227).withOpacity(0.8),
-            blurRadius: 2,
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [HexColor("#4A90E2"), HexColor("#0033A0")],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: Colors.white.withOpacity(0.8)),
-              boxShadow: [
-                BoxShadow(
-                  color: HexColor("#0033A0").withOpacity(0.2),
-                  blurRadius: 10,
-                  offset: Offset(0, 4),
-                ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppTheme.primaryColor,
+                AppTheme.primaryColor.withOpacity(0.8),
               ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: onPressed,
-                splashColor: Colors.white.withOpacity(0.2),
-                highlightColor: Colors.white.withOpacity(0.1),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 24,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      icon,
-                      const SizedBox(width: 10),
-                      Text(
-                        label,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          letterSpacing: 0.5,
-                        ),
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(color: Colors.white.withOpacity(0.8)),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.secondaryColor.withOpacity(0.3),
+                blurRadius: 10,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onPressed,
+              splashColor: Colors.white.withOpacity(0.2),
+              highlightColor: Colors.white.withOpacity(0.1),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 24,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    icon,
+                    const SizedBox(width: 10),
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        letterSpacing: 0.5,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -466,7 +457,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.primaryColor,
+        color: AppTheme.secondaryColor,
         // gradient: LinearGradient(
         //   begin: Alignment.topLeft,
         //   end: Alignment.bottomRight,
@@ -516,7 +507,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
               ),
               // const Spacer(),
               const Text(
-                'Hello, Asif!',
+                'Hello, David!',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -534,16 +525,21 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                 width: 180,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [HexColor("#ade8f4"), HexColor("#48cae4")],
-                  ),
+                  color: const Color.fromARGB(255, 62, 166, 214),
                   // boxShadow: [
                   //   BoxShadow(
-                  //     color: Colors.purple.shade200.withOpacity(0.5),
-                  //     blurRadius: 30,
-                  //     spreadRadius: 10,
+                  //     color: AppTheme.primaryColor.withOpacity(0.3),
+                  //     blurRadius: 15,
+                  //     spreadRadius: 5,
                   //   ),
                   // ],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.purple.shade200.withOpacity(0.2),
+                      blurRadius: 15,
+                      spreadRadius: 4,
+                    ),
+                  ],
                 ),
                 child: Center(
                   child: AnimatedBuilder(
@@ -574,7 +570,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                           Icon(
                             isCallActive ? Icons.mic : Icons.mic_none,
                             size: 80,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                         ],
                       );
@@ -608,8 +604,8 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                       onPressed: _toggleCall,
                       color:
                           connectionState == app_ctrl.ConnectionState.connecting
-                              ? HexColor("#ef4444")
-                              : HexColor("#06bf81"),
+                              ? Colors.red
+                              : const Color.fromARGB(255, 55, 212, 144),
                       isProgressing:
                           connectionState ==
                           app_ctrl.ConnectionState.connecting,

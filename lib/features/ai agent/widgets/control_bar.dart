@@ -4,7 +4,6 @@ import 'package:livekit_components/livekit_components.dart' as components;
 import 'package:moinc/features/ai%20agent/widgets/floating_glass_circle.dart';
 import 'package:provider/provider.dart';
 
-
 import '../app.dart';
 import '../controllers/app_ctrl.dart' show AppCtrl, AgentScreenState;
 import '../ui/color_pallette.dart' show LKColorPaletteLight;
@@ -60,6 +59,7 @@ class ControlBar extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
+                        color: Colors.white,
                       ),
                     ),
                   ],
@@ -119,7 +119,11 @@ class ControlBar extends StatelessWidget {
               SizedBox(height: 4),
               Text(
                 'Hold',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
@@ -137,7 +141,11 @@ class ControlBar extends StatelessWidget {
               SizedBox(height: 4),
               Text(
                 'Disconnect',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                ),
               ),
             ],
           ),

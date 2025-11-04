@@ -38,8 +38,8 @@ class FloatingGlassCircleButton extends StatelessWidget {
             shape: BoxShape.circle,
             color:
                 isActive
-                    ? Colors.blue.shade400
-                    : Colors.blue.shade400.withOpacity(0.4),
+                    ? Theme.of(ctx).primaryColor
+                    : Theme.of(ctx).primaryColor.withOpacity(0.4),
             // gradient: LinearGradient(
             //   colors:
             //       isActive
@@ -55,7 +55,7 @@ class FloatingGlassCircleButton extends StatelessWidget {
                 isActive
                     ? [
                       BoxShadow(
-                        color: Colors.blue.shade300.withOpacity(0.6),
+                        color: Theme.of(ctx).primaryColor.withOpacity(0.6),
                         blurRadius: 12,
                         spreadRadius: 2,
                       ),

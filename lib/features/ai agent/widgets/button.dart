@@ -17,37 +17,36 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext ctx) => TextButton(
-        onPressed: isProgressing ? null : onPressed,
-        style: TextButton.styleFrom(
-          // backgroundColor: Theme.of(ctx).buttonTheme.colorScheme?.surface,
-          backgroundColor: color,
-          foregroundColor: Colors.white,
-          // surfaceTintColor: Colors.white,
-          disabledForegroundColor: Colors.white,
-          // disabledIconColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-        ),
-        child: Row(
-          spacing: 15,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (isProgressing)
-              const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation(Colors.white),
-                ),
-              ),
-            Text(
-              text.toUpperCase(),
-              style: const TextStyle(fontWeight: FontWeight.bold),
+    onPressed: isProgressing ? null : onPressed,
+    style: TextButton.styleFrom(
+      backgroundColor: color,
+      foregroundColor: Colors.black,
+      disabledForegroundColor: Colors.black54,
+      elevation: 2,
+      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+        side: BorderSide(color: Colors.white.withOpacity(0.2), width: 1),
+      ),
+    ),
+    child: Row(
+      spacing: 15,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (isProgressing)
+          const SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation(Colors.black),
             ),
-          ],
+          ),
+        Text(
+          text.toUpperCase(),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-      );
+      ],
+    ),
+  );
 }
