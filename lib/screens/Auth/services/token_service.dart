@@ -50,6 +50,7 @@ class TokenService {
       String? token;
       Exception? lastError;
 
+
       // Try each endpoint
       for (final endpoint in endpoints) {
         try {
