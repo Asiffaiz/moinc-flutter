@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/ai%20agent/app.dart';
 import 'package:moinc/features/dashboard/domain/models/dashboard_data_model.dart';
 import 'package:moinc/features/dashboard/presentation/bloc/bloc/dashboard_bloc.dart';
 import 'package:moinc/widgets/custom_error_dialog.dart';
@@ -22,6 +23,7 @@ final List<AssignedFormModel> dummyForms = [
     filledDate: '',
     linkForm: 0,
     externalLink: '',
+    agentEnable: true, // Enable AI agent for this form
   ),
   AssignedFormModel(
     formTitle: 'AI Usage Preferences',
@@ -35,6 +37,7 @@ final List<AssignedFormModel> dummyForms = [
     filledDate: '',
     linkForm: 0,
     externalLink: '',
+    agentEnable: false, // Disable AI agent for this form
   ),
   AssignedFormModel(
     formTitle: 'Feedback Survey',
@@ -48,6 +51,7 @@ final List<AssignedFormModel> dummyForms = [
     filledDate: '',
     linkForm: 0,
     externalLink: '',
+    agentEnable: true, // Enable AI agent for this form
   ),
   AssignedFormModel(
     formTitle: 'Communication Preferences',
@@ -61,6 +65,7 @@ final List<AssignedFormModel> dummyForms = [
     filledDate: '2025-10-30',
     linkForm: 0,
     externalLink: '',
+    agentEnable: false, // Disable AI agent for this form
   ),
 ];
 
@@ -398,13 +403,65 @@ class _DashboardHomeContentState extends State<DashboardHomeContent> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (form.agentEnable) // Only show agent button if enabled
+                      InkWell(
+                        onTap: () {
+                          // Handle agent call button tap
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     content: Text('AI Agent for $title activated'),
+                          //     backgroundColor: AppTheme.primaryColor,
+                          //     behavior: SnackBarBehavior.floating,
+                          //   ),
+                          // );
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VoiceAssistantApp(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryColor,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.call, color: Colors.black, size: 16),
+                              SizedBox(width: 4),
+                              Text(
+                                'Agent',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
                 const SizedBox(height: 12),
                 Row(

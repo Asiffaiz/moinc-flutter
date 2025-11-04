@@ -65,6 +65,7 @@ class AssignedFormModel extends Equatable {
   final String formLink;
   final int linkForm;
   final String externalLink;
+  final bool agentEnable;
 
   const AssignedFormModel({
     required this.formAccountno,
@@ -77,6 +78,7 @@ class AssignedFormModel extends Equatable {
     required this.formLink,
     required this.linkForm,
     required this.externalLink,
+    this.agentEnable = false,
   });
 
   factory AssignedFormModel.fromJson(Map<String, dynamic> json) {
@@ -91,6 +93,7 @@ class AssignedFormModel extends Equatable {
       formLink: json['form_link'] ?? '',
       linkForm: json['link_form'] ?? 0,
       externalLink: json['external_link'] ?? '',
+      agentEnable: json['agent_enable'] == 1 || json['agent_enable'] == true,
     );
   }
 
@@ -106,5 +109,6 @@ class AssignedFormModel extends Equatable {
     formLink,
     linkForm,
     externalLink,
+    agentEnable,
   ];
 }
