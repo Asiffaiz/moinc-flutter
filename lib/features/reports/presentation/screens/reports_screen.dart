@@ -8,6 +8,55 @@ import 'package:moinc/features/reports/presentation/screens/report_webview_scree
 import 'package:moinc/widgets/custom_error_dialog.dart';
 import 'package:moinc/widgets/dashboard_shimmer.dart';
 
+// Dummy data for reports
+final List<ReportsModel> dummyReports = [
+  ReportsModel(
+    id: 1,
+    title: 'Monthly Performance Report',
+    createdAt: DateTime.now().subtract(const Duration(days: 5)),
+    publishedAt: DateTime.now().subtract(const Duration(days: 3)),
+    status: 'processed',
+    reportStatus: 1,
+    url: 'https://moinc.ai/reports/monthly-performance',
+  ),
+  ReportsModel(
+    id: 2,
+    title: 'User Engagement Analytics',
+    createdAt: DateTime.now().subtract(const Duration(days: 10)),
+    publishedAt: DateTime.now().subtract(const Duration(days: 8)),
+    status: 'processed',
+    reportStatus: 1,
+    url: 'https://moinc.ai/reports/user-engagement',
+  ),
+  ReportsModel(
+    id: 3,
+    title: 'AI Usage Statistics',
+    createdAt: DateTime.now().subtract(const Duration(days: 15)),
+    publishedAt: DateTime.now().subtract(const Duration(days: 12)),
+    status: 'processing',
+    reportStatus: 0,
+    url: 'https://moinc.ai/reports/ai-usage',
+  ),
+  ReportsModel(
+    id: 4,
+    title: 'Quarterly Financial Summary',
+    createdAt: DateTime.now().subtract(const Duration(days: 30)),
+    publishedAt: DateTime.now().subtract(const Duration(days: 25)),
+    status: 'processed',
+    reportStatus: 1,
+    url: 'https://moinc.ai/reports/quarterly-financial',
+  ),
+  ReportsModel(
+    id: 5,
+    title: 'User Feedback Analysis',
+    createdAt: DateTime.now().subtract(const Duration(days: 20)),
+    publishedAt: DateTime.now().subtract(const Duration(days: 18)),
+    status: 'processed',
+    reportStatus: 0,
+    url: 'https://moinc.ai/reports/user-feedback',
+  ),
+];
+
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
 
@@ -19,7 +68,24 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<ReportsBloc>().add(LoadReportsData());
+    // Load from API in production
+    // context.read<ReportsBloc>().add(LoadReportsData());
+    _showDummyData();
+
+    // For development, we can use the dummy data directly
+    // Uncomment the line below to use dummy data instead of API
+    // _showDummyData();
+  }
+
+  // Method to show dummy data for development
+  void _showDummyData() {
+    Future.delayed(Duration.zero, () {
+      if (mounted) {
+        context.read<ReportsBloc>().emit(
+          ReportsLoaded(reportsData: dummyReports),
+        );
+      }
+    });
   }
 
   @override
@@ -30,15 +96,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Reports'),
-        // leading: CustomBackButton(
-        //   onTap: () {
-        //     Navigator.pop(context); // Go back
-        //   },
-        // ),
-      ),
+      backgroundColor: AppTheme.backgroundColor,
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   title: const Text('Reports'),
+      //   backgroundColor: AppTheme.secondaryColor,
+      //   foregroundColor: AppTheme.primaryColor,
+      //   // leading: CustomBackButton(
+      //   //   onTap: () {
+      //   //     Navigator.pop(context); // Go back
+      //   //   },
+      //   // ),
+      // ),
       body: BlocConsumer<ReportsBloc, ReportsState>(
         listener: (context, state) {
           if (state is ReportsError) {
@@ -101,7 +170,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 children: [
                   Text(
                     'Something went wrong Please try again',
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red, fontSize: 16),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -115,7 +184,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
           }
 
           // Fallback if no reports are available
-          return const Center(child: Text('No reports found'));
+          // Show dummy data if there are no reports from API
+          return _buildUnsignedAgreementsList(dummyReports);
+          // If you want to show a "no reports" message instead, uncomment below
+          // return Center(child: Text('No reports found', style: TextStyle(color: Colors.white, fontSize: 16)));
         },
       ),
     );
@@ -139,12 +211,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
     return Container(
       margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: AppTheme.cardColor,
+        color: AppTheme.secondaryColor,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: AppTheme.primaryColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 2,
             offset: const Offset(0, 1),
@@ -165,7 +237,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       'assets/icons/ic_report.png',
                       width: 20,
                       height: 20,
-                      color: Colors.black,
+                      color: AppTheme.primaryColor,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
@@ -175,7 +247,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -199,7 +271,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               ],
             ),
           ),
-          const Divider(height: 1),
+          Divider(height: 1, color: AppTheme.primaryColor.withOpacity(0.5)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Column(
@@ -212,7 +284,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       icon: null,
                       labelColor: Colors.white,
                       label: capitalize(report.status),
-                      fillColor: Colors.green,
+                      fillColor: const Color.fromARGB(255, 43, 68, 78),
                       color:
                           report.status == 'processed'
                               ? Colors.green
@@ -276,7 +348,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Colors.black,
+            color: Colors.white70,
           ),
         ),
         const SizedBox(width: 8),
@@ -350,6 +422,38 @@ class _ReportsScreenState extends State<ReportsScreen> {
     required Color fillColor,
     required VoidCallback? onPressed,
   }) {
+    // Use theme colors for View button
+    if (label == 'View') {
+      return InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(4),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: AppTheme.primaryColor,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Row(
+            children: [
+              icon != null
+                  ? Icon(icon, size: 16, color: Colors.black)
+                  : const SizedBox(),
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // For other status buttons
     return InkWell(
       onTap: onPressed,
       borderRadius: BorderRadius.circular(4),
