@@ -5,15 +5,18 @@ import 'package:get_it/get_it.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/core/dependency_injection.dart';
-import 'package:moinc/screens/Auth/presentation/bloc/auth_bloc.dart';
-import 'package:moinc/screens/Auth/presentation/bloc/user_cubit.dart';
-import 'package:moinc/screens/Auth/presentation/signup_screen.dart';
-import 'package:moinc/screens/Auth/services/token_service.dart';
-import 'package:moinc/screens/Dashboard/dashboard_screen.dart';
-import 'package:moinc/screens/Auth/presentation/login_screen.dart';
-import 'package:moinc/screens/profile_screen.dart';
+import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:moinc/features/auth/presentation/bloc/user_cubit.dart';
+import 'package:moinc/features/auth/presentation/signup_screen.dart';
+import 'package:moinc/features/auth/services/token_service.dart';
+import 'package:moinc/features/dashboard/dashboard_screen.dart';
+import 'package:moinc/features/auth/presentation/login_screen.dart';
+import 'package:moinc/features/profile_screen.dart';
+import 'package:moinc/features/reports/domain/repositories/reports_repository.dart';
+import 'package:moinc/features/reports/presentation/bloc/reports_bloc.dart';
+import 'package:moinc/features/reports/presentation/screens/reports_screen.dart';
 
-import 'package:moinc/screens/splash_screen.dart';
+import 'package:moinc/features/splash_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 void main() async {
@@ -57,6 +60,11 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthBloc>(create: (context) => authBloc),
         BlocProvider(create: (_) => UserCubit()..loadUser()),
+        BlocProvider<ReportsBloc>(
+          create:
+              (context) =>
+                  ReportsBloc(reportsRepository: GetIt.I<ReportsRepository>()),
+        ),
       ],
       child: MaterialApp(
         title: AppConstants.appName,
@@ -73,6 +81,7 @@ class MyApp extends StatelessWidget {
 
           AppConstants.dashboardRoute: (context) => const DashboardScreen(),
           AppConstants.profileRoute: (context) => const ProfileScreen(),
+          AppConstants.reportsRoute: (context) => const ReportsScreen(),
         },
       ),
     );

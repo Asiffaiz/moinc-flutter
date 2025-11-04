@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/main.dart';
-import 'package:moinc/screens/Auth/presentation/bloc/auth_bloc.dart';
-import 'package:moinc/screens/Auth/presentation/bloc/auth_event.dart';
+import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:moinc/features/auth/presentation/bloc/auth_event.dart';
 
 /// HTTP Interceptor for handling authentication and error responses
 class HttpInterceptor {

@@ -20,7 +20,7 @@ class AppConstants {
   static const String registerRoute = '/register';
   static const String dashboardRoute = '/dashboard';
   static const String profileRoute = '/profile';
-
+  static const String reportsRoute = '/reports';
   // Assets
   static const String logoPath = 'assets/images/logo.png';
   static const String splashBackgroundPath =

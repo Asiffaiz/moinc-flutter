@@ -1,11 +1,14 @@
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:moinc/screens/Auth/presentation/bloc/auth_bloc.dart';
-import 'package:moinc/screens/Auth/data/repositories/auth_repository_impl.dart';
-import 'package:moinc/screens/Auth/data/services/auth_service.dart';
-import 'package:moinc/screens/Auth/domain/repositories/auth_repository.dart';
-import 'package:moinc/screens/Auth/network/api_client.dart';
-import 'package:moinc/screens/Auth/services/token_service.dart';
+import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:moinc/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:moinc/features/auth/data/services/auth_service.dart';
+import 'package:moinc/features/auth/domain/repositories/auth_repository.dart';
+import 'package:moinc/features/auth/network/api_client.dart';
+import 'package:moinc/features/auth/services/token_service.dart';
+import 'package:moinc/features/reports/data/repositories/reports_repository_impl.dart';
+import 'package:moinc/features/reports/data/services/reports_service.dart';
+import 'package:moinc/features/reports/domain/repositories/reports_repository.dart';
 
 // Set this to false to disable Firebase
 const bool useFirebase = true;
@@ -27,7 +30,7 @@ Future<void> initializeDependencies() async {
   // getIt.registerLazySingleton(() => DashboardService());
 
   // // Register ReportsService
-  // getIt.registerLazySingleton(() => ReportsService());
+  getIt.registerLazySingleton(() => ReportsService());
 
   // // Register FormsService
   // getIt.registerLazySingleton(() => FormsService());
@@ -78,9 +81,9 @@ Future<void> initializeDependencies() async {
   //   () => DashboardRepositoryImpl(dashboardService: getIt<DashboardService>()),
   // );
 
-  // getIt.registerLazySingleton<ReportsRepository>(
-  //   () => ReportsRepositoryImpl(reportsService: getIt<ReportsService>()),
-  // );
+  getIt.registerLazySingleton<ReportsRepository>(
+    () => ReportsRepositoryImpl(reportsService: getIt<ReportsService>()),
+  );
 
   // getIt.registerLazySingleton<FormsRepository>(
   //   () => FormsRepositoryImpl(formsService: getIt<FormsService>()),

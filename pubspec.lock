@@ -65,6 +65,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  chat_bubbles:
+    dependency: transitive
+    description:
+      name: chat_bubbles
+      sha256: "9ee1493b31a7f847363c5d69725ec55db94f720c7c116d403b4d322a4da0f08c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.0"
   clock:
     dependency: transitive
     description:
@@ -214,6 +222,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_background:
+    dependency: transitive
+    description:
+      name: flutter_background
+      sha256: "8dad66e3102da2b4046cc3adcf70625578809827170bd78e36e5890c074287d2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.0+1"
   flutter_bloc:
     dependency: "direct main"
     description:
@@ -348,10 +364,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_webrtc
-      sha256: "16ca9e30d428bae3dd32933e875c9f67c5843d1fa726c37cf1fc479eb9294549"
+      sha256: "792aa1e5838a719f29ae52c0773dbb5dd781fc33b1bf87c321b274e55ab51ad1"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "0.14.2"
   get_it:
     dependency: "direct main"
     description:
@@ -532,18 +548,18 @@ packages:
     dependency: "direct main"
     description:
       name: livekit_client
-      sha256: ddb4467d306be472898b2459c87768121aba030173b3664ef367f7f7f4c96897
+      sha256: "5d182f40cc9aafce60a9acf936bad8bc69010b5cbf0a949f6f27dc4390f2fcce"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.3"
-  logger:
-    dependency: transitive
+    version: "2.4.9"
+  livekit_components:
+    dependency: "direct main"
     description:
-      name: logger
-      sha256: a7967e31b703831a893bbc3c3dd11db08126fe5f369b5c648a36f821979f5be3
+      name: livekit_components
+      sha256: "1de0e4f98a006bf006882384b728f0dca9bdde3eb0df2296a94ad42db413ac53"
       url: "https://pub.dev"
     source: hosted
-    version: "2.6.2"
+    version: "1.2.2+hotfix.1"
   logging:
     dependency: "direct main"
     description:
@@ -776,6 +792,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.5+1"
+  responsive_builder:
+    dependency: transitive
+    description:
+      name: responsive_builder
+      sha256: "64a5ef3fbe3628e4588a0c2391c3186300e76f58621d8135cc77aac816255a3e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.1"
   rxdart:
     dependency: transitive
     description:
