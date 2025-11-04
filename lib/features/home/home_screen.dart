@@ -5,14 +5,14 @@ import 'package:moinc/features/reports/presentation/screens/reports_screen.dart'
 import 'package:moinc/widgets/ai_agent_form.dart';
 import 'package:moinc/widgets/ai_agent_widget.dart';
 
-class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   bool _isAgentEnabled = false; // This would come from settings in real app
 

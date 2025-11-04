@@ -9,7 +9,9 @@ import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:moinc/features/auth/presentation/bloc/user_cubit.dart';
 import 'package:moinc/features/auth/presentation/signup_screen.dart';
 import 'package:moinc/features/auth/services/token_service.dart';
-import 'package:moinc/features/dashboard/dashboard_screen.dart';
+import 'package:moinc/features/dashboard/domain/Repositories/dashboard_repository.dart';
+import 'package:moinc/features/dashboard/presentation/bloc/bloc/dashboard_bloc.dart';
+import 'package:moinc/features/home/home_screen.dart';
 import 'package:moinc/features/auth/presentation/login_screen.dart';
 import 'package:moinc/features/profile_screen.dart';
 import 'package:moinc/features/reports/domain/repositories/reports_repository.dart';
@@ -65,6 +67,12 @@ class MyApp extends StatelessWidget {
               (context) =>
                   ReportsBloc(reportsRepository: GetIt.I<ReportsRepository>()),
         ),
+        BlocProvider<DashboardBloc>(
+          create:
+              (context) => DashboardBloc(
+                dashboardRepository: GetIt.I<DashboardRepository>(),
+              ),
+        ),
       ],
       child: MaterialApp(
         title: AppConstants.appName,
@@ -79,7 +87,7 @@ class MyApp extends StatelessWidget {
           // AppConstants.registerRoute: (context) => const RegisterScreen(),
           AppConstants.registerRoute: (context) => const SignUpScreen(),
 
-          AppConstants.dashboardRoute: (context) => const DashboardScreen(),
+          AppConstants.dashboardRoute: (context) => const HomeScreen(),
           AppConstants.profileRoute: (context) => const ProfileScreen(),
           AppConstants.reportsRoute: (context) => const ReportsScreen(),
         },

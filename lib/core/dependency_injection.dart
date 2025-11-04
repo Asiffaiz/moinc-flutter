@@ -6,6 +6,9 @@ import 'package:moinc/features/auth/data/services/auth_service.dart';
 import 'package:moinc/features/auth/domain/repositories/auth_repository.dart';
 import 'package:moinc/features/auth/network/api_client.dart';
 import 'package:moinc/features/auth/services/token_service.dart';
+import 'package:moinc/features/dashboard/data/Repositories/dashboard_repository_impl.dart';
+import 'package:moinc/features/dashboard/data/services/dashboard_service.dart';
+import 'package:moinc/features/dashboard/domain/Repositories/dashboard_repository.dart';
 import 'package:moinc/features/reports/data/repositories/reports_repository_impl.dart';
 import 'package:moinc/features/reports/data/services/reports_service.dart';
 import 'package:moinc/features/reports/domain/repositories/reports_repository.dart';
@@ -27,7 +30,7 @@ Future<void> initializeDependencies() async {
   // getIt.registerLazySingleton(() => AgreementService());
 
   // // Register DashboardService
-  // getIt.registerLazySingleton(() => DashboardService());
+  getIt.registerLazySingleton(() => DashboardService());
 
   // // Register ReportsService
   getIt.registerLazySingleton(() => ReportsService());
@@ -77,9 +80,9 @@ Future<void> initializeDependencies() async {
   //   ),
   // );
 
-  // getIt.registerLazySingleton<DashboardRepository>(
-  //   () => DashboardRepositoryImpl(dashboardService: getIt<DashboardService>()),
-  // );
+  getIt.registerLazySingleton<DashboardRepository>(
+    () => DashboardRepositoryImpl(dashboardService: getIt<DashboardService>()),
+  );
 
   getIt.registerLazySingleton<ReportsRepository>(
     () => ReportsRepositoryImpl(reportsService: getIt<ReportsService>()),
