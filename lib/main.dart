@@ -3,11 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/screens/dashboard_screen.dart';
-import 'package:moinc/screens/login_screen.dart';
+import 'package:moinc/screens/Auth/presentation/login_screen.dart';
 import 'package:moinc/screens/profile_screen.dart';
-import 'package:moinc/screens/register_screen.dart';
+import 'package:moinc/screens/Auth/presentation/register_screen.dart';
 import 'package:moinc/screens/splash_screen.dart';
 
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([

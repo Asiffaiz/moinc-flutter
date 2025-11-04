@@ -195,7 +195,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 activeColor: AppTheme.primaryColor,
                               ),
-                              Text('Remember me', style: AppTheme.bodySmall),
+                              Text(
+                                'Remember me',
+                                style: AppTheme.bodySmall.copyWith(
+                                  color: Colors.white,
+                                ),
+                              ),
                             ],
                           ),
                           TextButton(
@@ -239,10 +244,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Register Option
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             'Don\'t have an account?',
-                            style: AppTheme.bodyMedium,
+                            style: AppTheme.bodyMedium.copyWith(
+                              color: Colors.white,
+                            ),
                           ),
                           TextButton(
                             onPressed: _navigateToRegister,
