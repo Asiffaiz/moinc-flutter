@@ -8,6 +8,62 @@ import 'package:moinc/features/dashboard/presentation/bloc/bloc/dashboard_bloc.d
 import 'package:moinc/widgets/custom_error_dialog.dart';
 import 'package:moinc/widgets/dashboard_shimmer.dart';
 
+// Dummy forms data for development
+final List<AssignedFormModel> dummyForms = [
+  AssignedFormModel(
+    formTitle: 'Personal Information Form',
+    formDesc:
+        'Please complete your personal information details to help us serve you better.',
+    formLink: 'form_token_123',
+    formAccountno: 'ACC001',
+    btnText: 'Fill Form',
+    allowMultiple: 1,
+    isFilled: 'No',
+    filledDate: '',
+    linkForm: 0,
+    externalLink: '',
+  ),
+  AssignedFormModel(
+    formTitle: 'AI Usage Preferences',
+    formDesc:
+        'Tell us how you prefer to interact with our AI assistant and customize your experience.',
+    formLink: 'form_token_456',
+    formAccountno: 'ACC002',
+    btnText: 'Update Preferences',
+    allowMultiple: 0,
+    isFilled: 'No',
+    filledDate: '',
+    linkForm: 0,
+    externalLink: '',
+  ),
+  AssignedFormModel(
+    formTitle: 'Feedback Survey',
+    formDesc:
+        'We value your opinion! Please take a moment to share your thoughts about our services.',
+    formLink: 'form_token_789',
+    formAccountno: 'ACC003',
+    btnText: 'Submit Feedback',
+    allowMultiple: 1,
+    isFilled: 'No',
+    filledDate: '',
+    linkForm: 0,
+    externalLink: '',
+  ),
+  AssignedFormModel(
+    formTitle: 'Communication Preferences',
+    formDesc:
+        'Update your communication preferences to receive notifications that matter to you.',
+    formLink: 'form_token_101',
+    formAccountno: 'ACC004',
+    btnText: 'Set Preferences',
+    allowMultiple: 0,
+    isFilled: 'Yes',
+    filledDate: '2025-10-30',
+    linkForm: 0,
+    externalLink: '',
+  ),
+];
+
 class DashboardHomeContent extends StatefulWidget {
   final Function(String menuId, String? url)? onMenuItemSelected;
 
@@ -24,8 +80,33 @@ class _DashboardHomeContentState extends State<DashboardHomeContent> {
     // Only load data if it's not already loaded
     final currentState = context.read<DashboardBloc>().state;
     if (currentState is! DashboardLoaded) {
-      context.read<DashboardBloc>().add(LoadDashboardData());
+      // For API data (production)
+      // context.read<DashboardBloc>().add(LoadDashboardData());
+
+      // For dummy data (development)
+      _showDummyData();
     }
+  }
+
+  // Method to show dummy data for development
+  void _showDummyData() {
+    Future.delayed(Duration.zero, () {
+      if (mounted) {
+        final dummyData = DashboardDataModel(
+          welcomeContent:
+              '<h2 style="color: #D4AF37;">Welcome David!</h2><p>Your personal AI assistant is ready to help you. Explore the forms below to get started.</p>',
+          assignedForms: dummyForms,
+          agreementSummary: AgreementsSummaryModel(
+            totalAgreements: 5,
+            totalSigned: 3,
+            totalNotSigned: 2,
+          ),
+        );
+        context.read<DashboardBloc>().emit(
+          DashboardLoaded(dashboardData: dummyData),
+        );
+      }
+    });
   }
 
   _handleRetry() {
@@ -86,20 +167,51 @@ class _DashboardHomeContentState extends State<DashboardHomeContent> {
   }
 
   _buildAssignedFormsList(DashboardDataModel dashboardData) {
-    return dashboardData.assignedForms.isEmpty
-        ? Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          child: Html(data: dashboardData.welcomeContent),
-        )
-        : ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: dashboardData.assignedForms.length,
-          itemBuilder: (context, index) {
-            final form = dashboardData.assignedForms[index];
-            return _buildFormsCard(form);
-          },
-        );
+    return Column(
+      children: [
+        // Always show welcome content at the top
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppTheme.secondaryColor,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppTheme.primaryColor.withOpacity(0.5)),
+            ),
+            child: Html(
+              data: dashboardData.welcomeContent,
+              style: {
+                "h2": Style(color: AppTheme.primaryColor),
+                "p": Style(color: Colors.white),
+                "body": Style(margin: Margins.zero, padding: HtmlPaddings.zero),
+              },
+            ),
+          ),
+        ),
+
+        // Show forms if available
+        dashboardData.assignedForms.isEmpty
+            ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  'No forms assigned yet',
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                ),
+              ),
+            )
+            : ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: dashboardData.assignedForms.length,
+              itemBuilder: (context, index) {
+                final form = dashboardData.assignedForms[index];
+                return _buildFormsCard(form);
+              },
+            ),
+      ],
+    );
   }
 
   // Keeping this method for potential future use
@@ -235,19 +347,22 @@ class _DashboardHomeContentState extends State<DashboardHomeContent> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: onPressed != null ? Colors.transparent : Colors.grey.shade300,
-          border: Border.all(color: Colors.grey.shade300),
+          color:
+              onPressed != null
+                  ? AppTheme.primaryColor.withOpacity(0.2)
+                  : const Color.fromARGB(255, 43, 68, 78),
+          border: Border.all(color: AppTheme.primaryColor),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Row(
           children: [
-            // Icon(icon, size: 16, color: AppColors.primaryColor),
-            // const SizedBox(width: 4),
+            Icon(icon, size: 16, color: Colors.white),
+            const SizedBox(width: 4),
             Text(
               label,
               style: TextStyle(
                 fontSize: 11,
-                color: onPressed != null ? Colors.black : Colors.grey.shade700,
+                color: onPressed != null ? Colors.white : Colors.white70,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -273,10 +388,10 @@ class _DashboardHomeContentState extends State<DashboardHomeContent> {
         // height: MediaQuery.of(context).size.height * 0.2,
         child: Card(
           elevation: 0,
-          color: AppTheme.cardColor,
+          color: AppTheme.secondaryColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
-            side: BorderSide(color: Colors.grey.shade300),
+            side: BorderSide(color: AppTheme.primaryColor),
           ),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -288,6 +403,7 @@ class _DashboardHomeContentState extends State<DashboardHomeContent> {
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -298,10 +414,7 @@ class _DashboardHomeContentState extends State<DashboardHomeContent> {
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey.shade700,
-                          ),
+                          style: TextStyle(fontSize: 14, color: Colors.white70),
                           children: [
                             TextSpan(text: description),
 
@@ -341,8 +454,8 @@ class _DashboardHomeContentState extends State<DashboardHomeContent> {
                         child: ElevatedButton(
                           onPressed: onTap,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            foregroundColor: Colors.white,
+                            backgroundColor: AppTheme.primaryColor,
+                            foregroundColor: Colors.black,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),

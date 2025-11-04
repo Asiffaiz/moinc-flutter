@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/dashboard/presentation/widgets/dashboard_home_content.dart';
 import 'package:moinc/features/reports/presentation/screens/reports_screen.dart';
 import 'package:moinc/widgets/ai_agent_form.dart';
 import 'package:moinc/widgets/ai_agent_widget.dart';
@@ -31,12 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
               // Handle notifications
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () {
-              _showSettingsBottomSheet(context);
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.settings_outlined),
+          //   onPressed: () {
+          //     _showSettingsBottomSheet(context);
+          //   },
+          // ),
         ],
       ),
       body: SafeArea(
@@ -90,67 +91,69 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildDashboardTab() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(AppConstants.defaultPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Welcome section
-            Text(
-              'Welcome to Moinc AI',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Your personal AI assistant',
-              style: TextStyle(fontSize: 18, color: Colors.white70),
-            ),
-            const SizedBox(height: 24),
+    return DashboardHomeContent();
 
-            // AI Agent section
-            _isAgentEnabled ? const AiAgentWidget() : const AiAgentForm(),
+    // SingleChildScrollView(
+    //   child: Padding(
+    //     padding: const EdgeInsets.all(AppConstants.defaultPadding),
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         // Welcome section
+    //         Text(
+    //           'Welcome to Moinc AI',
+    //           style: TextStyle(
+    //             fontSize: 32,
+    //             fontWeight: FontWeight.bold,
+    //             color: Colors.white,
+    //           ),
+    //         ),
+    //         const SizedBox(height: 8),
+    //         Text(
+    //           'Your personal AI assistant',
+    //           style: TextStyle(fontSize: 18, color: Colors.white70),
+    //         ),
+    //         const SizedBox(height: 24),
 
-            const SizedBox(height: 24),
+    //         // AI Agent section
+    //         _isAgentEnabled ? const AiAgentWidget() : const AiAgentForm(),
 
-            // Recent activity section
-            Text(
-              'Recent Activity',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildRecentActivityItem(
-              title: 'Generated content',
-              description: 'AI generated a blog post about machine learning',
-              time: '2 hours ago',
-              icon: Icons.article_outlined,
-            ),
-            const SizedBox(height: 12),
-            _buildRecentActivityItem(
-              title: 'Answered question',
-              description: 'AI provided information about Flutter development',
-              time: '5 hours ago',
-              icon: Icons.question_answer_outlined,
-            ),
-            const SizedBox(height: 12),
-            _buildRecentActivityItem(
-              title: 'Completed task',
-              description: 'AI helped analyze data from your spreadsheet',
-              time: '1 day ago',
-              icon: Icons.task_outlined,
-            ),
-          ],
-        ),
-      ),
-    );
+    //         const SizedBox(height: 24),
+
+    //         // Recent activity section
+    //         Text(
+    //           'Recent Activity',
+    //           style: TextStyle(
+    //             fontSize: 28,
+    //             fontWeight: FontWeight.bold,
+    //             color: Colors.white,
+    //           ),
+    //         ),
+    //         const SizedBox(height: 16),
+    //         _buildRecentActivityItem(
+    //           title: 'Generated content',
+    //           description: 'AI generated a blog post about machine learning',
+    //           time: '2 hours ago',
+    //           icon: Icons.article_outlined,
+    //         ),
+    //         const SizedBox(height: 12),
+    //         _buildRecentActivityItem(
+    //           title: 'Answered question',
+    //           description: 'AI provided information about Flutter development',
+    //           time: '5 hours ago',
+    //           icon: Icons.question_answer_outlined,
+    //         ),
+    //         const SizedBox(height: 12),
+    //         _buildRecentActivityItem(
+    //           title: 'Completed task',
+    //           description: 'AI helped analyze data from your spreadsheet',
+    //           time: '1 day ago',
+    //           icon: Icons.task_outlined,
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 
   Widget _buildProfileTab() {
