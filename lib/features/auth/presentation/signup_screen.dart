@@ -354,9 +354,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       Text(
                         AppStrings.signUp,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.displayLarge?.copyWith(color: Colors.white),
+                        style: Theme.of(context).textTheme.displayMedium
+                            ?.copyWith(color: Colors.white),
                       ),
 
                       // const SizedBox(height: 8),
@@ -795,6 +794,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.primaryColor,
                             foregroundColor: Colors.black,
+                            disabledBackgroundColor: Colors.grey.shade700,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/constants/strings.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/auth/presentation/widgets/social_auth_buttons.dart';
 import 'package:moinc/utils/form_label.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -68,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 // Header
                 Center(
                   child: Column(
@@ -111,20 +112,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      Text(
-                        'Welcome Back',
-                        style: AppTheme.headingLarge.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Sign in to continue',
-                        style: AppTheme.bodyMedium.copyWith(
-                          color: Colors.white70,
-                        ),
-                      ),
+                      // const SizedBox(height: 24),
+                      // Text(
+                      //   'Welcome Back',
+                      //   style: AppTheme.headingLarge.copyWith(
+                      //     color: Colors.white,
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 8),
+                      // Text(
+                      //   'Sign in to continue',
+                      //   style: AppTheme.bodyMedium.copyWith(
+                      //     color: Colors.white70,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -265,7 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 20),
 
                       // Login Button
                       SizedBox(
@@ -287,7 +288,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   : Text('Sign In', style: AppTheme.buttonText),
                         ),
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 20),
 
                       // Register Option
                       Row(
@@ -312,6 +313,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
+                      // Social auth buttons
+                      const SocialAuthButtons(),
                     ],
                   ),
                 ),

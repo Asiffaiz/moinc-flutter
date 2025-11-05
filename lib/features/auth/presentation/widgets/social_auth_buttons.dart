@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moinc/config/theme.dart';
 import 'dart:io' show Platform;
 
 import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
@@ -14,17 +15,17 @@ class SocialAuthButtons extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 16),
-        const Row(
+        Row(
           children: [
-            Expanded(child: Divider()),
+            Expanded(child: Divider(color: Colors.white30)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'or continue with',
-                style: TextStyle(color: Colors.grey, fontSize: 12),
+                style: TextStyle(color: Colors.white70, fontSize: 12),
               ),
             ),
-            Expanded(child: Divider()),
+            Expanded(child: Divider(color: Colors.white30)),
           ],
         ),
         const SizedBox(height: 16),
@@ -52,9 +53,11 @@ class _GoogleSignInButton extends StatelessWidget {
         context.read<AuthBloc>().add(const SignInWithGoogleRequested());
       },
       style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        side: BorderSide(color: Colors.grey.shade300),
+        padding: const EdgeInsets.symmetric(vertical: 11),
+        side: BorderSide(color: AppTheme.primaryColor, width: 1.5),
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        elevation: 2,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -76,7 +79,8 @@ class _GoogleSignInButton extends StatelessWidget {
             'Sign in with Google',
             style: TextStyle(
               color: Colors.black87,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
             ),
           ),
         ],
