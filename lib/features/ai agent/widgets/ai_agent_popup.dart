@@ -15,7 +15,7 @@ class AIAgentPopup extends StatelessWidget {
           // Semi-transparent overlay for the background
           GestureDetector(
             onTap: () {}, // Prevent taps from passing through
-            child: Container(color: Colors.black.withOpacity(0.7)),
+            child: Container(color: Colors.black.withOpacity(0.1)),
           ),
 
           // Animated container with padding to show it's floating above dashboard
@@ -26,21 +26,21 @@ class AIAgentPopup extends StatelessWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      AppTheme.secondaryColor.withOpacity(0.9),
-                      AppTheme.secondaryColor,
-                    ],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 15,
-                      spreadRadius: 5,
-                    ),
-                  ],
+                  // gradient: LinearGradient(
+                  //   begin: Alignment.topCenter,
+                  //   end: Alignment.bottomCenter,
+                  //   colors: [
+                  //     AppTheme.secondaryColor.withOpacity(0.9),
+                  //     AppTheme.secondaryColor,
+                  //   ],
+                  // ),
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Colors.black.withOpacity(0.3),
+                  //     blurRadius: 15,
+                  //     spreadRadius: 5,
+                  //   ),
+                  // ],
                 ),
                 child: const VoiceAssistantApp(),
               ),
@@ -49,17 +49,17 @@ class AIAgentPopup extends StatelessWidget {
 
           // Close button
           Positioned(
-            top: 20,
-            right: 8,
+            top: 40,
+            right: 16,
             child: SafeArea(
               child: CloseButton(
                 onPressed: () => Navigator.of(context).pop(),
                 color: AppTheme.primaryColor,
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(
                     Colors.white.withOpacity(0.2),
                   ),
-                  shape: MaterialStateProperty.all(const CircleBorder()),
+                  shape: WidgetStateProperty.all(const CircleBorder()),
                 ),
               ),
             ),

@@ -27,9 +27,9 @@ class SocialAuthButtonsRegister extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        const Row(
+        Row(
           children: [
-            Expanded(child: Divider()),
+            Expanded(child: Divider(color: Colors.white30)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
@@ -37,7 +37,7 @@ class SocialAuthButtonsRegister extends StatelessWidget {
                 style: TextStyle(color: Colors.white70, fontSize: 12),
               ),
             ),
-            Expanded(child: Divider()),
+            Expanded(child: Divider(color: Colors.white30)),
           ],
         ),
         const SizedBox(height: 16),
@@ -54,10 +54,11 @@ class _GoogleSignInButton extends StatelessWidget {
         context.read<AuthBloc>().add(const SignUpWithGoogleRequested());
       },
       style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        side: BorderSide(color: AppTheme.primaryColor),
-        backgroundColor: AppTheme.secondaryColor,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        side: BorderSide(color: AppTheme.primaryColor, width: 1.5),
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        elevation: 2,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -77,7 +78,11 @@ class _GoogleSignInButton extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             'Sign up with Google',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: Colors.black87,
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+            ),
           ),
         ],
       ),

@@ -478,33 +478,33 @@ class _AudioCallScreenState extends State<AudioCallScreen>
           child: Column(
             // mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      icon:
-                          Platform.isAndroid
-                              ? const Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                              )
-                              : const Icon(
-                                Icons.arrow_back_ios_new_rounded,
-                                color: Colors.white,
-                              ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    // IconButton(
-                    //   icon: const Icon(Icons.settings),
-                    //   onPressed: () {},
-                    // ),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(16.0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.start,
+              //     children: [
+              //       IconButton(
+              //         icon:
+              //             Platform.isAndroid
+              //                 ? const Icon(
+              //                   Icons.arrow_back,
+              //                   color: Colors.white,
+              //                 )
+              //                 : const Icon(
+              //                   Icons.arrow_back_ios_new_rounded,
+              //                   color: Colors.white,
+              //                 ),
+              //         onPressed: () {
+              //           Navigator.pop(context);
+              //         },
+              //       ),
+              //       // IconButton(
+              //       //   icon: const Icon(Icons.settings),
+              //       //   onPressed: () {},
+              //       // ),
+              //     ],
+              //   ),
+              // ),
               // const Spacer(),
               const Text(
                 'Hello, David!',
