@@ -98,7 +98,9 @@ class NotificationService {
     await _notificationsPlugin.initialize(
       settings,
       onDidReceiveNotificationResponse: (NotificationResponse response) {
-        print('Notification tapped with payload: ${response.payload}');
+        if (kDebugMode) {
+          print('Notification tapped with payload: ${response.payload}');
+        }
       },
     );
 
