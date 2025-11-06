@@ -4,6 +4,7 @@ import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/profile/presentation/screens/reminders_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/privacy_policy_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/terms_screen.dart';
+import 'package:moinc/services/local_notification_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -73,11 +74,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: 'Terms & Conditions',
                     icon: Icons.description_outlined,
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TermsScreen(),
-                        ),
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const TermsScreen(),
+                      //   ),
+                      // );
+
+                      NotificationService.showSimpleNotification(
+                        title: 'Your electricity bill is due!',
+                        body:
+                            'Your electricity bill is due on November 15, 2025. Please pay it to avoid late payment charges.',
                       );
                     },
                   ),

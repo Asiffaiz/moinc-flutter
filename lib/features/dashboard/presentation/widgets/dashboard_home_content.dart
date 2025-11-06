@@ -430,11 +430,7 @@ class _DashboardHomeContentState extends State<DashboardHomeContent> {
                           // );
 
                           // Show AI agent in a full-screen popup
-                          // showAIAgentPopup(context);
-                          NotificationService.showSimpleNotification(
-                            title: 'Hello!',
-                            body: 'This is a simple notification.',
-                          );
+                          showAIAgentPopup(context);
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
