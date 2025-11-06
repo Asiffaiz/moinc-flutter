@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
-import 'package:moinc/features/profile/presentation/screens/alerts_screen.dart';
+import 'package:moinc/features/profile/presentation/screens/reminders_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/privacy_policy_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/terms_screen.dart';
 
@@ -43,17 +43,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   _buildDivider(),
                   _buildListTile(
-                    title: 'Alerts For Me',
-                    icon: Icons.notifications_outlined,
+                    title: 'My Reminders',
+                    icon: Icons.event_note,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const AlertsScreen(),
+                          builder: (context) => const RemindersScreen(),
                         ),
                       );
                     },
-                    badge: 3, // Number of unread alerts
+                    badge: 3, // Number of upcoming reminders
                   ),
                   _buildDivider(),
                   _buildListTile(

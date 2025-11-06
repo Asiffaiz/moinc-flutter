@@ -102,7 +102,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         backgroundColor: AppTheme.primaryColor,
         foregroundColor: Colors.black,
         elevation: 4,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.edit_document),
       ),
     );
   }
