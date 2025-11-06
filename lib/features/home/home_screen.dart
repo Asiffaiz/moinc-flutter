@@ -3,6 +3,7 @@ import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/dashboard/presentation/widgets/dashboard_home_content.dart';
 import 'package:moinc/features/documents/presentation/screens/documents_screen.dart';
+import 'package:moinc/features/profile/presentation/screens/profile_screen.dart';
 import 'package:moinc/features/reports/presentation/screens/reports_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -164,12 +165,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildProfileTab() {
-    // This will be implemented in the profile screen
-    return Center(
-      child: Text(
-        'Profile Tab - Will be implemented separately',
-        style: TextStyle(color: Colors.white),
-      ),
-    );
+    return const ProfileScreen();
   }
 }

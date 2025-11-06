@@ -13,7 +13,7 @@ import 'package:moinc/features/dashboard/domain/Repositories/dashboard_repositor
 import 'package:moinc/features/dashboard/presentation/bloc/bloc/dashboard_bloc.dart';
 import 'package:moinc/features/home/home_screen.dart';
 import 'package:moinc/features/auth/presentation/login_screen.dart';
-import 'package:moinc/features/profile_screen.dart';
+import 'package:moinc/features/profile/presentation/screens/profile_screen.dart';
 import 'package:moinc/features/reports/domain/repositories/reports_repository.dart';
 import 'package:moinc/features/reports/presentation/bloc/reports_bloc.dart';
 import 'package:moinc/features/reports/presentation/screens/reports_screen.dart';
