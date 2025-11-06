@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/dashboard/presentation/widgets/dashboard_home_content.dart';
+import 'package:moinc/features/documents/presentation/screens/documents_screen.dart';
 import 'package:moinc/features/reports/presentation/screens/reports_screen.dart';
-import 'package:moinc/widgets/ai_agent_form.dart';
-import 'package:moinc/widgets/ai_agent_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  bool _isAgentEnabled = false; // This would come from settings in real app
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
             // Dashboard Tab
             _buildDashboardTab(),
 
+            // Documents Tab
+            const DocumentsScreen(),
+
             // Reports Tab
             _buildReportsTab(),
 
@@ -62,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _currentIndex = index;
           });
         },
+        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard_outlined),
@@ -69,8 +71,13 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.folder_outlined),
+            activeIcon: Icon(Icons.folder),
+            label: 'Documents',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.analytics_outlined),
-            activeIcon: Icon(Icons.analytics_outlined),
+            activeIcon: Icon(Icons.analytics),
             label: 'Reports',
           ),
           BottomNavigationBarItem(
@@ -114,12 +121,12 @@ class _HomeScreenState extends State<HomeScreen> {
     //           style: TextStyle(fontSize: 18, color: Colors.white70),
     //         ),
     //         const SizedBox(height: 24),
-
+    //
     //         // AI Agent section
     //         _isAgentEnabled ? const AiAgentWidget() : const AiAgentForm(),
-
+    //
     //         const SizedBox(height: 24),
-
+    //
     //         // Recent activity section
     //         Text(
     //           'Recent Activity',
@@ -158,140 +165,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildProfileTab() {
     // This will be implemented in the profile screen
-    return const Center(
-      child: Text('Profile Tab - Will be implemented separately'),
-    );
-  }
-
-  Widget _buildRecentActivityItem({
-    required String title,
-    required String description,
-    required String time,
-    required IconData icon,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppTheme.secondaryColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.primaryColor),
+    return Center(
+      child: Text(
+        'Profile Tab - Will be implemented separately',
+        style: TextStyle(color: Colors.white),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: AppTheme.primaryColor),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppTheme.bodyMedium.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  description,
-                  style: AppTheme.bodySmall.copyWith(color: Colors.white70),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(time, style: AppTheme.bodySmall.copyWith(color: Colors.white60)),
-        ],
-      ),
-    );
-  }
-
-  void _showSettingsBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Settings', style: AppTheme.headingSmall),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  ListTile(
-                    title: const Text('Enable AI Agent Widget'),
-                    subtitle: const Text(
-                      'Show AI agent widget instead of form on dashboard',
-                    ),
-                    trailing: Switch(
-                      value: _isAgentEnabled,
-                      activeColor: AppTheme.primaryColor,
-                      onChanged: (value) {
-                        setState(() {
-                          _isAgentEnabled = value;
-                        });
-                        // Update parent state
-                        this.setState(() {});
-                      },
-                    ),
-                  ),
-                  const Divider(),
-                  ListTile(
-                    title: const Text('Dark Mode'),
-                    subtitle: const Text('Switch between light and dark theme'),
-                    trailing: Switch(
-                      value: false, // Would be connected to theme provider
-                      activeColor: AppTheme.primaryColor,
-                      onChanged: (value) {
-                        // Would toggle theme
-                      },
-                    ),
-                  ),
-                  const Divider(),
-                  ListTile(
-                    title: const Text('Enable Registration'),
-                    subtitle: const Text('Allow new users to register'),
-                    trailing: Switch(
-                      value: true, // Would be connected to settings
-                      activeColor: AppTheme.primaryColor,
-                      onChanged: (value) {
-                        // Would toggle registration
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            );
-          },
-        );
-      },
     );
   }
 }
