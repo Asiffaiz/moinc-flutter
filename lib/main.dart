@@ -1,3 +1,5 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,15 +21,38 @@ import 'package:moinc/features/reports/presentation/bloc/reports_bloc.dart';
 import 'package:moinc/features/reports/presentation/screens/reports_screen.dart';
 
 import 'package:moinc/features/splash_screen.dart';
+import 'package:moinc/services/local_notification_service.dart';
+import 'package:moinc/services/messaging_service.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+
+/////////////
+
+// Future<void> _backgroundHandler(RemoteMessage message) async {
+//   if (kDebugMode) print("Handling background message: ${message.data}");
+
+//   // if (message != null) {
+//   //   handleNotificationNavigation(message.data);
+//   // }
+//   // LocalNotificationService.display(message);
+//   // Process the incoming message and perform appropriate actions
+// }
+
+// void handleInitialMessage() async {
+//   RemoteMessage? initialMessage =
+//       await FirebaseMessaging.instance.getInitialMessage();
+//   // if (initialMessage != null) {
+//   //   handleNotificationNavigation(initialMessage.data);
+//   // }
+// }
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
+  MessagingServices();
   // Initialize dependencies
   await initializeDependencies();
 
@@ -46,6 +71,36 @@ void main() async {
   } catch (e) {
     print('Error initializing API token: $e');
   }
+
+  /////////////
+  // FirebaseMessaging messaging = FirebaseMessaging.instance;
+  // FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
+  // NotificationSettings settings = await messaging.requestPermission(
+  //   alert: true,
+  //   announcement: false,
+  //   badge: true,
+  //   carPlay: false,
+  //   criticalAlert: false,
+  //   provisional: false,
+  //   sound: true,
+  // );
+
+  // if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+  //   if (kDebugMode) print('User granted permission');
+  // } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+  //   if (kDebugMode) print('User granted provisional permission');
+  // } else {
+  //   if (kDebugMode) print('User declined or has not accepted permission');
+  // }
+
+  // FirebaseMessaging.instance.getToken().then((token) {
+  //   if (kDebugMode) print("FCM Token: $token");
+  //   // Store the token on your server for sending targeted messages
+  //   Globals.firebaseToken = token!;
+  // });
+
+  MessagingServices();
+
   runApp(const MyApp());
 }
 

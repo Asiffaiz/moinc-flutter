@@ -6,6 +6,7 @@ import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/ai%20agent/widgets/ai_agent_popup.dart';
 import 'package:moinc/features/dashboard/domain/models/dashboard_data_model.dart';
 import 'package:moinc/features/dashboard/presentation/bloc/bloc/dashboard_bloc.dart';
+import 'package:moinc/services/local_notification_service.dart';
 import 'package:moinc/widgets/custom_error_dialog.dart';
 import 'package:moinc/widgets/dashboard_shimmer.dart';
 
@@ -429,7 +430,11 @@ class _DashboardHomeContentState extends State<DashboardHomeContent> {
                           // );
 
                           // Show AI agent in a full-screen popup
-                          showAIAgentPopup(context);
+                          // showAIAgentPopup(context);
+                          NotificationService.showSimpleNotification(
+                            title: 'Hello!',
+                            body: 'This is a simple notification.',
+                          );
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
