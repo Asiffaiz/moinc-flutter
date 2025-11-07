@@ -679,39 +679,39 @@ class _AudioCallScreenState extends State<AudioCallScreen>
               ),
               const SizedBox(height: 24),
               // Terms and Privacy
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        launchUrl(Uri.parse(ApiEndpoints.termsAndConditions));
-                      },
-                      child: const Text(
-                        'Terms & Conditions',
-                        style: TextStyle(
-                          color: Colors.white,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                    const Text('|', style: TextStyle(color: Colors.white)),
-                    TextButton(
-                      onPressed: () {
-                        launchUrl(Uri.parse(ApiEndpoints.privacyPolicy));
-                      },
-                      child: const Text(
-                        'Privacy Policy',
-                        style: TextStyle(
-                          color: Colors.white,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(bottom: 16.0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       TextButton(
+              //         onPressed: () {
+              //           launchUrl(Uri.parse(ApiEndpoints.termsAndConditions));
+              //         },
+              //         child: const Text(
+              //           'Terms & Conditions',
+              //           style: TextStyle(
+              //             color: Colors.white,
+              //             decoration: TextDecoration.underline,
+              //           ),
+              //         ),
+              //       ),
+              //       const Text('|', style: TextStyle(color: Colors.white)),
+              //       TextButton(
+              //         onPressed: () {
+              //           launchUrl(Uri.parse(ApiEndpoints.privacyPolicy));
+              //         },
+              //         child: const Text(
+              //           'Privacy Policy',
+              //           style: TextStyle(
+              //             color: Colors.white,
+              //             decoration: TextDecoration.underline,
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:livekit_client/livekit_client.dart' as sdk;
@@ -29,6 +30,7 @@ class AppCtrl extends ChangeNotifier {
 
   //Test
   bool isUserCameEnabled = false;
+  bool _isFullScreen = false;
   bool isScreenshareEnabled = false;
   bool isHoldEnabled = false;
   final messageCtrl = TextEditingController();
@@ -258,21 +260,37 @@ class AppCtrl extends ChangeNotifier {
 
       // Start the timer to check for AGENT participant
       _startAgentConnectionTimer();
-
+      _enterFullScreen();
       notifyListeners();
     } catch (error) {
       _logger.severe('Connection error: $error');
 
       connectionState = ConnectionState.disconnected;
+      _exitFullScreen();
       // appScreenState = AppScreenState.welcome;
       notifyListeners();
     }
   }
 
+  void _enterFullScreen() {
+    // Hide status bar and navigation bar
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    _isFullScreen = true;
+    notifyListeners();
+  }
+
+  void _exitFullScreen() {
+    // Restore system UI
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+    _isFullScreen = false;
+    notifyListeners();
+  }
+
   void disconnect() {
     room.disconnect();
     _cancelAgentTimer();
-
+    _exitFullScreen();
     // Update states
     connectionState = ConnectionState.disconnected;
 
