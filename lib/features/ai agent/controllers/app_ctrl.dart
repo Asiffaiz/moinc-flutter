@@ -196,9 +196,9 @@ class AppCtrl extends ChangeNotifier {
       _setupRoomListeners();
 
       // Direct connection with hardcoded credentials from portal
-      const serverUrl = "wss://obs-v760rz4i.livekit.cloud";
+      const serverUrl = "wss://voiceadmin-q6nhb8k6.livekit.cloud";
       const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTWF5YSIsInZpZGVvIjp7InJvb21Kb2luIjp0cnVlLCJyb29tIjoibW9pbmNfcm9vbSIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZSwiY2FuUHVibGlzaERhdGEiOnRydWV9LCJzdWIiOiI2ZTM5OTg3YS1kODFmLTQ3ZTUtYmQ0MC0yOGY0MGU5ZDExNDgiLCJpc3MiOiJBUEk4Ymhvblg3RUhvenAiLCJuYmYiOjE3NjEzMzM2NDEsImV4cCI6MTc2MTM1NTI0MX0.1gSWxqem92FvqucQ8HMsHAESRmB1v9OcS6oJrZ0VbHA";
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTWF5YSIsInZpZGVvIjp7InJvb21Kb2luIjp0cnVlLCJyb29tIjoiTWF5YSIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZSwiY2FuUHVibGlzaERhdGEiOnRydWV9LCJzdWIiOiIxZDFiOWU5NS1mNGNkLTQ2ZDctOTg1ZS1mYjQ4ODRiYjA4ZTciLCJpc3MiOiJBUElhWm85SjZYYmFTUWEiLCJuYmYiOjE3NjI4MTY5MjIsImV4cCI6MTc2MjgzODUyMn0.r9E0vg5mwbS7PuoTWhDkfFyHMHgTJzVMvp0GlzQdCgQ";
 
       // From your logs, I can see that the connection is initially successful
       // but then disconnects with a timeout error. This could be due to:

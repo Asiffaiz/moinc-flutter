@@ -101,8 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           );
         } else if (state.status == AuthStatus.error) {
-          if (state.errorMessage == "Invalid Email OR Password" ||
-              state.errorMessage == "already_created") {
+          if (state.errorMessage == "Invalid Email OR Password") {
             setState(() {
               //  _errorMessage = 'Invalid Email OR Password';
               _isLoading = false;
@@ -114,8 +113,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 backgroundColor: AppTheme.errorColor,
               ),
             );
+          } else if (state.errorMessage == "already_created") {
+            setState(() {
+              _isLoading = false;
+            });
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Account already created with this email address. Please choose another one',
+                ),
+                backgroundColor: AppTheme.errorColor,
+              ),
+            );
           } else {
-       
             setState(() {
               //  _errorMessage = 'Something went wrong please try again later';
               _isLoading = false;
