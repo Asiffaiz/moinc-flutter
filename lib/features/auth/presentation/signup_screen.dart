@@ -10,6 +10,7 @@ import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/auth/network/api_endpoints.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:moinc/features/auth/domain/models/address_model.dart';
+import 'package:moinc/features/auth/presentation/bloc/auth_event.dart';
 
 import 'package:moinc/features/auth/presentation/bloc/auth_state.dart';
 import 'package:moinc/features/auth/presentation/register_verification_screen.dart';
@@ -60,6 +61,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool _hidePassowrdFields = false;
   String _signupHash = '';
+
+  Map<String, dynamic> registrationData = {};
 
   @override
   void dispose() {
@@ -166,7 +169,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       final password = generate4DigitPassword();
       // Prepare registration data for API
-      final registrationData = {
+      registrationData = {
         'legal_name':
             _companyNameController.text.isNotEmpty
                 ? _companyNameController.text
@@ -192,17 +195,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         'signup_hash': _signupHash,
       };
 
-      // Dispatch the registration event
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) => RegisterVerificationScreen(
-                email: _emailController.text,
-                registrationData: registrationData,
-              ),
-        ),
+      context.read<AuthBloc>().add(
+        SendVerifyRegisterCodeRequested(email: _emailController.text),
       );
+      // Dispa
+      //
+      //tch the registration event
     }
   }
 
@@ -261,8 +259,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Optional: Pre-fill other fields if available
             // For example, you could extract address components if Google provides them
           });
+        } else if (state.status == AuthStatus.registerCodeSent) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => RegisterVerificationScreen(
+                    email: _emailController.text,
+                    registrationData: registrationData,
+                  ),
+            ),
+          );
         }
-
         //<===============WORKING CODE WITHOUT VERIFICATION CODE===============>
 
         // if (state.status == AuthStatus.authenticated) {
@@ -643,6 +651,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       SizedBox(height: 10),
                       TextFormField(
+                        style: TextStyle(color: Colors.white),
                         controller: _cityController,
                         decoration: const InputDecoration(
                           hintText: AppStrings.city,
@@ -662,6 +671,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       SizedBox(height: 10),
                       TextFormField(
+                        style: TextStyle(color: Colors.white),
                         controller: _stateController,
                         decoration: const InputDecoration(
                           hintText: AppStrings.state,
@@ -681,6 +691,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       SizedBox(height: 10),
                       TextFormField(
+                        style: TextStyle(color: Colors.white),
                         controller: _zipCodeController,
                         decoration: const InputDecoration(
                           hintText: AppStrings.zipCode,

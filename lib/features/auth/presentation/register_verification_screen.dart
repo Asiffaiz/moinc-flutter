@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
 
 import 'dart:async';
@@ -46,9 +47,9 @@ class _RegisterVerificationScreenState
   void initState() {
     super.initState();
 
-    context.read<AuthBloc>().add(
-      SendVerifyRegisterCodeRequested(email: widget.email),
-    );
+    // context.read<AuthBloc>().add(
+    //   SendVerifyRegisterCodeRequested(email: widget.email),
+    // );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startTimer();
@@ -173,9 +174,7 @@ class _RegisterVerificationScreenState
           // context.go(AppRoutes.unsignedAgreements);
         } else if (state.status == AuthStatus.authenticated ||
             state.status == AuthStatus.apiAuthenticated) {
-          // print('authenticated');
-          // context.go(AppRoutes.home);
-          // print('authenticated');
+          Navigator.pushReplacementNamed(context, AppConstants.dashboardRoute);
         } else if (state.status == AuthStatus.registerCodeResent) {
           // For resend code success
           setState(() {
@@ -209,11 +208,16 @@ class _RegisterVerificationScreenState
         });
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Verification')),
+        backgroundColor: AppTheme.backgroundColor,
+        appBar: AppBar(
+          title: const Text('Verification'),
+          backgroundColor: AppTheme.secondaryColor,
+          foregroundColor: AppTheme.primaryColor,
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 24),
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
               constraints: BoxConstraints(
                 minHeight:
                     screenSize.height -
@@ -226,9 +230,7 @@ class _RegisterVerificationScreenState
                 children: [
                   Text(
                     'Enter the 4-digit verification code sent to your email to reset your password.',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyLarge?.copyWith(color: Colors.black54),
+                    style: AppTheme.bodyLarge.copyWith(color: Colors.white70),
                   ),
                   const SizedBox(height: 32),
 
@@ -237,18 +239,20 @@ class _RegisterVerificationScreenState
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.red.shade50,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.red.shade200),
+                        color: AppTheme.errorColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: AppTheme.errorColor.withOpacity(0.5),
+                        ),
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.error_outline, color: Colors.red.shade700),
+                          Icon(Icons.error_outline, color: AppTheme.errorColor),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               _errorMessage!,
-                              style: TextStyle(color: Colors.red.shade700),
+                              style: TextStyle(color: AppTheme.errorColor),
                             ),
                           ),
                         ],
@@ -262,21 +266,23 @@ class _RegisterVerificationScreenState
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.green.shade50,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.green.shade200),
+                        color: AppTheme.successColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: AppTheme.successColor.withOpacity(0.5),
+                        ),
                       ),
                       child: Row(
                         children: [
                           Icon(
                             Icons.check_circle_outline,
-                            color: Colors.green.shade700,
+                            color: AppTheme.successColor,
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               _successMessage!,
-                              style: TextStyle(color: Colors.green.shade700),
+                              style: TextStyle(color: AppTheme.successColor),
                             ),
                           ),
                         ],
@@ -290,13 +296,17 @@ class _RegisterVerificationScreenState
                     children: [
                       Text(
                         'Code sent to your email: ',
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: AppTheme.bodyMedium.copyWith(
+                          color: Colors.white,
+                        ),
                       ),
                       Flexible(
                         child: Text(
                           widget.email,
-                          style: Theme.of(context).textTheme.bodyLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                          style: AppTheme.bodyMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.primaryColor,
+                          ),
                         ),
                       ),
                     ],
@@ -311,15 +321,26 @@ class _RegisterVerificationScreenState
                     ),
                     decoration: BoxDecoration(
                       color:
-                          _isExpired ? Colors.red.shade50 : Colors.blue.shade50,
-                      borderRadius: BorderRadius.circular(8),
+                          _isExpired
+                              ? AppTheme.errorColor.withOpacity(0.1)
+                              : AppTheme.secondaryColor.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color:
+                            _isExpired
+                                ? AppTheme.errorColor
+                                : AppTheme.primaryColor.withOpacity(0.5),
+                      ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           Icons.timer,
-                          color: _isExpired ? Colors.red : Colors.blue,
+                          color:
+                              _isExpired
+                                  ? AppTheme.errorColor
+                                  : AppTheme.primaryColor,
                           size: 18,
                         ),
                         const SizedBox(width: 8),
@@ -330,7 +351,10 @@ class _RegisterVerificationScreenState
                                   ? 'Code expires in: ${_formatTime(_timeLeft)} seconds'
                                   : 'Code expires in: 60 seconds'),
                           style: TextStyle(
-                            color: _isExpired ? Colors.red : Colors.blue,
+                            color:
+                                _isExpired
+                                    ? AppTheme.errorColor
+                                    : AppTheme.primaryColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -350,7 +374,13 @@ class _RegisterVerificationScreenState
                               : _verifyCode,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryColor,
-                        disabledBackgroundColor: Colors.grey.shade300,
+                        foregroundColor: Colors.black,
+                        disabledBackgroundColor: Colors.grey.shade700,
+                        disabledForegroundColor: Colors.grey.shade300,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       child:
                           _isLoading
@@ -359,10 +389,13 @@ class _RegisterVerificationScreenState
                                 width: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               )
-                              : Text(_isExpired ? 'Code Expired' : 'Continue'),
+                              : Text(
+                                _isExpired ? 'Code Expired' : 'Continue',
+                                style: AppTheme.buttonText,
+                              ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -371,7 +404,9 @@ class _RegisterVerificationScreenState
                     children: [
                       Text(
                         _isExpired ? "Code expired. " : "Didn't receive code? ",
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: AppTheme.bodyMedium.copyWith(
+                          color: Colors.white70,
+                        ),
                       ),
                       TextButton(
                         onPressed:
@@ -380,6 +415,9 @@ class _RegisterVerificationScreenState
                                     (!_isExpired && _timeLeft > 0))
                                 ? null
                                 : _resendCode,
+                        style: TextButton.styleFrom(
+                          foregroundColor: AppTheme.primaryColor,
+                        ),
                         child:
                             _isResending
                                 ? const SizedBox(
@@ -387,6 +425,7 @@ class _RegisterVerificationScreenState
                                   width: 16,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
+                                    color: AppTheme.primaryColor,
                                   ),
                                 )
                                 : Text(
@@ -395,6 +434,10 @@ class _RegisterVerificationScreenState
                                       : (_timeLeft > 0
                                           ? "Wait ${_formatTime(_timeLeft)}s"
                                           : "Resend Now"),
+                                  style: TextStyle(
+                                    color: AppTheme.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                       ),
                     ],
@@ -421,23 +464,39 @@ class _RegisterVerificationScreenState
             focusNode: _focusNodes[index],
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
             decoration: InputDecoration(
               contentPadding: EdgeInsets.zero,
+              filled: true,
+              fillColor:
+                  _isExpired
+                      ? AppTheme.secondaryColor.withOpacity(0.3)
+                      : AppTheme.secondaryColor,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
+                borderSide: BorderSide(
+                  color: AppTheme.primaryColor.withOpacity(0.5),
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: AppTheme.primaryColor.withOpacity(0.5),
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                  width: 2,
-                ),
+                borderSide: BorderSide(color: AppTheme.primaryColor, width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppTheme.errorColor),
               ),
               counterText: '',
-              filled: _isExpired,
-              fillColor: _isExpired ? Colors.grey.shade200 : null,
             ),
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),

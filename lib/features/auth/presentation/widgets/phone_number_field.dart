@@ -55,8 +55,12 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
 
     return IntlPhoneField(
       controller: _controller,
+      style: TextStyle(color: Colors.white),
+
       decoration: InputDecoration(
-        labelText: 'Phone Number',
+        // labelText: 'Phone Number',
+        hintText: 'Phone Number',
+        iconColor: Colors.white,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       initialCountryCode: 'US',

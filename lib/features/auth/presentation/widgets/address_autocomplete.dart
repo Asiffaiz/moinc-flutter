@@ -190,6 +190,7 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
           child: TextFormField(
             controller: widget.controller,
             focusNode: _focusNode,
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               labelText: widget.label,
               errorText: widget.errorText,

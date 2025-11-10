@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:moinc/features/auth/presentation/bloc/auth_event.dart';
 import 'package:moinc/features/profile/presentation/screens/reminders_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/privacy_policy_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/terms_screen.dart';
@@ -270,7 +273,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.of(context).pop();
+
+                  // Clear user data from SharedPreferences and sign out from both Firebase and API
+                  final authBloc = context.read<AuthBloc>();
+
+                  // First handle API logout to clear SharedPreferences
+                  authBloc.add(const ApiLogoutRequested());
+
+                  // Then handle general sign out for any other auth sessions
+                  authBloc.add(const SignOutRequested());
                   // Navigate to login screen
                   Navigator.pushReplacementNamed(
                     context,

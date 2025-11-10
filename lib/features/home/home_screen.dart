@@ -65,10 +65,20 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_outlined),
-            activeIcon: Icon(Icons.dashboard),
+            icon: Image.asset(
+              'assets/icons/ic_home.png',
+              height: 24,
+              width: 24,
+              color: Colors.white,
+            ),
+            activeIcon: Image.asset(
+              'assets/icons/ic_home.png',
+              height: 24,
+              width: 24,
+              color: AppTheme.primaryColor,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(

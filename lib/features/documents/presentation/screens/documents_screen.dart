@@ -99,10 +99,15 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showUploadDialog,
-        backgroundColor: AppTheme.primaryColor,
-        foregroundColor: Colors.black,
-        elevation: 4,
-        child: const Icon(Icons.edit_document),
+        backgroundColor: Colors.black,
+        // foregroundColor: Colors.black,
+        elevation: 1,
+        child: Image.asset(
+          'assets/icons/ic_add.png',
+          height: 24,
+          width: 24,
+          // color: AppTheme.primaryColor,
+        ),
       ),
     );
   }
