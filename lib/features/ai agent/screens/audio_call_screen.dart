@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/ai%20agent/screens/custom_dialer_screen.dart';
 import 'package:moinc/features/ai%20agent/widgets/control_bar.dart';
 import 'package:moinc/features/auth/network/api_endpoints.dart';
 import 'package:provider/provider.dart';
@@ -279,20 +280,11 @@ class _AudioCallScreenState extends State<AudioCallScreen>
     );
   }
 
-  void _dialIn() async {
-    // Replace with your actual phone number
-    const phoneNumber = '+18001234567';
-    final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
-
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not launch dialer')),
-        );
-      }
-    }
+  void _dialIn() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CustomDialerScreen()),
+    );
   }
 
   void _toggleCall() {

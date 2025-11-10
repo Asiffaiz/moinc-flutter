@@ -18,6 +18,8 @@ import 'package:moinc/features/auth/presentation/login_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/profile_screen.dart';
 import 'package:moinc/features/reports/domain/repositories/reports_repository.dart';
 import 'package:moinc/features/reports/presentation/bloc/reports_bloc.dart';
+import 'package:moinc/services/call_service.dart';
+import 'package:provider/provider.dart';
 import 'package:moinc/features/reports/presentation/screens/reports_screen.dart';
 
 import 'package:moinc/features/splash_screen.dart';
@@ -101,7 +103,12 @@ void main() async {
 
   MessagingServices();
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => CallService())],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

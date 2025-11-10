@@ -119,13 +119,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final result = await _authRepository.registerWithApi(event.userData);
 
       if (result['success'] == true) {
-        add(const CheckMandatoryAgreements());
-        // emit(
-        //   state.copyWith(
-        //     status: AuthStatus.apiAuthenticated,
-        //     apiUserData: result,
-        //   ),
-        // );
+        //  add(const CheckMandatoryAgreements());
+        emit(
+          state.copyWith(
+            status: AuthStatus.apiAuthenticated,
+            apiUserData: result,
+          ),
+        );
       } else {
         emit(
           state.copyWith(
@@ -152,9 +152,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         event.email,
         event.password,
       );
-
+      // print(result);
       if (result['success'] == true) {
-        add(const CheckMandatoryAgreements());
+        // add(const CheckMandatoryAgreements());
+        emit(
+          state.copyWith(
+            status: AuthStatus.apiAuthenticated,
+            apiUserData: result,
+          ),
+        );
       } else {
         emit(
           state.copyWith(
