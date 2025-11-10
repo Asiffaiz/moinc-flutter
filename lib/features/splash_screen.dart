@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:moinc/config/constants.dart';
+import 'package:moinc/config/constants/shared_prefence_keys.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_event.dart';
@@ -88,7 +89,8 @@ class _SplashScreenState extends State<SplashScreen>
     if (!_animationComplete) return;
 
     // Check if user is authenticated
-    final isAuthenticated = await _checkAuthentication(state);
+    final token = await _checkTokenExists();
+    final isAuthenticated = state.isAuthenticated || token;
 
     if (mounted) {
       if (isAuthenticated) {
@@ -101,24 +103,15 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
-  Future<bool> _checkAuthentication(AuthState state) async {
-    // First check auth state from Bloc
-    if (state.isAuthenticated ||
-        state.status == AuthStatus.authenticated ||
-        state.status == AuthStatus.apiAuthenticated) {
-      return true;
-    }
-
-    // Fallback to checking token in SharedPreferences
+  Future<bool> _checkTokenExists() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final token =
-          prefs.getString('client_tkn__') ??
-          prefs.getString('api_access_token');
-
-      return token != null && token.isNotEmpty;
+      final token = prefs.getString('client_tkn__');
+      final accountNo = prefs.getString(SharedPreferenceKeys.accountNoKey);
+      return token != null && token.isNotEmpty ||
+          accountNo != null && accountNo.isNotEmpty && accountNo != 'null';
     } catch (e) {
-      debugPrint("Error checking token: $e");
+      print("Error checking token: $e");
       return false;
     }
   }
