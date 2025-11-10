@@ -57,7 +57,7 @@ abstract class AuthRepository {
   Future<bool> resetPassword(String email);
 
   /// Send verify register code
-  Future<bool> sendVerifyRegisterCode(String email);
+  Future<Map<String, dynamic>?> sendVerifyRegisterCode(String email);
 
   /// Verify reset password code
   Future<bool> verifyCode(String email, String code, String pincodeFor);

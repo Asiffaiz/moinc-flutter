@@ -122,7 +122,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         //  add(const CheckMandatoryAgreements());
         emit(
           state.copyWith(
-            status: AuthStatus.apiAuthenticated,
+            status: AuthStatus.registeredSuccessfully,
             apiUserData: result,
           ),
         );
@@ -564,13 +564,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final success = await _authRepository.sendVerifyRegisterCode(event.email);
 
-      if (success) {
+      if (success?['success'] == true) {
         emit(state.copyWith(status: AuthStatus.registerCodeSent));
       } else {
         emit(
           state.copyWith(
             status: AuthStatus.error,
-            errorMessage: 'Failed to send reset password email',
+            errorMessage:
+                success?['message'] ??
+                'Failed to send register verification code',
           ),
         );
       }
@@ -590,13 +592,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final success = await _authRepository.sendVerifyRegisterCode(event.email);
 
-      if (success) {
+      if (success?['success'] == true) {
         emit(state.copyWith(status: AuthStatus.registerCodeResent));
       } else {
         emit(
           state.copyWith(
             status: AuthStatus.error,
-            errorMessage: 'Failed to send reset password email',
+            errorMessage:
+                success?['message'] ??
+                'Failed to send register verification code',
           ),
         );
       }
@@ -771,7 +775,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (userExists['success'] == true &&
           userExists['requestType'] == "user_login") {
         // If user exists, login with API
-        add(const CheckMandatoryAgreements());
+        // add(const CheckMandatoryAgreements());
+        emit(state.copyWith(status: AuthStatus.apiAuthenticated));
       } else {
         // Use the Google user data we already have in state
         if (state.user != null) {

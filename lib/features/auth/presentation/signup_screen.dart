@@ -270,6 +270,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
             ),
           );
+        } else if (state.status == AuthStatus.error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.errorMessage ?? 'An error occurred')),
+          );
         }
         //<===============WORKING CODE WITHOUT VERIFICATION CODE===============>
 

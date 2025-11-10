@@ -10,6 +10,7 @@ import 'package:moinc/features/auth/presentation/bloc/auth_state.dart';
 import 'package:moinc/features/auth/presentation/signup_screen.dart';
 import 'package:moinc/features/auth/presentation/widgets/social_auth_buttons.dart';
 import 'package:moinc/utils/form_label.dart';
+import 'package:moinc/utils/validators.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -100,7 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           );
         } else if (state.status == AuthStatus.error) {
-          if (state.errorMessage == "Invalid Email OR Password") {
+          if (state.errorMessage == "Invalid Email OR Password" ||
+              state.errorMessage == "already_created") {
             setState(() {
               //  _errorMessage = 'Invalid Email OR Password';
               _isLoading = false;
@@ -113,6 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             );
           } else {
+       
             setState(() {
               //  _errorMessage = 'Something went wrong please try again later';
               _isLoading = false;
@@ -233,17 +236,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: Colors.white,
                             ),
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
-                            }
-                            if (!RegExp(
-                              r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                            ).hasMatch(value)) {
-                              return 'Please enter a valid email';
-                            }
-                            return null;
-                          },
                         ),
                         const SizedBox(height: 20),
 

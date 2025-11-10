@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
 import 'dart:async';
 
-
 import '../services/token_service.dart';
 import 'api_endpoints.dart';
 

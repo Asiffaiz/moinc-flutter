@@ -312,12 +312,12 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<bool> sendVerifyRegisterCode(String email) async {
+  Future<Map<String, dynamic>?> sendVerifyRegisterCode(String email) async {
     try {
       final result = await _authService.sendVerifyRegisterCode(email);
-      return result['success'] == true;
+      return result;
     } catch (e) {
-      return false;
+      return null;
     }
   }
 

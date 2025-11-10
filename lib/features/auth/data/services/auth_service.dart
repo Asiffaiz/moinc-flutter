@@ -274,7 +274,7 @@ class AuthService {
   Future<Map<String, dynamic>> register(Map<String, dynamic> userData) async {
     try {
       final response = await _apiClient.post(ApiEndpoints.register, userData);
-
+    
       if (response.statusCode == 200 && response.data['status'] == 200) {
         // Success, save user data if available
 
@@ -288,6 +288,11 @@ class AuthService {
           'success': true,
           'message': 'Registration successful',
           'data': response.data['data'],
+        };
+      } else if (response.data['status'] == 404) {
+        return {
+          'success': false,
+          'message': response.data['message'] ?? 'Registration failed',
         };
       } else {
         return {

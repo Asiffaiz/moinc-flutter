@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:moinc/features/auth/domain/models/user_model.dart';
 
-
 enum AuthStatus {
   initial,
   loading,
@@ -19,6 +18,7 @@ enum AuthStatus {
   forgotPasswordCodeResent,
   registerCodeSent,
   registerCodeResent,
+  registeredSuccessfully,
   error,
 }
 

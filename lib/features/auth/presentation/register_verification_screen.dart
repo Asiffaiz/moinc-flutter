@@ -172,8 +172,7 @@ class _RegisterVerificationScreenState
           _signUp();
         } else if (state.status == AuthStatus.hasMandatoryAgreements) {
           // context.go(AppRoutes.unsignedAgreements);
-        } else if (state.status == AuthStatus.authenticated ||
-            state.status == AuthStatus.apiAuthenticated) {
+        } else if (state.status == AuthStatus.registeredSuccessfully) {
           Navigator.pushReplacementNamed(context, AppConstants.dashboardRoute);
         } else if (state.status == AuthStatus.registerCodeResent) {
           // For resend code success
