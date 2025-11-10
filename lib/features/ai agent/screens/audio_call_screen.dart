@@ -280,11 +280,27 @@ class _AudioCallScreenState extends State<AudioCallScreen>
     );
   }
 
-  void _dialIn() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const CustomDialerScreen()),
-    );
+  // void _dialIn() {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const CustomDialerScreen()),
+  //   );
+  // }
+
+  void _dialIn() async {
+    // Replace with your actual phone number
+    const phoneNumber = '+18001234567';
+    final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not launch dialer')),
+        );
+      }
+    }
   }
 
   void _toggleCall() {
