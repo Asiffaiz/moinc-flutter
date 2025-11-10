@@ -1,13 +1,11 @@
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:moinc/config/theme.dart';
-import 'package:moinc/features/ai%20agent/screens/custom_dialer_screen.dart';
 import 'package:moinc/features/ai%20agent/widgets/control_bar.dart';
-import 'package:moinc/features/auth/network/api_endpoints.dart';
+import 'package:moinc/features/auth/presentation/bloc/user_cubit.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -514,13 +512,19 @@ class _AudioCallScreenState extends State<AudioCallScreen>
               //   ),
               // ),
               // const Spacer(),
-              const Text(
-                'Hello, David!',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+              BlocBuilder<UserCubit, UserState>(
+                builder: (context, state) {
+                  return Text(
+                    'Hello, ${state.name}!',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  );
+                },
               ),
               const Text(
                 'How can I help you today?',

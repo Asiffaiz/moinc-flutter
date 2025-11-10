@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moinc/config/constants.dart';
+import 'package:moinc/config/constants/shared_prefence_keys.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_event.dart';
+import 'package:moinc/features/auth/presentation/bloc/user_cubit.dart';
 import 'package:moinc/features/profile/presentation/screens/reminders_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/privacy_policy_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/terms_screen.dart';
 import 'package:moinc/services/local_notification_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,6 +20,23 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String userEmail = '';
+  String userName = '';
+  @override
+  void initState() {
+    super.initState();
+    _getUserEmail();
+  }
+
+  Future<void> _getUserEmail() async {
+    userEmail = await SharedPreferences.getInstance().then((prefs) {
+      return prefs.getString(SharedPreferenceKeys.emailKey) ?? '';
+    });
+    setState(() {
+      userEmail = userEmail;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,13 +160,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           CircleAvatar(
             radius: 30,
             backgroundColor: AppTheme.primaryColor,
-            child: const Text(
-              'J',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+            child: BlocBuilder<UserCubit, UserState>(
+              builder: (context, state) {
+                return Text(
+                  state.name.isNotEmpty ? state.name[0].toUpperCase() : 'U',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(width: 16),
@@ -156,19 +180,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'John Doe',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                BlocBuilder<UserCubit, UserState>(
+                  builder: (context, state) {
+                    return Text(
+                      state.name,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    );
+                  },
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'john.doe@example.com',
+                  userEmail,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.7),
                     fontSize: 14,
