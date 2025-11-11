@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:moinc/services/call_hangup_service.dart';
 
 enum CallState { idle, dialing, ringing, connected, onHold, ended, failed }
 
@@ -20,6 +21,13 @@ class CallService extends ChangeNotifier {
   String _callId = '';
   String get callId => _callId;
 
+  // LiveKit specific details
+  String _roomName = 'moinc_room';
+  String get roomName => _roomName;
+
+  String _participantId = '';
+  String get participantId => _participantId;
+
   DateTime? _startTime;
   DateTime? get startTime => _startTime;
 
@@ -38,8 +46,12 @@ class CallService extends ChangeNotifier {
   final List<CallHistoryEntry> _callHistory = [];
   List<CallHistoryEntry> get callHistory => List.unmodifiable(_callHistory);
 
-  // Dummy API call to initiate a call
-  Future<bool> initiateCall(String phoneNumber) async {
+  // Initiate a call with a phone number and optional session ID
+  Future<bool> initiateCall(
+    String phoneNumber, {
+    String? sessionId,
+    Map<String, dynamic>? callData,
+  }) async {
     if (_callState != CallState.idle) {
       return false;
     }
@@ -48,6 +60,35 @@ class CallService extends ChangeNotifier {
     _callState = CallState.dialing;
     notifyListeners();
 
+    // If we have a session ID from the API, we can consider the call as already connected
+    if (sessionId != null) {
+      _callState = CallState.connected;
+      _callId = sessionId;
+      _startTime = DateTime.now();
+
+      // Extract LiveKit specific details from call data if available
+      if (callData != null) {
+        _roomName = callData['room'] ?? 'moinc_room';
+        _participantId = callData['livekit_participant_id'] ?? '';
+      }
+
+      _startCallTimer();
+
+      // Add to call history
+      _callHistory.add(
+        CallHistoryEntry(
+          phoneNumber: _phoneNumber,
+          startTime: _startTime!,
+          callType: CallType.outgoing,
+          callId: _callId,
+        ),
+      );
+
+      notifyListeners();
+      return true;
+    }
+
+    // Otherwise use the original dummy logic for testing
     // Simulate API call delay
     await Future.delayed(const Duration(seconds: 2));
 
@@ -95,8 +136,30 @@ class CallService extends ChangeNotifier {
       return false;
     }
 
-    // Simulate API call delay
-    await Future.delayed(const Duration(milliseconds: 500));
+    // If we have a LiveKit SIP call ID and participant ID, use the hangup service
+    if (_callId.startsWith('SCL_') && _participantId.isNotEmpty) {
+      try {
+        final hangupService = CallHangupService();
+        final result = await hangupService.hangupCall(
+          callSid: _callId,
+          roomName: _roomName,
+          participantId: _participantId,
+        );
+
+        if (!result['success']) {
+          // If API call failed, still proceed with local call cleanup
+          print(
+            'Warning: API call to terminate call failed: ${result['message']}',
+          );
+        }
+      } catch (e) {
+        print('Error terminating call via API: $e');
+        // Continue with local cleanup even if API call fails
+      }
+    } else {
+      // Simulate API call delay for non-LiveKit calls
+      await Future.delayed(const Duration(milliseconds: 500));
+    }
 
     _stopCallTimer();
     _callState = CallState.ended;
@@ -189,6 +252,8 @@ class CallService extends ChangeNotifier {
     _callState = CallState.idle;
     _phoneNumber = '';
     _callId = '';
+    _roomName = 'moinc_room';
+    _participantId = '';
     _startTime = null;
     _callDuration = Duration.zero;
     _isMuted = false;

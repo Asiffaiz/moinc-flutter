@@ -5,22 +5,40 @@ import 'package:moinc/services/call_service.dart';
 import 'package:provider/provider.dart';
 
 class CustomDialerScreen extends StatefulWidget {
-  const CustomDialerScreen({Key? key}) : super(key: key);
+  final String? initialPhoneNumber;
+
+  const CustomDialerScreen({Key? key, this.initialPhoneNumber})
+    : super(key: key);
 
   @override
   State<CustomDialerScreen> createState() => _CustomDialerScreenState();
 }
 
 class _CustomDialerScreenState extends State<CustomDialerScreen> {
-  final TextEditingController _phoneController = TextEditingController(
-    text: '+18555552368',
-  );
+  late final TextEditingController _phoneController;
   bool _isDialing = false;
 
   @override
   void initState() {
     super.initState();
-    // Default number is already set in the controller
+    // Initialize phone controller with provided number or default
+    _phoneController = TextEditingController(
+      text: widget.initialPhoneNumber ?? '+18555552368',
+    );
+
+    // If we have an initial phone number, that means we're coming from the API call
+    // and should immediately navigate to the active call screen
+    if (widget.initialPhoneNumber != null) {
+      // Give the UI a moment to render before navigating
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ActiveCallScreen()),
+          );
+        }
+      });
+    }
   }
 
   @override
@@ -56,7 +74,16 @@ class _CustomDialerScreenState extends State<CustomDialerScreen> {
     });
 
     final callService = Provider.of<CallService>(context, listen: false);
-    final success = await callService.initiateCall(_phoneController.text);
+
+    // If we have session ID from API response, use it to start the call immediately
+    final sessionId =
+        widget.initialPhoneNumber != null
+            ? 'session_${DateTime.now().millisecondsSinceEpoch}'
+            : null;
+    final success = await callService.initiateCall(
+      _phoneController.text,
+      sessionId: sessionId,
+    );
 
     if (!success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

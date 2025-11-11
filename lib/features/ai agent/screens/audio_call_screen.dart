@@ -1,13 +1,14 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/ai%20agent/screens/custom_dialer_screen.dart';
 import 'package:moinc/features/ai%20agent/widgets/control_bar.dart';
 import 'package:moinc/features/auth/presentation/bloc/user_cubit.dart';
+import 'package:moinc/services/call_service.dart';
+import 'package:moinc/services/telephony_service.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../controllers/app_ctrl.dart' as app_ctrl;
 import '../widgets/button.dart';
@@ -238,25 +239,83 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                                 ),
                                 elevation: 3,
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 // Process phone number here
                                 if (_phoneController.text.isNotEmpty) {
-                                  // Call service would be implemented here
+                                  // Show loading indicator
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                       content: Text(
-                                        'Calling you at ${_phoneController.text}',
+                                        'Processing your request...',
                                       ),
-                                      backgroundColor: const Color.fromARGB(
-                                        255,
-                                        144,
-                                        32,
-                                        133,
-                                      ),
+                                      duration: Duration(seconds: 2),
                                     ),
                                   );
+
+                                  // Call the telephony service API
+                                  final telephonyService = TelephonyService();
+                                  final result = await telephonyService
+                                      .initiateCall(
+                                        _phoneController.text,
+                                        name: _nameController.text,
+                                        email: _emailController.text,
+                                      );
+
+                                  Navigator.pop(context); // Close the dialog
+
+                                  if (result['success']) {
+                                    // Navigate to the dialer screen with the phone number and session ID
+                                    if (context.mounted) {
+                                      // Get the call service and initialize it with the session ID
+                                      final callService =
+                                          Provider.of<CallService>(
+                                            context,
+                                            listen: false,
+                                          );
+
+                                      // Extract call data from API response
+                                      final callData =
+                                          result['data']
+                                              as Map<String, dynamic>;
+
+                                      // Start the call with the session ID and call data from the API
+                                      callService.initiateCall(
+                                        result['phoneNumber'],
+                                        sessionId: result['sessionId'],
+                                        callData: callData,
+                                      );
+
+                                      // Navigate to the dialer screen
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => CustomDialerScreen(
+                                                initialPhoneNumber:
+                                                    result['phoneNumber'],
+                                              ),
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    // Show error message
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            result['message'] ??
+                                                'Failed to initiate call',
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                } else {
+                                  Navigator.pop(context);
                                 }
-                                Navigator.pop(context);
                               },
                               child: const Text(
                                 'Submit',
@@ -285,20 +344,12 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   //   );
   // }
 
-  void _dialIn() async {
-    // Replace with your actual phone number
-    const phoneNumber = '+18001234567';
-    final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
-
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not launch dialer')),
-        );
-      }
-    }
+  void _dialIn() {
+    // Navigate to the custom dialer screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CustomDialerScreen()),
+    );
   }
 
   void _toggleCall() {
