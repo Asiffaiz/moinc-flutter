@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
+import 'package:moinc/config/api_config.dart';
 
 /// Data class representing the connection details needed to join a LiveKit room
 /// This includes the server URL, room name, participant info, and auth token
@@ -28,100 +29,91 @@ class ConnectionDetails {
   }
 }
 
-/// An example service for fetching LiveKit authentication tokens
-///
-/// To use the LiveKit Cloud sandbox (development only)
-/// - Enable your sandbox here https://cloud.livekit.io/projects/p_/sandbox/templates/token-server
-/// - Create .env file with your LIVEKIT_SANDBOX_ID
-///
-/// To use a hardcoded token (development only)
-/// - Generate a token: https://docs.livekit.io/home/cli/cli-setup/#generate-access-token
-/// - Set `hardcodedServerUrl` and `hardcodedToken` below
-///
-/// To use your own server (production applications)
-/// - Add a token endpoint to your server with a LiveKit Server SDK https://docs.livekit.io/home/server/generating-tokens/
-/// - Modify or replace this class as needed to connect to your new token server
-/// - Rejoice in your new production-ready LiveKit application!
-///
-/// See https://docs.livekit.io/home/get-started/authentication for more information
+/// Service for fetching LiveKit authentication tokens from the API
 class TokenService {
   static final _logger = Logger('TokenService');
+
+  // API endpoint for token generation
+  final String tokenEndpoint =
+      '${ApiConfig.baseApiUrl}/mobile/token'; // Replace with your actual base URL
+
+  // LiveKit server URL
+  final String serverUrl = "wss://voiceadmin-q6nhb8k6.livekit.cloud";
 
   // For hardcoded token usage (development only)
   final String? hardcodedServerUrl = null;
   final String? hardcodedToken = null;
 
-  // Get the sandbox ID from environment variables
-  // String? get sandboxId {
-  //   final value = dotenv.env['LIVEKIT_SANDBOX_ID'];
-  //   if (value != null) {
-  //     // Remove unwanted double quotes if present
-  //     return value.replaceAll('"', '');
-  //   }
-  //   return null;
-  // }
+  /// Generate token from API
+  Future<String> generateToken({
+    required String agentId,
+    required String roomName,
+    required String agentName,
+  }) async {
+    _logger.info('Generating token for agent: $agentName, room: $roomName');
 
-  // LiveKit Cloud sandbox API endpoint
-  final String sandboxUrl =
-      'https://cloud-api.livekit.io/api/sandbox/connection-details';
+    final uri = Uri.parse(tokenEndpoint);
+    final payload = {
+      'agent_id': agentId,
+      'room_name': roomName,
+      'agent_name': agentName,
+    };
 
-  /// Main method to get connection details
-  /// First tries hardcoded credentials, then falls back to sandbox
-  // Future<ConnectionDetails> fetchConnectionDetails({
-  //   required String roomName,
-  //   required String participantName,
-  // }) async {
-  //   final hardcodedDetails = fetchHardcodedConnectionDetails(
-  //     roomName: roomName,
-  //     participantName: participantName,
-  //   );
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(payload),
+      );
 
-  //   if (hardcodedDetails != null) {
-  //     return hardcodedDetails;
-  //   }
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        try {
+          final data = jsonDecode(response.body);
+          final token = data['token'];
+          _logger.info('Token generated successfully');
+          return token;
+        } catch (e) {
+          _logger.severe(
+            'Error parsing token from API response: ${response.body}',
+          );
+          throw Exception('Error parsing token from API response');
+        }
+      } else {
+        _logger.severe(
+          'Error from token API: ${response.statusCode}, response: ${response.body}',
+        );
+        throw Exception('Error from token API: ${response.statusCode}');
+      }
+    } catch (e) {
+      _logger.severe('Failed to connect to token API: $e');
+      throw Exception('Failed to connect to token API: $e');
+    }
+  }
 
-  //   return await fetchConnectionDetailsFromSandbox(
-  //     roomName: roomName,
-  //     participantName: participantName,
-  //   );
-  // }
+  /// Get connection details using the generated token
+  Future<ConnectionDetails> fetchConnectionDetails({
+    required String agentId,
+    required String roomName,
+    required String agentName,
+  }) async {
+    try {
+      final token = await generateToken(
+        agentId: agentId,
+        roomName: roomName,
+        agentName: agentName,
+      );
 
-  // Future<ConnectionDetails> fetchConnectionDetailsFromSandbox({
-  //   required String roomName,
-  //   required String participantName,
-  // }) async {
-  //   if (sandboxId == null) {
-  //     throw Exception('Sandbox ID is not set');
-  //   }
-
-  //   final uri = Uri.parse(sandboxUrl).replace(queryParameters: {
-  //     'roomName': roomName,
-  //     'participantName': participantName,
-  //   });
-
-  //   try {
-  //     final response = await http.post(
-  //       uri,
-  //       headers: {'X-Sandbox-ID': sandboxId!},
-  //     );
-
-  //     if (response.statusCode >= 200 && response.statusCode < 300) {
-  //       try {
-  //         final data = jsonDecode(response.body);
-  //         return ConnectionDetails.fromJson(data);
-  //       } catch (e) {
-  //         _logger.severe('Error parsing connection details from LiveKit Cloud sandbox, response: ${response.body}');
-  //         throw Exception('Error parsing connection details from LiveKit Cloud sandbox');
-  //       }
-  //     } else {
-  //       _logger.severe('Error from LiveKit Cloud sandbox: ${response.statusCode}, response: ${response.body}');
-  //       throw Exception('Error from LiveKit Cloud sandbox');
-  //     }
-  //   } catch (e) {
-  //     _logger.severe('Failed to connect to LiveKit Cloud sandbox: $e');
-  //     throw Exception('Failed to connect to LiveKit Cloud sandbox');
-  //   }
-  // }
+      return ConnectionDetails(
+        serverUrl: serverUrl,
+        roomName: roomName,
+        participantName: agentName,
+        participantToken: token,
+      );
+    } catch (e) {
+      _logger.severe('Failed to fetch connection details: $e');
+      throw Exception('Failed to fetch connection details: $e');
+    }
+  }
 
   ConnectionDetails? fetchHardcodedConnectionDetails({
     required String roomName,

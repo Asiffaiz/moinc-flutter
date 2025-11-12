@@ -195,41 +195,56 @@ class AppCtrl extends ChangeNotifier {
       // Set up room event listeners
       _setupRoomListeners();
 
-      // Direct connection with hardcoded credentials from portal
-      const serverUrl = "wss://voiceadmin-q6nhb8k6.livekit.cloud";
-      const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTWF5YSIsInZpZGVvIjp7InJvb21Kb2luIjp0cnVlLCJyb29tIjoiTWF5YSIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZSwiY2FuUHVibGlzaERhdGEiOnRydWV9LCJzdWIiOiIxZDFiOWU5NS1mNGNkLTQ2ZDctOTg1ZS1mYjQ4ODRiYjA4ZTciLCJpc3MiOiJBUElhWm85SjZYYmFTUWEiLCJuYmYiOjE3NjI4MTY5MjIsImV4cCI6MTc2MjgzODUyMn0.r9E0vg5mwbS7PuoTWhDkfFyHMHgTJzVMvp0GlzQdCgQ";
+      // Generate a token from the API instead of using hardcoded credentials
+      final String roomName =
+          "moinc_room"; // Replace with your actual room name or make it configurable
+      final String agentName =
+          "Maya"; // Replace with your actual agent name or make it configurable
+      final String agentId = "1d1b9e95-f4cd-46d7-985e-fb4884bb08e7";
 
-      // From your logs, I can see that the connection is initially successful
-      // but then disconnects with a timeout error. This could be due to:
-      // 1. Identity conflicts ("string" is not a unique identity)
-      // 2. Connection timeout issues
-      // 3. Permission conflicts with the agent participant
+      _logger.info("Requesting token for room: $roomName, agent: $agentName");
 
-      _logger.info("Using direct connection with hardcoded token");
+      try {
+        // Get connection details with token from API
+        final connectionDetails = await tokenService.fetchConnectionDetails(
+          agentId: agentId,
+          roomName: roomName,
+          agentName: agentName,
+        );
 
-      // Decode token to understand what's in it
-      final parts = token.split('.');
-      if (parts.length > 1) {
-        final payload = parts[1];
-        final normalized = base64Url.normalize(payload);
-        final decoded = utf8.decode(base64Url.decode(normalized));
-        _logger.info("Token payload: $decoded");
+        final serverUrl = connectionDetails.serverUrl;
+        final token = connectionDetails.participantToken;
+
+        _logger.info("Token received successfully");
+
+        // Decode token to understand what's in it (for debugging)
+        final parts = token.split('.');
+        if (parts.length > 1) {
+          final payload = parts[1];
+          final normalized = base64Url.normalize(payload);
+          final decoded = utf8.decode(base64Url.decode(normalized));
+          _logger.info("Token payload: $decoded");
+        }
+
+        _logger.info("Connecting to LiveKit server: $serverUrl");
+
+        // Log the current state of remote participants before connecting
+        _logger.info(
+          "Remote participants before connect: ${room.remoteParticipants.length}",
+        );
+
+        // Connect to the room with the generated token
+        await room.connect(serverUrl, token);
+
+        _logger.info("Room connection state: ${room.connectionState}");
+        _logger.info("Local participant: ${room.localParticipant?.identity}");
+        _logger.info("Room name: ${room.name}");
+      } catch (e) {
+        _logger.severe("Error generating token or connecting: $e");
+        connectionState = ConnectionState.disconnected;
+        notifyListeners();
+        rethrow;
       }
-
-      _logger.info("Connecting to LiveKit server: $serverUrl");
-
-      // Log the current state of remote participants before connecting
-      _logger.info(
-        "Remote participants before connect: ${room.remoteParticipants.length}",
-      );
-
-      // Connect to the room with direct credentials
-      await room.connect(serverUrl, token);
-
-      _logger.info("Room connection state: ${room.connectionState}");
-      _logger.info("Local participant: ${room.localParticipant?.identity}");
-      _logger.info("Room name: ${room.name}");
 
       // Enable microphone
       await room.localParticipant?.setMicrophoneEnabled(true);
