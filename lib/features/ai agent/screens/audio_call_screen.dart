@@ -45,12 +45,19 @@ class _AudioCallScreenState extends State<AudioCallScreen>
       begin: 0.5,
       end: 1.0,
     ).animate(_animationController);
+
+    // Ensure system UI is hidden when audio call screen initializes
+    app_ctrl.SystemUIVisibility.hideSystemUI();
   }
 
   @override
   void dispose() {
     _phoneController.dispose();
     _animationController.dispose();
+
+    // Restore system UI when screen is disposed
+    app_ctrl.SystemUIVisibility.showSystemUI();
+
     super.dispose();
   }
 

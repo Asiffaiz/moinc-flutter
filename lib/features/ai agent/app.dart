@@ -14,27 +14,21 @@ class VoiceAssistantApp extends StatelessWidget {
   const VoiceAssistantApp({super.key});
 
   @override
-  Widget build(BuildContext ctx) => MultiProvider(
-    providers: [
-      ChangeNotifierProvider.value(value: appCtrl),
-      ChangeNotifierProvider.value(value: appCtrl.roomContext),
-    ],
-    child: Builder(
-      builder:
-          (ctx) => Selector<AppCtrl, AppScreenState>(
-            selector: (ctx, appCtx) => appCtx.appScreenState,
-            builder: (ctx, screen, _) {
-              return const AudioCallScreen();
-              // if (screen == AppScreenState.audioCall) {
-              //   return const AudioCallScreen();
-              // }
-              // return AppLayoutSwitcher(
-              //   frontBuilder: (ctx) => const WelcomeScreen(),
-              //   backBuilder: (ctx) => const AgentScreen(),
-              //   isFront: screen == AppScreenState.welcome,
-              // );
-            },
-          ),
-    ),
+  Widget build(BuildContext ctx) => Builder(
+    builder:
+        (ctx) => Selector<AppCtrl, AppScreenState>(
+          selector: (ctx, appCtx) => appCtx.appScreenState,
+          builder: (ctx, screen, _) {
+            return const AudioCallScreen();
+            // if (screen == AppScreenState.audioCall) {
+            //   return const AudioCallScreen();
+            // }
+            // return AppLayoutSwitcher(
+            //   frontBuilder: (ctx) => const WelcomeScreen(),
+            //   backBuilder: (ctx) => const AgentScreen(),
+            //   isFront: screen == AppScreenState.welcome,
+            // );
+          },
+        ),
   );
 }

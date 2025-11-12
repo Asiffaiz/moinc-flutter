@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/core/dependency_injection.dart';
+import 'package:moinc/features/ai%20agent/app.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:moinc/features/auth/presentation/bloc/user_cubit.dart';
 import 'package:moinc/features/auth/presentation/signup_screen.dart';
@@ -149,7 +150,14 @@ class MyApp extends StatelessWidget {
           // AppConstants.registerRoute: (context) => const RegisterScreen(),
           AppConstants.registerRoute: (context) => const SignUpScreen(),
 
-          AppConstants.dashboardRoute: (context) => const HomeScreen(),
+          AppConstants.dashboardRoute:
+              (context) => MultiProvider(
+                providers: [
+                  ChangeNotifierProvider.value(value: appCtrl),
+                  ChangeNotifierProvider.value(value: appCtrl.roomContext),
+                ],
+                child: const HomeScreen(),
+              ),
           AppConstants.profileRoute: (context) => const ProfileScreen(),
           AppConstants.reportsRoute: (context) => const ReportsScreen(),
         },

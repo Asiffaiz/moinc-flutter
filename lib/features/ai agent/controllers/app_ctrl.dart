@@ -19,6 +19,17 @@ enum AgentScreenState { visualizer, transcription }
 
 enum ConnectionState { disconnected, connecting, connected }
 
+// System UI visibility controller
+class SystemUIVisibility {
+  static void hideSystemUI() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  }
+
+  static void showSystemUI() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  }
+}
+
 class AppCtrl extends ChangeNotifier {
   static const uuid = Uuid();
   static final _logger = Logger('AppCtrl');
@@ -191,6 +202,9 @@ class AppCtrl extends ChangeNotifier {
     connectionState = ConnectionState.connecting;
     notifyListeners();
 
+    // Hide system UI (status bar and bottom navigation) when connecting
+    SystemUIVisibility.hideSystemUI();
+
     try {
       // Set up room event listeners
       _setupRoomListeners();
@@ -289,25 +303,32 @@ class AppCtrl extends ChangeNotifier {
 
   void _enterFullScreen() {
     // Hide status bar and navigation bar
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    SystemUIVisibility.hideSystemUI();
     _isFullScreen = true;
     notifyListeners();
   }
 
   void _exitFullScreen() {
     // Restore system UI
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-
+    SystemUIVisibility.showSystemUI();
     _isFullScreen = false;
     notifyListeners();
   }
 
-  void disconnect() {
+  void disconnect() async {
+    // First update the connection state to trigger UI changes
+    connectionState = ConnectionState.disconnected;
+    notifyListeners();
+
+    // Add a small delay for smooth transition before showing system UI
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    // Show system UI with a smooth transition
+    SystemUIVisibility.showSystemUI();
+
+    // Disconnect from the room and clean up
     room.disconnect();
     _cancelAgentTimer();
-    _exitFullScreen();
-    // Update states
-    connectionState = ConnectionState.disconnected;
 
     // If we're in audio call screen, stay there, otherwise go back to welcome
     if (appScreenState != AppScreenState.audioCall) {
