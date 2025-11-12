@@ -26,11 +26,11 @@ abstract class CallLog {
     final logDate = DateTime(timestamp.year, timestamp.month, timestamp.day);
 
     if (logDate == today) {
-      return 'Today, ${DateFormat('h:mm a').format(timestamp)}';
+      return 'Today';
     } else if (logDate == yesterday) {
-      return 'Yesterday, ${DateFormat('h:mm a').format(timestamp)}';
+      return 'Yesterday';
     } else {
-      return DateFormat('MMM d, yyyy, h:mm a').format(timestamp);
+      return DateFormat('MMM d, yyyy').format(timestamp);
     }
   }
 

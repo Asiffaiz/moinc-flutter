@@ -89,6 +89,7 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
 
     return ListView.builder(
       itemCount: logs.length,
+      padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
         final log = logs[index];
         return _buildCallLogItem(log);
@@ -108,112 +109,109 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
   }
 
   Widget _buildLiveKitCallLogItem(LiveKitCallLog log) {
-    final statusColor = _getStatusColor(log.status);
+    // Status color is now handled directly in the UI
+    // Get initials for known users, use icon for unknown
+    final nameInitials =
+        log.userName.isNotEmpty
+            ? log.userName
+                .split(' ')
+                .map((e) => e.isNotEmpty ? e[0].toUpperCase() : '')
+                .take(2)
+                .join('')
+            : '';
+    final isUnknown =
+        log.userName.isEmpty || log.userName.toLowerCase() == 'unknown';
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: AppTheme.secondaryColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: AppTheme.primaryColor.withOpacity(0.2)),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 1),
+      decoration: BoxDecoration(
+        color: AppTheme.secondaryColor,
+        border: Border(
+          bottom: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
+        ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: CircleAvatar(
+          backgroundColor:
+              log.status == CallStatus.missed || log.status == CallStatus.failed
+                  ? Colors.red.withOpacity(0.2)
+                  : AppTheme.primaryColor.withOpacity(0.2),
+          child:
+              isUnknown
+                  ? Icon(
+                    Icons.person,
+                    color:
+                        log.status == CallStatus.missed ||
+                                log.status == CallStatus.failed
+                            ? Colors.red
+                            : AppTheme.primaryColor,
+                    size: 20,
+                  )
+                  : Text(
+                    nameInitials,
+                    style: TextStyle(
+                      color:
+                          log.status == CallStatus.missed ||
+                                  log.status == CallStatus.failed
+                              ? Colors.red
+                              : AppTheme.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+        ),
+        title: Text(
+          log.userName,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+          ),
+        ),
+        subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: AppTheme.primaryColor.withOpacity(0.2),
-                  child: const Icon(Icons.call, color: AppTheme.primaryColor),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        log.userName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        log.userEmail,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    log.statusText,
-                    style: TextStyle(
-                      color: statusColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ],
+            Text(
+              log.userEmail,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontSize: 14,
+              ),
             ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Agent: ${log.agentName ?? 'Maya'}',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
-                    fontSize: 14,
-                  ),
-                ),
-                Text(
-                  'Audio Call',
-                  style: TextStyle(
-                    color: AppTheme.primaryColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+            const SizedBox(height: 2),
+            // Audio Call label removed as requested
+          ],
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              log.formattedDate,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontSize: 12,
+              ),
             ),
-            const SizedBox(height: 8),
-            Divider(color: Colors.white.withOpacity(0.1)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  log.formattedDate,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
-                    fontSize: 14,
-                  ),
+            const SizedBox(height: 4),
+            if (log.status == CallStatus.missed ||
+                log.status == CallStatus.failed)
+              Text(
+                log.statusText,
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
                 ),
-                if (log.status == CallStatus.completed)
-                  Text(
-                    log.formattedDuration,
-                    style: const TextStyle(
-                      color: AppTheme.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-              ],
-            ),
+              )
+            else if (log.status == CallStatus.completed)
+              Text(
+                log.formattedDuration,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 12,
+                ),
+              ),
           ],
         ),
       ),
@@ -221,130 +219,138 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
   }
 
   Widget _buildTwilioCallLogItem(TwilioCallLog log) {
-    final statusColor = _getStatusColor(log.status);
     final callIcon = log.isOutgoing ? Icons.call_made : Icons.call_received;
     final callDirection = log.isOutgoing ? 'Outgoing' : 'Incoming';
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: AppTheme.secondaryColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: AppTheme.primaryColor.withOpacity(0.2)),
+    // Get first letter of caller name for known callers, use person icon for unknown
+    final nameInitial =
+        (log.callerName?.isNotEmpty == true)
+            ? log.callerName![0].toUpperCase()
+            : '';
+    final isUnknown =
+        log.callerName == null ||
+        log.callerName!.isEmpty ||
+        log.callerName!.toLowerCase() == 'unknown';
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 1),
+      decoration: BoxDecoration(
+        color: AppTheme.secondaryColor,
+        border: Border(
+          bottom: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
+        ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: AppTheme.primaryColor.withOpacity(0.2),
-                  child: Icon(callIcon, color: AppTheme.primaryColor),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        log.callerName ?? 'Unknown Caller',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        log.phoneNumber,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    log.statusText,
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: CircleAvatar(
+          backgroundColor:
+              log.status == CallStatus.missed || log.status == CallStatus.failed
+                  ? Colors.red.withOpacity(0.2)
+                  : AppTheme.primaryColor.withOpacity(0.2),
+          child:
+              isUnknown
+                  ? Icon(
+                    Icons.person,
+                    color:
+                        log.status == CallStatus.missed ||
+                                log.status == CallStatus.failed
+                            ? Colors.red
+                            : AppTheme.primaryColor,
+                    size: 20,
+                  )
+                  : Text(
+                    nameInitial,
                     style: TextStyle(
-                      color: statusColor,
+                      color:
+                          log.status == CallStatus.missed ||
+                                  log.status == CallStatus.failed
+                              ? Colors.red
+                              : AppTheme.primaryColor,
                       fontWeight: FontWeight.bold,
-                      fontSize: 12,
                     ),
                   ),
-                ),
-              ],
+        ),
+        title: Text(
+          log.callerName ?? 'Unknown',
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              log.phoneNumber,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontSize: 14,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 2),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Icon(
+                  callIcon,
+                  size: 14,
+                  color:
+                      log.status == CallStatus.missed ||
+                              log.status == CallStatus.failed
+                          ? Colors.red
+                          : Colors.white.withOpacity(0.7),
+                ),
+                const SizedBox(width: 4),
                 Text(
                   callDirection,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
-                    fontSize: 14,
-                  ),
-                ),
-                Text(
-                  'Audio Call',
-                  style: TextStyle(
-                    color: AppTheme.primaryColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    color:
+                        log.status == CallStatus.missed ||
+                                log.status == CallStatus.failed
+                            ? Colors.red
+                            : Colors.white.withOpacity(0.7),
+                    fontSize: 12,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Divider(color: Colors.white.withOpacity(0.1)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  log.formattedDate,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
-                    fontSize: 14,
-                  ),
-                ),
-                if (log.status == CallStatus.completed)
-                  Text(
-                    log.formattedDuration,
-                    style: const TextStyle(
-                      color: AppTheme.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-              ],
+          ],
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              log.formattedDate,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontSize: 12,
+              ),
             ),
+            const SizedBox(height: 4),
+            if (log.status == CallStatus.missed ||
+                log.status == CallStatus.failed)
+              Text(
+                log.statusText,
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                ),
+              )
+            else if (log.status == CallStatus.completed)
+              Text(
+                log.formattedDuration,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 12,
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  Color _getStatusColor(CallStatus status) {
-    switch (status) {
-      case CallStatus.completed:
-        return Colors.green;
-      case CallStatus.missed:
-        return Colors.amber;
-      case CallStatus.failed:
-        return Colors.red;
-      case CallStatus.ongoing:
-        return AppTheme.primaryColor;
-    }
-  }
+  // Status colors are now handled directly in the UI
 }

@@ -47,7 +47,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
     ).animate(_animationController);
 
     // Ensure system UI is hidden when audio call screen initializes
-    app_ctrl.SystemUIVisibility.hideSystemUI();
+    // app_ctrl.SystemUIVisibility.hideSystemUI();
   }
 
   @override
