@@ -178,8 +178,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             _companyNameController.text.isNotEmpty
                 ? _companyNameController.text
                 : '${_fullNameController.text} Enterprise',
-        // 'email': _emailController.text,
-        'email': 'asif.faiz+905@tcpaas.com',
+        'email': _emailController.text,
+
         'password': _hidePassowrdFields ? password : _passwordController.text,
         'full_name': _fullNameController.text,
         'phone': _phoneNumber.isNotEmpty ? _countryCode + _phoneNumber : '',
@@ -249,6 +249,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
+        // Update loading state based on AuthBloc state
+        setState(() {
+          _isLoading = state.status == AuthStatus.loading;
+        });
+
         if (state.status == AuthStatus.googleUserDataReady &&
             state.additionalData != null) {
           // Fill form with Google user data
@@ -802,9 +807,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed:
-                              _isLoading ||
-                                      (_dataConsentChecked == false ||
-                                          _marketingConsentChecked == false)
+                              _isLoading || (_dataConsentChecked == false)
                                   ? null
                                   : _signUp,
                           style: ElevatedButton.styleFrom(

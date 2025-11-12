@@ -433,6 +433,7 @@ class _RegisterVerificationScreenState
                                     (!_isExpired && _timeLeft > 0))
                                 ? null
                                 : _resendCode,
+
                         style: TextButton.styleFrom(
                           foregroundColor: AppTheme.primaryColor,
                         ),
