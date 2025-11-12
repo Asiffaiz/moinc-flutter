@@ -1,0 +1,21 @@
+{
+    "id": 1,
+    "from_number": "+15072047942",
+    "from_formatted": "(507) 204-7942",
+    "to_number": "+12012547832",
+    "to_formatted": "(201) 254-7832",
+    "status": "completed",
+    "direction": "trunking-terminating",
+    "caller_name": "John Doe", 
+    "caller_number": "+15072047942",   
+    "log_type": "Livekit/twillio",
+    "duration": 132,
+    "start_time": "11/11/2025 02:40:53+00",
+    "end_time": "11/11/2025 02:43:05+00",
+    "date_created": "11/11/2025 02:40:44+00",
+    "date_updated": "11/11/2025 02:43:05+00",
+    "forwarded_from": null,
+    "recording": "/mnt/call_recordings_twilio/CA75c6bc8db57799b867e2c9ddb9514ccf/RE8e09e2f0ed738cd88a6abe48d330ca53.mp3",
+    "accountno": "562224562224",
+    "comp_name": "OnBoardSoft LLC"
+  }

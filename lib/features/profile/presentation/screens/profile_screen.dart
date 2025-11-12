@@ -6,9 +6,9 @@ import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_event.dart';
 import 'package:moinc/features/auth/presentation/bloc/user_cubit.dart';
+import 'package:moinc/features/profile/presentation/screens/call_logs_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/reminders_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/privacy_policy_screen.dart';
-import 'package:moinc/features/profile/presentation/screens/terms_screen.dart';
 import 'package:moinc/services/local_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -64,6 +64,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onTap: () {
                       // Navigate to profile details screen
                     },
+                  ),
+                  _buildDivider(),
+                  _buildListTile(
+                    title: 'Audio Call Logs',
+                    icon: Icons.call,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CallLogsScreen(),
+                        ),
+                      );
+                    },
+                    badge: 10, // Number of call logs
                   ),
                   _buildDivider(),
                   _buildListTile(
