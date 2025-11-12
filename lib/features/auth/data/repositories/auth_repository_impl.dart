@@ -311,6 +311,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+
   @override
   Future<Map<String, dynamic>?> sendVerifyRegisterCode(String email) async {
     try {
