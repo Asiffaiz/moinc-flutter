@@ -178,7 +178,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             _companyNameController.text.isNotEmpty
                 ? _companyNameController.text
                 : '${_fullNameController.text} Enterprise',
-        'email': _emailController.text,
+        // 'email': _emailController.text,
+        'email': 'asif.faiz+905@tcpaas.com',
         'password': _hidePassowrdFields ? password : _passwordController.text,
         'full_name': _fullNameController.text,
         'phone': _phoneNumber.isNotEmpty ? _countryCode + _phoneNumber : '',

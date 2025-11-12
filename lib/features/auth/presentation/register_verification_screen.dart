@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/home/home_screen.dart';
 
 import 'dart:async';
 
@@ -173,7 +174,11 @@ class _RegisterVerificationScreenState
         } else if (state.status == AuthStatus.hasMandatoryAgreements) {
           // context.go(AppRoutes.unsignedAgreements);
         } else if (state.status == AuthStatus.registeredSuccessfully) {
-          Navigator.pushReplacementNamed(context, AppConstants.dashboardRoute);
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            (route) => false,
+          );
         } else if (state.status == AuthStatus.registerCodeResent) {
           // For resend code success
           setState(() {
@@ -190,11 +195,25 @@ class _RegisterVerificationScreenState
               _startTimer();
             }
           });
-        } else if (state.status == AuthStatus.error) {
+        } else if (state.status == AuthStatus.registerPinVerificationError) {
           setState(() {
             _errorMessage = 'Something went wrong please try again later';
             _isResending = false; // Ensure resend loader is stopped on error
           });
+        } else if (state.errorMessage == "already_created" &&
+            state.status == AuthStatus.error) {
+          setState(() {
+            _isLoading = false;
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Account already created with this email address. Please choose another one',
+              ),
+              backgroundColor: AppTheme.errorColor,
+            ),
+          );
         }
 
         setState(() {

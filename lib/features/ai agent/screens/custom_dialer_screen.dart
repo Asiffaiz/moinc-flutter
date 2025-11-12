@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moinc/config/theme.dart';
@@ -6,9 +7,13 @@ import 'package:provider/provider.dart';
 
 class CustomDialerScreen extends StatefulWidget {
   final String? initialPhoneNumber;
+  final bool isRinging;
 
-  const CustomDialerScreen({Key? key, this.initialPhoneNumber})
-    : super(key: key);
+  const CustomDialerScreen({
+    Key? key,
+    this.initialPhoneNumber,
+    this.isRinging = false,
+  }) : super(key: key);
 
   @override
   State<CustomDialerScreen> createState() => _CustomDialerScreenState();
@@ -26,9 +31,17 @@ class _CustomDialerScreenState extends State<CustomDialerScreen> {
       text: widget.initialPhoneNumber ?? '+18555552368',
     );
 
-    // If we have an initial phone number, that means we're coming from the API call
+    // If this is a ringing call, show the ringing UI
+    if (widget.isRinging) {
+      setState(() {
+        _isDialing = true;
+      });
+    }
+
+    // If we have an initial phone number and we're not in ringing state,
+    // that means we're coming from the API call with an active connection
     // and should immediately navigate to the active call screen
-    if (widget.initialPhoneNumber != null) {
+    if (widget.initialPhoneNumber != null && !widget.isRinging) {
       // Give the UI a moment to render before navigating
       Future.delayed(const Duration(milliseconds: 100), () {
         if (mounted) {
@@ -36,6 +49,46 @@ class _CustomDialerScreenState extends State<CustomDialerScreen> {
             context,
             MaterialPageRoute(builder: (context) => const ActiveCallScreen()),
           );
+        }
+      });
+    }
+
+    // If we're in ringing state, listen for changes in the call state
+    if (widget.isRinging) {
+      // Check every second if the call has connected
+      Timer.periodic(const Duration(milliseconds: 500), (timer) {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
+
+        final callService = Provider.of<CallService>(context, listen: false);
+        if (callService.callState == CallState.connected) {
+          timer.cancel();
+
+          // Navigate to the active call screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ActiveCallScreen()),
+          );
+        } else if (callService.callState == CallState.idle ||
+            callService.callState == CallState.failed ||
+            callService.callState == CallState.ended) {
+          // Call failed or ended
+          timer.cancel();
+          setState(() {
+            _isDialing = false;
+          });
+
+          // Show error if needed
+          if (callService.callState == CallState.failed && mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Call failed. Please try again.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         }
       });
     }
@@ -110,12 +163,18 @@ class _CustomDialerScreenState extends State<CustomDialerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final callService = Provider.of<CallService>(context);
+    final isRinging =
+        widget.isRinging &&
+        (callService.callState == CallState.ringing ||
+            callService.callState == CallState.dialing);
+
     return Scaffold(
       backgroundColor: AppTheme.secondaryColor,
       appBar: AppBar(
         backgroundColor: AppTheme.secondaryColor,
         foregroundColor: AppTheme.primaryColor,
-        title: const Text('Dialer'),
+        title: Text(isRinging ? 'Calling...' : 'Dialer'),
         elevation: 0,
       ),
       body: SafeArea(
@@ -188,7 +247,8 @@ class _CustomDialerScreenState extends State<CustomDialerScreen> {
                   child: ElevatedButton(
                     onPressed: _isDialing ? null : _initiateCall,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryColor,
+                      backgroundColor:
+                          isRinging ? Colors.red : AppTheme.primaryColor,
                       foregroundColor: Colors.black,
                       shape: const CircleBorder(),
                       padding: EdgeInsets.zero,
@@ -196,10 +256,55 @@ class _CustomDialerScreenState extends State<CustomDialerScreen> {
                     ),
                     child:
                         _isDialing
-                            ? const CircularProgressIndicator(
-                              color: Colors.black,
-                              strokeWidth: 3,
-                            )
+                            ? isRinging
+                                // Show ringing animation
+                                ? Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    // Pulsating circles
+                                    ...List.generate(3, (index) {
+                                      return TweenAnimationBuilder<double>(
+                                        tween: Tween<double>(
+                                          begin: 0.0,
+                                          end: 1.0,
+                                        ),
+                                        duration: Duration(seconds: 1 + index),
+                                        curve: Curves.easeOutQuart,
+                                        builder: (context, value, child) {
+                                          return Opacity(
+                                            opacity: (1.0 - value) * 0.7,
+                                            child: Transform.scale(
+                                              scale: value * 0.8 + 0.2,
+                                              child: Container(
+                                                width: 70,
+                                                height: 70,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                    color: Colors.white,
+                                                    width: 2.0 * (1.0 - value),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }),
+                                    // Phone icon
+                                    const Icon(
+                                      Icons.phone,
+                                      size: 32,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                )
+                                // Regular loading indicator
+                                : const CircularProgressIndicator(
+                                  color: Colors.black,
+                                  strokeWidth: 3,
+                                )
+                            // Regular call button
                             : const Icon(
                               Icons.call,
                               size: 32,

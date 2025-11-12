@@ -6,6 +6,8 @@ enum AuthStatus {
   loading,
   authenticated,
   apiAuthenticated,
+  apiRegisterAuthenticated,
+  apiLoginAuthenticated,
   unauthenticated,
   needsProfileCompletion,
   hasMandatoryAgreements,
@@ -19,6 +21,10 @@ enum AuthStatus {
   registerCodeSent,
   registerCodeResent,
   registeredSuccessfully,
+  loginError,
+  registerError,
+  registerPinVerificationError,
+  checkAuthStatusError,
   error,
 }
 

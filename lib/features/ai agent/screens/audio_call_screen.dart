@@ -242,17 +242,34 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                               onPressed: () async {
                                 // Process phone number here
                                 if (_phoneController.text.isNotEmpty) {
-                                  // Show loading indicator
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Processing your request...',
-                                      ),
-                                      duration: Duration(seconds: 2),
+                                  // Get the call service and set it to ringing state
+                                  final callService = Provider.of<CallService>(
+                                    context,
+                                    listen: false,
+                                  );
+
+                                  // Start the call in ringing state
+                                  callService.startRinging(
+                                    _phoneController.text,
+                                  );
+
+                                  // Close the dialog
+                                  Navigator.pop(context);
+
+                                  // Show the dialer screen immediately in ringing state
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => CustomDialerScreen(
+                                            initialPhoneNumber:
+                                                _phoneController.text,
+                                            isRinging: true,
+                                          ),
                                     ),
                                   );
 
-                                  // Call the telephony service API
+                                  // Now make the API call in the background
                                   final telephonyService = TelephonyService();
                                   final result = await telephonyService
                                       .initiateCall(
@@ -261,43 +278,37 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                                         email: _emailController.text,
                                       );
 
-                                  Navigator.pop(context); // Close the dialog
-
                                   if (result['success']) {
-                                    // Navigate to the dialer screen with the phone number and session ID
+                                    // API call succeeded, update the call state
                                     if (context.mounted) {
-                                      // Get the call service and initialize it with the session ID
-                                      final callService =
-                                          Provider.of<CallService>(
-                                            context,
-                                            listen: false,
-                                          );
-
                                       // Extract call data from API response
                                       final callData =
                                           result['data']
                                               as Map<String, dynamic>;
 
-                                      // Start the call with the session ID and call data from the API
-                                      callService.initiateCall(
-                                        result['phoneNumber'],
-                                        sessionId: result['sessionId'],
-                                        callData: callData,
+                                      // Debug log to see what's in the response
+                                      print(
+                                        'Call API response data: $callData',
                                       );
 
-                                      // Navigate to the dialer screen
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (context) => CustomDialerScreen(
-                                                initialPhoneNumber:
-                                                    result['phoneNumber'],
-                                              ),
-                                        ),
+                                      // Use the SIP call ID if available, otherwise fall back to session ID
+                                      final String callId =
+                                          result['sipCallId'] ??
+                                          result['sessionId'];
+
+                                      // Update the call with the appropriate call ID and data from the API
+                                      callService.initiateCall(
+                                        result['phoneNumber'],
+                                        sessionId: callId,
+                                        callData: callData,
+                                        skipRingingState:
+                                            true, // Skip ringing since we're already showing it
                                       );
                                     }
                                   } else {
+                                    // API call failed, end the call
+                                    callService.endCall();
+
                                     // Show error message
                                     if (context.mounted) {
                                       ScaffoldMessenger.of(

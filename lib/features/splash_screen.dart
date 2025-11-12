@@ -127,7 +127,9 @@ class _SplashScreenState extends State<SplashScreen>
                 previous.status != current.status);
       },
       listener: (context, state) {
-        _proceedWithNavigation(context, state);
+        if (state.status == AuthStatus.authenticated) {
+          _proceedWithNavigation(context, state);
+        }
       },
       child: Scaffold(
         backgroundColor: AppTheme.secondaryColor,

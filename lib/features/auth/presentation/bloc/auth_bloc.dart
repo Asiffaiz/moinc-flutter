@@ -20,8 +20,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     //   _onCheckMandatoryAgreementsBeforeLogin,
     // );
     on<AuthCheckRequested>(_onAuthCheckRequested);
-    on<SignInWithEmailPasswordRequested>(_onSignInWithEmailPasswordRequested);
-    on<SignUpWithEmailPasswordRequested>(_onSignUpWithEmailPasswordRequested);
+    // on<SignInWithEmailPasswordRequested>(_onSignInWithEmailPasswordRequested);
+    // on<SignUpWithEmailPasswordRequested>(_onSignUpWithEmailPasswordRequested);
     on<SignInWithGoogleRequested>(_onSignInWithGoogleRequested);
     on<SignUpWithGoogleRequested>(_onSignUpWithGoogleRequested);
     // on<SignInWithBusinessCardRequested>(_onSignInWithBusinessCardRequested);
@@ -129,14 +129,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         emit(
           state.copyWith(
-            status: AuthStatus.error,
+            status: AuthStatus.registerPinVerificationError,
             errorMessage: result['message'] ?? 'Registration failed',
           ),
         );
       }
     } catch (e) {
       emit(
-        state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
+        state.copyWith(
+          status: AuthStatus.registerPinVerificationError,
+          errorMessage: e.toString(),
+        ),
       );
     }
   }
@@ -157,21 +160,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // add(const CheckMandatoryAgreements());
         emit(
           state.copyWith(
-            status: AuthStatus.apiAuthenticated,
+            status: AuthStatus.apiLoginAuthenticated,
             apiUserData: result,
           ),
         );
       } else {
         emit(
           state.copyWith(
-            status: AuthStatus.error,
+            status: AuthStatus.loginError,
             errorMessage: result['message'] ?? 'Failed to login',
           ),
         );
       }
     } catch (e) {
       emit(
-        state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
+        state.copyWith(
+          status: AuthStatus.loginError,
+          errorMessage: e.toString(),
+        ),
       );
     }
   }
@@ -189,7 +195,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
     } catch (e) {
       emit(
-        state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
+        state.copyWith(
+          status: AuthStatus.loginError,
+          errorMessage: e.toString(),
+        ),
       );
     }
   }
@@ -223,7 +232,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       emit(
-        state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
+        state.copyWith(
+          status: AuthStatus.checkAuthStatusError,
+          errorMessage: e.toString(),
+        ),
       );
     }
   }
@@ -254,86 +266,89 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       emit(
-        state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
+        state.copyWith(
+          status: AuthStatus.checkAuthStatusError,
+          errorMessage: e.toString(),
+        ),
       );
     }
   }
 
-  Future<void> _onSignInWithEmailPasswordRequested(
-    SignInWithEmailPasswordRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(state.copyWith(status: AuthStatus.loading));
+  // Future<void> _onSignInWithEmailPasswordRequested(
+  //   SignInWithEmailPasswordRequested event,
+  //   Emitter<AuthState> emit,
+  // ) async {
+  //   emit(state.copyWith(status: AuthStatus.loading));
 
-    try {
-      // final result = await _authRepository.signInWithEmailPassword(
-      //   event.email,
-      //   event.password,
-      // );
-      final result = null;
-      if (result.isAuthenticated) {
-        emit(
-          state.copyWith(status: AuthStatus.authenticated, user: result.user),
-        );
-      } else if (result.isError) {
-        emit(
-          state.copyWith(
-            status: AuthStatus.error,
-            errorMessage: result.errorMessage ?? 'Failed to sign in',
-          ),
-        );
-      } else if (result.isCanceled) {
-        emit(state.copyWith(status: AuthStatus.unauthenticated));
-      } else if (result.needsProfileCompletion) {
-        emit(
-          state.copyWith(
-            status: AuthStatus.needsProfileCompletion,
-            additionalData: result.additionalData,
-          ),
-        );
-      }
-    } catch (e) {
-      emit(
-        state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
-      );
-    }
-  }
+  //   try {
+  //     // final result = await _authRepository.signInWithEmailPassword(
+  //     //   event.email,
+  //     //   event.password,
+  //     // );
+  //     final result = null;
+  //     if (result.isAuthenticated) {
+  //       emit(
+  //         state.copyWith(status: AuthStatus.authenticated, user: result.user),
+  //       );
+  //     } else if (result.isError) {
+  //       emit(
+  //         state.copyWith(
+  //           status: AuthStatus.error,
+  //           errorMessage: result.errorMessage ?? 'Failed to sign in',
+  //         ),
+  //       );
+  //     } else if (result.isCanceled) {
+  //       emit(state.copyWith(status: AuthStatus.unauthenticated));
+  //     } else if (result.needsProfileCompletion) {
+  //       emit(
+  //         state.copyWith(
+  //           status: AuthStatus.needsProfileCompletion,
+  //           additionalData: result.additionalData,
+  //         ),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     emit(
+  //       state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
+  //     );
+  //   }
+  // }
 
-  Future<void> _onSignUpWithEmailPasswordRequested(
-    SignUpWithEmailPasswordRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(state.copyWith(status: AuthStatus.loading));
+  // Future<void> _onSignUpWithEmailPasswordRequested(
+  //   SignUpWithEmailPasswordRequested event,
+  //   Emitter<AuthState> emit,
+  // ) async {
+  //   emit(state.copyWith(status: AuthStatus.loading));
 
-    try {
-      // final result = await _authRepository.signUpWithEmailPassword(
-      //   event.email,
-      //   event.password,
-      //   event.firstName,
-      //   event.lastName,
-      // );
-      final result = null;
+  //   try {
+  //     // final result = await _authRepository.signUpWithEmailPassword(
+  //     //   event.email,
+  //     //   event.password,
+  //     //   event.firstName,
+  //     //   event.lastName,
+  //     // );
+  //     final result = null;
 
-      if (result.isAuthenticated) {
-        emit(
-          state.copyWith(status: AuthStatus.authenticated, user: result.user),
-        );
-      } else if (result.isError) {
-        emit(
-          state.copyWith(
-            status: AuthStatus.error,
-            errorMessage: result.errorMessage ?? 'Failed to sign up',
-          ),
-        );
-      } else if (result.isCanceled) {
-        emit(state.copyWith(status: AuthStatus.unauthenticated));
-      }
-    } catch (e) {
-      emit(
-        state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
-      );
-    }
-  }
+  //     if (result.isAuthenticated) {
+  //       emit(
+  //         state.copyWith(status: AuthStatus.authenticated, user: result.user),
+  //       );
+  //     } else if (result.isError) {
+  //       emit(
+  //         state.copyWith(
+  //           status: AuthStatus.error,
+  //           errorMessage: result.errorMessage ?? 'Failed to sign up',
+  //         ),
+  //       );
+  //     } else if (result.isCanceled) {
+  //       emit(state.copyWith(status: AuthStatus.unauthenticated));
+  //     }
+  //   } catch (e) {
+  //     emit(
+  //       state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
+  //     );
+  //   }
+  // }
 
   Future<void> _onSignInWithGoogleRequested(
     SignInWithGoogleRequested event,
@@ -591,7 +606,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       final success = await _authRepository.sendVerifyRegisterCode(event.email);
-
+      print(success);
       if (success?['success'] == true) {
         emit(state.copyWith(status: AuthStatus.registerCodeResent));
       } else {
@@ -679,14 +694,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         emit(
           state.copyWith(
-            status: AuthStatus.error,
+            status: AuthStatus.registerPinVerificationError,
             errorMessage: 'Invalid verification code. Please try again.',
           ),
         );
       }
     } catch (e) {
       emit(
-        state.copyWith(status: AuthStatus.error, errorMessage: e.toString()),
+        state.copyWith(
+          status: AuthStatus.registerPinVerificationError,
+          errorMessage: e.toString(),
+        ),
       );
     }
   }

@@ -67,9 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state.status == AuthStatus.authenticated) {
-          Navigator.pushReplacementNamed(context, AppConstants.dashboardRoute);
-        } else if (state.status == AuthStatus.apiAuthenticated) {
+        if (state.status == AuthStatus.apiLoginAuthenticated) {
           setState(() {
             //_successMessage = "Login successful. Redirecting to dashboard...";
             _isLoading = false;
@@ -100,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       SignUpScreen(additionalData: state.additionalData),
             ),
           );
-        } else if (state.status == AuthStatus.error) {
+        } else if (state.status == AuthStatus.loginError) {
           if (state.errorMessage == "Invalid Email OR Password") {
             setState(() {
               //  _errorMessage = 'Invalid Email OR Password';
@@ -113,32 +111,33 @@ class _LoginScreenState extends State<LoginScreen> {
                 backgroundColor: AppTheme.errorColor,
               ),
             );
-          } else if (state.errorMessage == "already_created") {
-            setState(() {
-              _isLoading = false;
-            });
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Account already created with this email address. Please choose another one',
-                ),
-                backgroundColor: AppTheme.errorColor,
-              ),
-            );
-          } else {
-            setState(() {
-              //  _errorMessage = 'Something went wrong please try again later';
-              _isLoading = false;
-            });
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Something went wrong please try again later'),
-                backgroundColor: AppTheme.errorColor,
-              ),
-            );
           }
+          //  else if (state.errorMessage == "already_created") {
+          //   setState(() {
+          //     _isLoading = false;
+          //   });
+
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //     const SnackBar(
+          //       content: Text(
+          //         'Account already created with this email address. Please choose another one',
+          //       ),
+          //       backgroundColor: AppTheme.errorColor,
+          //     ),
+          //   );
+          // } else {
+          //   setState(() {
+          //     //  _errorMessage = 'Something went wrong please try again later';
+          //     _isLoading = false;
+          //   });
+
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //     const SnackBar(
+          //       content: Text('Something went wrong please try again later'),
+          //       backgroundColor: AppTheme.errorColor,
+          //     ),
+          //   );
+          // }
         } else if (state.status == AuthStatus.loading) {
           setState(() {
             _isLoading = true;

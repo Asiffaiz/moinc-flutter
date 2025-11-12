@@ -61,11 +61,15 @@ class TelephonyService {
       // Parse the response
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final responseData = jsonDecode(response.body);
+        // Extract LiveKit SIP call ID if available
+        final sipCallId = responseData['livekit_sip_call_id'] ?? '';
+
         return {
           'success': true,
           'data': responseData,
           'phoneNumber': formattedNumber,
           'sessionId': responseData['session_id'] ?? '',
+          'sipCallId': sipCallId,
         };
       } else {
         return {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:moinc/services/call_hangup_service.dart';
 
@@ -20,6 +21,10 @@ class CallService extends ChangeNotifier {
 
   String _callId = '';
   String get callId => _callId;
+
+  // Call provider type (twilio or livekit)
+  String _callProvider = 'twilio'; // Default to Twilio for outbound calls
+  String get callProvider => _callProvider;
 
   // LiveKit specific details
   String _roomName = 'moinc_room';
@@ -46,19 +51,30 @@ class CallService extends ChangeNotifier {
   final List<CallHistoryEntry> _callHistory = [];
   List<CallHistoryEntry> get callHistory => List.unmodifiable(_callHistory);
 
+  // Start a call in ringing state (before API response)
+  void startRinging(String phoneNumber) {
+    if (_callState != CallState.idle) {
+      return;
+    }
+
+    _phoneNumber = phoneNumber;
+    _callState = CallState.ringing;
+    notifyListeners();
+  }
+
   // Initiate a call with a phone number and optional session ID
   Future<bool> initiateCall(
     String phoneNumber, {
     String? sessionId,
     Map<String, dynamic>? callData,
+    bool skipRingingState = false,
   }) async {
-    if (_callState != CallState.idle) {
-      return false;
+    // If we're not already in ringing state and not skipping it, start in ringing state
+    if (_callState != CallState.ringing && !skipRingingState) {
+      _phoneNumber = phoneNumber;
+      _callState = CallState.dialing;
+      notifyListeners();
     }
-
-    _phoneNumber = phoneNumber;
-    _callState = CallState.dialing;
-    notifyListeners();
 
     // If we have a session ID from the API, we can consider the call as already connected
     if (sessionId != null) {
@@ -66,10 +82,19 @@ class CallService extends ChangeNotifier {
       _callId = sessionId;
       _startTime = DateTime.now();
 
-      // Extract LiveKit specific details from call data if available
+      // Extract call details from API response
       if (callData != null) {
-        _roomName = callData['room'] ?? 'moinc_room';
-        _participantId = callData['livekit_participant_id'] ?? '';
+        // Check if this is a LiveKit SIP call by looking for livekit_sip_call_id in the response
+        if (callData['livekit_sip_call_id'] != null) {
+          _callProvider = 'livekit';
+          // Use the actual SIP call ID from the response, not the session ID
+          _callId = callData['livekit_sip_call_id'] ?? sessionId;
+          _roomName = callData['room'] ?? 'moinc_room';
+          _participantId = callData['livekit_participant_id'] ?? '';
+        } else {
+          // This is a Twilio call
+          _callProvider = 'twilio';
+        }
       }
 
       _startCallTimer();
@@ -136,15 +161,32 @@ class CallService extends ChangeNotifier {
       return false;
     }
 
-    // If we have a LiveKit SIP call ID and participant ID, use the hangup service
-    if (_callId.startsWith('SCL_') && _participantId.isNotEmpty) {
+    // Use the hangup service for both LiveKit and Twilio calls
+    if (_callId.isNotEmpty) {
       try {
+        if (kDebugMode) {
+          print('Ending call with ID: $_callId');
+          print('Call provider: $_callProvider');
+          print('Room name: $_roomName');
+          print('Participant ID: $_participantId');
+        }
+
         final hangupService = CallHangupService();
+
+        // For LiveKit calls, we need room name and participant ID
+        // For Twilio calls, we just need the call SID
         final result = await hangupService.hangupCall(
           callSid: _callId,
-          roomName: _roomName,
-          participantId: _participantId,
+          roomName: _callProvider == 'livekit' ? _roomName : null,
+          participantId: _callProvider == 'livekit' ? _participantId : null,
         );
+
+        if (kDebugMode) {
+          print('Hangup result: ${result['success']} - ${result['message']}');
+          if (result.containsKey('provider')) {
+            print('Provider used: ${result['provider']}');
+          }
+        }
 
         if (!result['success']) {
           // If API call failed, still proceed with local call cleanup
@@ -157,7 +199,10 @@ class CallService extends ChangeNotifier {
         // Continue with local cleanup even if API call fails
       }
     } else {
-      // Simulate API call delay for non-LiveKit calls
+      if (kDebugMode) {
+        print('No call ID available, skipping API hangup');
+      }
+      // Simulate API call delay for calls without an ID
       await Future.delayed(const Duration(milliseconds: 500));
     }
 
@@ -252,6 +297,7 @@ class CallService extends ChangeNotifier {
     _callState = CallState.idle;
     _phoneNumber = '';
     _callId = '';
+    _callProvider = 'twilio'; // Default back to twilio
     _roomName = 'moinc_room';
     _participantId = '';
     _startTime = null;
