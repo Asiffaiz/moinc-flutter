@@ -3,6 +3,7 @@ import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/dashboard/presentation/widgets/dashboard_home_content.dart';
 import 'package:moinc/features/documents/presentation/screens/documents_screen.dart';
+import 'package:moinc/features/profile/presentation/screens/call_logs_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/profile_screen.dart';
 import 'package:moinc/features/reports/presentation/screens/reports_screen.dart';
 import 'package:provider/provider.dart';
@@ -103,11 +104,11 @@ class _HomeScreenState extends State<HomeScreen>
             _buildDashboardTab(),
 
             // Documents Tab
-            const DocumentsScreen(),
+            // const DocumentsScreen(),
 
             // Reports Tab
-            _buildReportsTab(),
-
+            // _buildReportsTab(),
+            CallLogsScreen(),
             // Profile Tab
             _buildProfileTab(),
           ],
@@ -138,17 +139,22 @@ class _HomeScreenState extends State<HomeScreen>
                 width: 24,
                 color: AppTheme.primaryColor,
               ),
-              label: 'Home',
+              label: 'Maya',
             ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.folder_outlined),
+            //   activeIcon: Icon(Icons.folder),
+            //   label: 'Documents',
+            // ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.analytics_outlined),
+            //   activeIcon: Icon(Icons.analytics),
+            //   label: 'Reports',
+            // ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.folder_outlined),
-              activeIcon: Icon(Icons.folder),
-              label: 'Documents',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.analytics_outlined),
-              activeIcon: Icon(Icons.analytics),
-              label: 'Reports',
+              icon: Icon(Icons.call_outlined),
+              activeIcon: Icon(Icons.call),
+              label: 'Call Logs',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),

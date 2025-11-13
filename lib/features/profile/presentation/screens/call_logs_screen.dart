@@ -48,23 +48,23 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
-      appBar: AppBar(
-        title: const Text('Call Logs'),
-        backgroundColor: AppTheme.secondaryColor,
-        foregroundColor: AppTheme.primaryColor,
-        // Commented out tab bar
-        // bottom: TabBar(
-        //   controller: _tabController,
-        //   labelColor: AppTheme.primaryColor,
-        //   unselectedLabelColor: Colors.white70,
-        //   indicatorColor: AppTheme.primaryColor,
-        //   tabs: const [
-        //     Tab(text: 'All'),
-        //     Tab(text: 'LiveKit'),
-        //     Tab(text: 'Twilio'),
-        //   ],
-        // ),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Call Logs'),
+      //   backgroundColor: AppTheme.secondaryColor,
+      //   foregroundColor: AppTheme.primaryColor,
+      //   // Commented out tab bar
+      //   // bottom: TabBar(
+      //   //   controller: _tabController,
+      //   //   labelColor: AppTheme.primaryColor,
+      //   //   unselectedLabelColor: Colors.white70,
+      //   //   indicatorColor: AppTheme.primaryColor,
+      //   //   tabs: const [
+      //   //     Tab(text: 'All'),
+      //   //     Tab(text: 'LiveKit'),
+      //   //     Tab(text: 'Twilio'),
+      //   //   ],
+      //   // ),
+      // ),
       body: _buildCallLogsList(_allLogs),
       // Commented out tab bar view
       // body: TabBarView(
