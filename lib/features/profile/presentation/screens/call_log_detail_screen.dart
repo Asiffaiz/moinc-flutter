@@ -22,6 +22,13 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      // This is called when the tab selection changes
+      // We need to rebuild the UI to update the tab appearance
+      if (_tabController.indexIsChanging) {
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -191,33 +198,86 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
           SliverPersistentHeader(
             delegate: _SliverAppBarDelegate(
               Container(
-                decoration: BoxDecoration(
-                  color: AppTheme.secondaryColor,
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Colors.grey.withOpacity(0.2),
-                      width: 1,
-                    ),
-                  ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 8,
                 ),
-                child: TabBar(
-                  controller: _tabController,
-                  labelColor: AppTheme.primaryColor,
-                  unselectedLabelColor: Colors.white.withOpacity(0.7),
-                  indicatorColor: AppTheme.primaryColor,
-                  indicatorWeight: 3,
-                  tabs: const [
-                    Tab(text: 'Details'),
-                    Tab(text: 'Transcription'),
+                color: AppTheme.secondaryColor,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        _tabController.animateTo(0);
+                      },
+                      child: Container(
+                        height: 36,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 0,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              _tabController.index == 0
+                                  ? AppTheme.primaryColor
+                                  : Colors.grey.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Details',
+                            style: TextStyle(
+                              color:
+                                  _tabController.index == 0
+                                      ? Colors.black
+                                      : Colors.white,
+                              fontWeight:
+                                  _tabController.index == 0
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    GestureDetector(
+                      onTap: () {
+                        _tabController.animateTo(1);
+                      },
+                      child: Container(
+                        height: 36,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 0,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              _tabController.index == 1
+                                  ? AppTheme.primaryColor
+                                  : Colors.grey.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Transcription',
+                            style: TextStyle(
+                              color:
+                                  _tabController.index == 1
+                                      ? Colors.black
+                                      : Colors.white,
+                              fontWeight:
+                                  _tabController.index == 1
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
-                  labelStyle: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                  unselectedLabelStyle: const TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 16,
-                  ),
                 ),
               ),
             ),
@@ -373,23 +433,23 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                   fontSize: 18,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Text(
-                  widget.callLog.formattedDuration,
-                  style: TextStyle(
-                    color: AppTheme.primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.symmetric(
+              //     horizontal: 12,
+              //     vertical: 6,
+              //   ),
+              //   decoration: BoxDecoration(
+              //     color: AppTheme.primaryColor.withOpacity(0.1),
+              //     borderRadius: BorderRadius.circular(16),
+              //   ),
+              //   child: Text(
+              //     widget.callLog.formattedDuration,
+              //     style: TextStyle(
+              //       color: AppTheme.primaryColor,
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           const SizedBox(height: 16),
@@ -423,15 +483,15 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                 Row(
                   children: [
                     Icon(Icons.mic, color: AppTheme.primaryColor, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Audio Recording',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                      ),
-                    ),
+                    // const SizedBox(width: 8),
+                    // Text(
+                    //   'Audio Recording',
+                    //   style: TextStyle(
+                    //     color: Colors.white,
+                    //     fontWeight: FontWeight.w500,
+                    //     fontSize: 16,
+                    //   ),
+                    // ),
                   ],
                 ),
 
@@ -556,23 +616,23 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                   fontSize: 18,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Text(
-                  widget.callLog.formattedDate,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.symmetric(
+              //     horizontal: 12,
+              //     vertical: 6,
+              //   ),
+              //   decoration: BoxDecoration(
+              //     color: Colors.grey.withOpacity(0.2),
+              //     borderRadius: BorderRadius.circular(16),
+              //   ),
+              //   child: Text(
+              //     widget.callLog.formattedDate,
+              //     style: TextStyle(
+              //       color: Colors.white.withOpacity(0.9),
+              //       fontWeight: FontWeight.w500,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           const SizedBox(height: 16),
@@ -591,43 +651,43 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
               child: Column(
                 children: [
                   _buildDetailRowCard('Date', widget.callLog.formattedDate),
-                  const Divider(color: Colors.grey),
+                  //   const Divider(color: Colors.grey),
                   _buildDetailRowCard('Time', formattedTime),
-                  const Divider(color: Colors.grey),
+                  //  const Divider(color: Colors.grey),
                   _buildDetailRowCard(
                     'Duration',
                     widget.callLog.formattedDuration,
                   ),
-                  const Divider(color: Colors.grey),
+                  //    const Divider(color: Colors.grey),
                   _buildDetailRowCard(
                     'Status',
                     widget.callLog.statusText,
                     statusColor: _getStatusColor(),
                   ),
                   if (widget.callLog is LiveKitCallLog) ...[
-                    const Divider(color: Colors.grey),
+                    //    const Divider(color: Colors.grey),
                     _buildDetailRowCard(
                       'Agent',
                       (widget.callLog as LiveKitCallLog).agentName ?? 'Maya',
                     ),
-                    const Divider(color: Colors.grey),
-                    _buildDetailRowCard(
-                      'Email',
-                      (widget.callLog as LiveKitCallLog).userEmail,
-                    ),
+                    //   const Divider(color: Colors.grey),
+                    // _buildDetailRowCard(
+                    //   'Email',
+                    //   (widget.callLog as LiveKitCallLog).userEmail,
+                    // ),
                   ] else if (widget.callLog is TwilioCallLog) ...[
-                    const Divider(color: Colors.grey),
+                    //   const Divider(color: Colors.grey),
                     _buildDetailRowCard(
                       'Type',
                       (widget.callLog as TwilioCallLog).isOutgoing
                           ? 'Outgoing'
                           : 'Incoming',
                     ),
-                    const Divider(color: Colors.grey),
-                    _buildDetailRowCard(
-                      'Phone',
-                      (widget.callLog as TwilioCallLog).phoneNumber,
-                    ),
+                    //   const Divider(color: Colors.grey),
+                    // _buildDetailRowCard(
+                    //   'Phone',
+                    //   (widget.callLog as TwilioCallLog).phoneNumber,
+                    // ),
                   ],
                 ],
               ),
@@ -918,14 +978,14 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return _child;
+    return SizedBox(height: maxExtent, child: _child);
   }
 
   @override
-  double get maxExtent => 48; // Height for the tab bar container
+  double get maxExtent => 70; // Height for the tab bar container
 
   @override
-  double get minExtent => 48; // Height for the tab bar container
+  double get minExtent => 70; // Height for the tab bar container
 
   @override
   bool shouldRebuild(covariant _SliverAppBarDelegate oldDelegate) {
