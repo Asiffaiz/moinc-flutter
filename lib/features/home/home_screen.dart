@@ -4,7 +4,7 @@ import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/dashboard/presentation/widgets/dashboard_home_content.dart';
 import 'package:moinc/features/documents/presentation/screens/documents_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/call_logs_screen.dart';
-import 'package:moinc/features/profile/presentation/screens/profile_screen.dart';
+import 'package:moinc/features/profile/presentation/screens/profile_screen_home.dart';
 import 'package:moinc/features/reports/presentation/screens/reports_screen.dart';
 import 'package:provider/provider.dart';
 import '../ai%20agent/controllers/app_ctrl.dart' as app_ctrl;
@@ -241,6 +241,6 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildProfileTab() {
-    return const ProfileScreen();
+    return const ProfileScreenHome();
   }
 }

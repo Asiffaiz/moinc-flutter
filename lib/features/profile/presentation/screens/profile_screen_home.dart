@@ -6,18 +6,19 @@ import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_event.dart';
 import 'package:moinc/features/auth/presentation/bloc/user_cubit.dart';
+import 'package:moinc/features/profile/presentation/screens/client_profile_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/privacy_policy_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/terms_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class ProfileScreenHome extends StatefulWidget {
+  const ProfileScreenHome({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfileScreenHome> createState() => _ProfileScreenHomeState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenHomeState extends State<ProfileScreenHome> {
   String userEmail = '';
   String userName = '';
   @override
@@ -62,7 +63,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: 'Profile Details',
                     icon: Icons.person_outline,
                     onTap: () {
-                      // Navigate to profile details screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ClientProfileScreen(),
+                        ),
+                      );
                     },
                   ),
                   _buildDivider(),

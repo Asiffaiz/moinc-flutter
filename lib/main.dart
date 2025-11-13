@@ -16,7 +16,9 @@ import 'package:moinc/features/dashboard/domain/Repositories/dashboard_repositor
 import 'package:moinc/features/dashboard/presentation/bloc/bloc/dashboard_bloc.dart';
 import 'package:moinc/features/home/home_screen.dart';
 import 'package:moinc/features/auth/presentation/login_screen.dart';
-import 'package:moinc/features/profile/presentation/screens/profile_screen.dart';
+import 'package:moinc/features/profile/data/repositories/profile_repository.dart';
+import 'package:moinc/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:moinc/features/profile/presentation/screens/profile_screen_home.dart';
 import 'package:moinc/features/reports/domain/repositories/reports_repository.dart';
 import 'package:moinc/features/reports/presentation/bloc/reports_bloc.dart';
 import 'package:moinc/services/call_service.dart';
@@ -121,7 +123,7 @@ class MyApp extends StatelessWidget {
 
     // final authRepository = GetIt.I<AuthRepository>();
 
-    return MultiRepositoryProvider(
+    return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(create: (context) => authBloc),
         BlocProvider(create: (_) => UserCubit()..loadUser()),
@@ -135,6 +137,12 @@ class MyApp extends StatelessWidget {
               (context) => DashboardBloc(
                 dashboardRepository: GetIt.I<DashboardRepository>(),
               ),
+        ),
+
+        BlocProvider<ProfileBloc>(
+          create:
+              (context) =>
+                  ProfileBloc(profileRepository: GetIt.I<ProfileRepository>()),
         ),
       ],
       child: MaterialApp(
@@ -158,7 +166,7 @@ class MyApp extends StatelessWidget {
                 ],
                 child: const HomeScreen(),
               ),
-          AppConstants.profileRoute: (context) => const ProfileScreen(),
+          AppConstants.profileRoute: (context) => const ProfileScreenHome(),
           AppConstants.reportsRoute: (context) => const ReportsScreen(),
         },
       ),

@@ -9,6 +9,8 @@ import 'package:moinc/features/auth/services/token_service.dart';
 import 'package:moinc/features/dashboard/data/Repositories/dashboard_repository_impl.dart';
 import 'package:moinc/features/dashboard/data/services/dashboard_service.dart';
 import 'package:moinc/features/dashboard/domain/Repositories/dashboard_repository.dart';
+import 'package:moinc/features/profile/data/repositories/profile_repository.dart';
+import 'package:moinc/features/profile/data/services/profile_service.dart';
 import 'package:moinc/features/reports/data/repositories/reports_repository_impl.dart';
 import 'package:moinc/features/reports/data/services/reports_service.dart';
 import 'package:moinc/features/reports/domain/repositories/reports_repository.dart';
@@ -45,7 +47,7 @@ Future<void> initializeDependencies() async {
   // getIt.registerLazySingleton(() => ProductService());
 
   // // Register ProfileService
-  // getIt.registerLazySingleton(() => ProfileService());
+  getIt.registerLazySingleton(() => ProfileService());
 
   // We'll register the GoRouter after the AuthBloc is created in main.dart
   // Don't register an empty GoRouter here as it will cause issues
@@ -96,7 +98,7 @@ Future<void> initializeDependencies() async {
 
   // getIt.registerLazySingleton<ProductRepository>(() => ProductRepository());
 
-  // getIt.registerLazySingleton<ProfileRepository>(() => ProfileRepository());
+  getIt.registerLazySingleton<ProfileRepository>(() => ProfileRepository());
 
   // BLoCs
   getIt.registerFactory(
