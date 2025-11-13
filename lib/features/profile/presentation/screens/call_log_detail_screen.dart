@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:moinc/config/theme.dart';
@@ -26,6 +28,12 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
   Duration _position = Duration.zero;
   String? _audioUrl;
 
+  // Stream subscriptions
+  StreamSubscription? _playerStateSubscription;
+  StreamSubscription? _positionSubscription;
+  StreamSubscription? _durationSubscription;
+  StreamSubscription? _processingStateSubscription;
+
   @override
   void initState() {
     super.initState();
@@ -52,33 +60,37 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
       _audioUrl = twilioLog.recordingUrl;
     }
 
-    // Setup listeners
-    _audioPlayer.playerStateStream.listen((state) {
-      if (state.playing != _isPlaying) {
+    // Setup listeners with proper subscription tracking
+    _playerStateSubscription = _audioPlayer.playerStateStream.listen((state) {
+      if (state.playing != _isPlaying && mounted) {
         setState(() {
           _isPlaying = state.playing;
         });
       }
     });
 
-    _audioPlayer.positionStream.listen((position) {
-      setState(() {
-        _position = position;
-        if (_duration.inSeconds > 0) {
-          _playbackPosition = position.inSeconds / _duration.inSeconds;
-        }
-      });
+    _positionSubscription = _audioPlayer.positionStream.listen((position) {
+      if (mounted) {
+        setState(() {
+          _position = position;
+          if (_duration.inSeconds > 0) {
+            _playbackPosition = position.inSeconds / _duration.inSeconds;
+          }
+        });
+      }
     });
 
-    _audioPlayer.durationStream.listen((duration) {
-      if (duration != null) {
+    _durationSubscription = _audioPlayer.durationStream.listen((duration) {
+      if (duration != null && mounted) {
         setState(() {
           _duration = duration;
         });
       }
     });
 
-    _audioPlayer.processingStateStream.listen((state) async {
+    _processingStateSubscription = _audioPlayer.processingStateStream.listen((
+      state,
+    ) async {
       if (state == ProcessingState.completed) {
         // First pause the player to prevent auto-play
         await _audioPlayer.pause();
@@ -156,11 +168,18 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
 
   @override
   void dispose() {
+    // Cancel all stream subscriptions first to prevent setState after dispose errors
+    _playerStateSubscription?.cancel();
+    _positionSubscription?.cancel();
+    _durationSubscription?.cancel();
+    _processingStateSubscription?.cancel();
+
     // Dispose the audio player when screen is disposed (navigating back)
     // Make sure audio is stopped before disposing
     _audioPlayer.stop().then((_) {
       _audioPlayer.dispose();
     });
+
     _tabController.dispose();
     // Remove observer
     WidgetsBinding.instance.removeObserver(this);
