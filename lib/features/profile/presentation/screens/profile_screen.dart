@@ -9,6 +9,7 @@ import 'package:moinc/features/auth/presentation/bloc/user_cubit.dart';
 import 'package:moinc/features/profile/presentation/screens/call_logs_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/reminders_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/privacy_policy_screen.dart';
+import 'package:moinc/features/profile/presentation/screens/terms_screen.dart';
 import 'package:moinc/services/local_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -66,33 +67,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                   ),
                   _buildDivider(),
-                  _buildListTile(
-                    title: 'Audio Call Logs',
-                    icon: Icons.call,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CallLogsScreen(),
-                        ),
-                      );
-                    },
-                    badge: 10, // Number of call logs
-                  ),
-                  _buildDivider(),
-                  _buildListTile(
-                    title: 'My Reminders',
-                    icon: Icons.event_note,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RemindersScreen(),
-                        ),
-                      );
-                    },
-                    badge: 3, // Number of upcoming reminders
-                  ),
+                  // _buildListTile(
+                  //   title: 'Audio Call Logs',
+                  //   icon: Icons.call,
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const CallLogsScreen(),
+                  //       ),
+                  //     );
+                  //   },
+                  //   badge: 10, // Number of call logs
+                  // ),
+                  // _buildDivider(),
+                  // _buildListTile(
+                  //   title: 'My Reminders',
+                  //   icon: Icons.event_note,
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const RemindersScreen(),
+                  //       ),
+                  //     );
+                  //   },
+                  //   badge: 3, // Number of upcoming reminders
+                  // ),
                   _buildDivider(),
                   _buildListTile(
                     title: 'Privacy Policy',
@@ -111,18 +112,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: 'Terms & Conditions',
                     icon: Icons.description_outlined,
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => const TermsScreen(),
-                      //   ),
-                      // );
-
-                      NotificationService.showSimpleNotification(
-                        title: 'Your electricity bill is due!',
-                        body:
-                            'Your electricity bill is due on November 15, 2025. Please pay it to avoid late payment charges.',
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TermsScreen(),
+                        ),
                       );
+
+                      // NotificationService.showSimpleNotification(
+                      //   title: 'Your electricity bill is due!',
+                      //   body:
+                      //       'Your electricity bill is due on November 15, 2025. Please pay it to avoid late payment charges.',
+                      // );
                     },
                   ),
                 ],
@@ -233,6 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     int? badge,
   }) {
     return ListTile(
+   
       leading: Container(
         width: 40,
         height: 40,

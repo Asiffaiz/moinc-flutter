@@ -116,46 +116,37 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
-      body: CustomScrollView(
-        slivers: [
-          // App Bar with caller info
-          SliverAppBar(
-            expandedHeight: 200.0,
-            floating: false,
-            pinned: true,
-            backgroundColor: AppTheme.secondaryColor,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                color: AppTheme.secondaryColor,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 40),
-                      // Avatar
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor:
-                            widget.callLog.status == CallStatus.missed ||
-                                    widget.callLog.status == CallStatus.failed
-                                ? Colors.red.withOpacity(0.2)
-                                : AppTheme.primaryColor.withOpacity(0.2),
-                        child:
-                            isUnknown
-                                ? Icon(
-                                  Icons.person,
-                                  color:
-                                      widget.callLog.status ==
-                                                  CallStatus.missed ||
-                                              widget.callLog.status ==
-                                                  CallStatus.failed
-                                          ? Colors.red
-                                          : AppTheme.primaryColor,
-                                  size: 40,
-                                )
-                                : Text(
-                                  initials,
-                                  style: TextStyle(
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return [
+            // App Bar with caller info
+            SliverAppBar(
+              expandedHeight: 200.0,
+              floating: false,
+              pinned: true,
+              backgroundColor: AppTheme.secondaryColor,
+              stretch: true,
+              flexibleSpace: FlexibleSpaceBar(
+                collapseMode: CollapseMode.parallax,
+                background: Container(
+                  color: AppTheme.secondaryColor,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 40),
+                        // Avatar
+                        CircleAvatar(
+                          radius: 40,
+                          backgroundColor:
+                              widget.callLog.status == CallStatus.missed ||
+                                      widget.callLog.status == CallStatus.failed
+                                  ? Colors.red.withOpacity(0.2)
+                                  : AppTheme.primaryColor.withOpacity(0.2),
+                          child:
+                              isUnknown
+                                  ? Icon(
+                                    Icons.person,
                                     color:
                                         widget.callLog.status ==
                                                     CallStatus.missed ||
@@ -163,141 +154,150 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                                                     CallStatus.failed
                                             ? Colors.red
                                             : AppTheme.primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 28,
+                                    size: 40,
+                                  )
+                                  : Text(
+                                    initials,
+                                    style: TextStyle(
+                                      color:
+                                          widget.callLog.status ==
+                                                      CallStatus.missed ||
+                                                  widget.callLog.status ==
+                                                      CallStatus.failed
+                                              ? Colors.red
+                                              : AppTheme.primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 28,
+                                    ),
                                   ),
-                                ),
-                      ),
-                      const SizedBox(height: 16),
-                      // Caller name
-                      Text(
-                        callerName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
+                        ),
+                        const SizedBox(height: 16),
+                        // Caller name
+                        Text(
+                          callerName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        // Subtitle (email or phone)
+                        Text(
+                          callerSubtitle,
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Tabs
+            SliverPersistentHeader(
+              delegate: _SliverAppBarDelegate(
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 8,
+                  ),
+                  color: AppTheme.secondaryColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          _tabController.animateTo(0);
+                        },
+                        child: Container(
+                          height: 36,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 0,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                _tabController.index == 0
+                                    ? AppTheme.primaryColor
+                                    : Colors.grey.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Details',
+                              style: TextStyle(
+                                color:
+                                    _tabController.index == 0
+                                        ? Colors.black
+                                        : Colors.white,
+                                fontWeight:
+                                    _tabController.index == 0
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      // Subtitle (email or phone)
-                      Text(
-                        callerSubtitle,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 16,
+                      const SizedBox(width: 20),
+                      GestureDetector(
+                        onTap: () {
+                          _tabController.animateTo(1);
+                        },
+                        child: Container(
+                          height: 36,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 0,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                _tabController.index == 1
+                                    ? AppTheme.primaryColor
+                                    : Colors.grey.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Transcription',
+                              style: TextStyle(
+                                color:
+                                    _tabController.index == 1
+                                        ? Colors.black
+                                        : Colors.white,
+                                fontWeight:
+                                    _tabController.index == 1
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
+              pinned: true,
             ),
-          ),
+          ];
+        },
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            // Details Tab
+            _buildDetailsTab(),
 
-          // Tabs
-          SliverPersistentHeader(
-            delegate: _SliverAppBarDelegate(
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 8,
-                ),
-                color: AppTheme.secondaryColor,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        _tabController.animateTo(0);
-                      },
-                      child: Container(
-                        height: 36,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 0,
-                        ),
-                        decoration: BoxDecoration(
-                          color:
-                              _tabController.index == 0
-                                  ? AppTheme.primaryColor
-                                  : Colors.grey.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Details',
-                            style: TextStyle(
-                              color:
-                                  _tabController.index == 0
-                                      ? Colors.black
-                                      : Colors.white,
-                              fontWeight:
-                                  _tabController.index == 0
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        _tabController.animateTo(1);
-                      },
-                      child: Container(
-                        height: 36,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 0,
-                        ),
-                        decoration: BoxDecoration(
-                          color:
-                              _tabController.index == 1
-                                  ? AppTheme.primaryColor
-                                  : Colors.grey.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Transcription',
-                            style: TextStyle(
-                              color:
-                                  _tabController.index == 1
-                                      ? Colors.black
-                                      : Colors.white,
-                              fontWeight:
-                                  _tabController.index == 1
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            pinned: true,
-          ),
-
-          // Tab content
-          SliverFillRemaining(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                // Details Tab
-                _buildDetailsTab(),
-
-                // Transcription Tab
-                _buildTranscriptionTab(),
-              ],
-            ),
-          ),
-        ],
+            // Transcription Tab
+            _buildTranscriptionTab(),
+          ],
+        ),
       ),
     );
   }
@@ -308,393 +308,400 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
     final formattedTime =
         '${callDate.hour}:${callDate.minute.toString().padLeft(2, '0')} ${callDate.hour >= 12 ? 'PM' : 'AM'}';
 
-    return SingleChildScrollView(
+    return ListView(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Call info card
-          Card(
-            elevation: 8,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: BorderSide(
-                color: AppTheme.primaryColor.withOpacity(0.3),
-                width: 1,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Call info card
+            Card(
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(
+                  color: AppTheme.primaryColor.withOpacity(0.3),
+                  width: 1,
+                ),
               ),
-            ),
-            color: AppTheme.secondaryColor,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color:
-                              widget.callLog is TwilioCallLog &&
-                                      (widget.callLog as TwilioCallLog)
-                                          .isOutgoing
-                                  ? Colors.green.withOpacity(0.2)
-                                  : Colors.blue.withOpacity(0.2),
-                          shape: BoxShape.circle,
+              color: AppTheme.secondaryColor,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color:
+                                widget.callLog is TwilioCallLog &&
+                                        (widget.callLog as TwilioCallLog)
+                                            .isOutgoing
+                                    ? Colors.green.withOpacity(0.2)
+                                    : Colors.blue.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            widget.callLog is TwilioCallLog &&
+                                    (widget.callLog as TwilioCallLog).isOutgoing
+                                ? Icons.call_made
+                                : Icons.call_received,
+                            color:
+                                widget.callLog is TwilioCallLog &&
+                                        (widget.callLog as TwilioCallLog)
+                                            .isOutgoing
+                                    ? Colors.green
+                                    : Colors.blue,
+                            size: 20,
+                          ),
                         ),
-                        child: Icon(
-                          widget.callLog is TwilioCallLog &&
-                                  (widget.callLog as TwilioCallLog).isOutgoing
-                              ? Icons.call_made
-                              : Icons.call_received,
-                          color:
-                              widget.callLog is TwilioCallLog &&
-                                      (widget.callLog as TwilioCallLog)
-                                          .isOutgoing
-                                  ? Colors.green
-                                  : Colors.blue,
-                          size: 20,
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                callDirection,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${widget.callLog.formattedDuration}',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.7),
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              callDirection,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '${widget.callLog.formattedDuration}',
+                              formattedTime,
                               style: TextStyle(
                                 color: Colors.white.withOpacity(0.7),
                                 fontSize: 16,
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            formattedTime,
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: 16,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          // Status indicator
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _getStatusColor().withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Text(
-                              widget.callLog.statusText,
-                              style: TextStyle(
-                                color: _getStatusColor(),
-                                fontWeight: FontWeight.bold,
+                            const SizedBox(height: 4),
+                            // Status indicator
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: _getStatusColor().withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Text(
+                                widget.callLog.statusText,
+                                style: TextStyle(
+                                  color: _getStatusColor(),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Audio player section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Audio Recording',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                // Container(
+                //   padding: const EdgeInsets.symmetric(
+                //     horizontal: 12,
+                //     vertical: 6,
+                //   ),
+                //   decoration: BoxDecoration(
+                //     color: AppTheme.primaryColor.withOpacity(0.1),
+                //     borderRadius: BorderRadius.circular(16),
+                //   ),
+                //   child: Text(
+                //     widget.callLog.formattedDuration,
+                //     style: TextStyle(
+                //       color: AppTheme.primaryColor,
+                //       fontWeight: FontWeight.bold,
+                //     ),
+                //   ),
+                // ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(20.0),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppTheme.secondaryColor,
+                    AppTheme.secondaryColor.withOpacity(0.8),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+                border: Border.all(
+                  color: AppTheme.primaryColor.withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                children: [
+                  // Audio player title
+                  Row(
+                    children: [
+                      Icon(Icons.mic, color: AppTheme.primaryColor, size: 20),
+                      // const SizedBox(width: 8),
+                      // Text(
+                      //   'Audio Recording',
+                      //   style: TextStyle(
+                      //     color: Colors.white,
+                      //     fontWeight: FontWeight.w500,
+                      //     fontSize: 16,
+                      //   ),
+                      // ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Audio progress bar
+                  SliderTheme(
+                    data: SliderThemeData(
+                      trackHeight: 6,
+                      thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: 8,
+                      ),
+                      overlayShape: const RoundSliderOverlayShape(
+                        overlayRadius: 16,
+                      ),
+                      activeTrackColor: AppTheme.primaryColor,
+                      inactiveTrackColor: Colors.grey.withOpacity(0.3),
+                      thumbColor: Colors.white,
+                      overlayColor: AppTheme.primaryColor.withOpacity(0.2),
+                    ),
+                    child: Slider(
+                      value: _playbackPosition,
+                      onChanged: (value) {
+                        setState(() {
+                          _playbackPosition = value;
+                        });
+                      },
+                    ),
+                  ),
+
+                  // Time and controls
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Current position
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          _formatDuration(
+                            _playbackPosition *
+                                widget.callLog.duration.inSeconds,
                           ),
-                        ],
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                        ),
+                      ),
+
+                      // Play/Pause button
+                      Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: [
+                              AppTheme.primaryColor,
+                              AppTheme.primaryColor.withOpacity(0.8),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppTheme.primaryColor.withOpacity(0.3),
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: IconButton(
+                          icon: Icon(
+                            _isPlaying ? Icons.pause : Icons.play_arrow,
+                            color: Colors.white,
+                            size: 32,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPlaying = !_isPlaying;
+                            });
+                          },
+                        ),
+                      ),
+
+                      // Total duration
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          _formatDuration(
+                            widget.callLog.duration.inSeconds.toDouble(),
+                          ),
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-          ),
 
-          const SizedBox(height: 24),
-
-          // Audio player section
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Audio Recording',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              // Container(
-              //   padding: const EdgeInsets.symmetric(
-              //     horizontal: 12,
-              //     vertical: 6,
-              //   ),
-              //   decoration: BoxDecoration(
-              //     color: AppTheme.primaryColor.withOpacity(0.1),
-              //     borderRadius: BorderRadius.circular(16),
-              //   ),
-              //   child: Text(
-              //     widget.callLog.formattedDuration,
-              //     style: TextStyle(
-              //       color: AppTheme.primaryColor,
-              //       fontWeight: FontWeight.bold,
-              //     ),
-              //   ),
-              // ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppTheme.secondaryColor,
-                  AppTheme.secondaryColor.withOpacity(0.8),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-              border: Border.all(
-                color: AppTheme.primaryColor.withOpacity(0.3),
-                width: 1,
-              ),
-            ),
-            child: Column(
+            // Additional call details
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Audio player title
-                Row(
-                  children: [
-                    Icon(Icons.mic, color: AppTheme.primaryColor, size: 20),
-                    // const SizedBox(width: 8),
-                    // Text(
-                    //   'Audio Recording',
-                    //   style: TextStyle(
-                    //     color: Colors.white,
-                    //     fontWeight: FontWeight.w500,
-                    //     fontSize: 16,
-                    //   ),
-                    // ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                // Audio progress bar
-                SliderTheme(
-                  data: SliderThemeData(
-                    trackHeight: 6,
-                    thumbShape: const RoundSliderThumbShape(
-                      enabledThumbRadius: 8,
-                    ),
-                    overlayShape: const RoundSliderOverlayShape(
-                      overlayRadius: 16,
-                    ),
-                    activeTrackColor: AppTheme.primaryColor,
-                    inactiveTrackColor: Colors.grey.withOpacity(0.3),
-                    thumbColor: Colors.white,
-                    overlayColor: AppTheme.primaryColor.withOpacity(0.2),
-                  ),
-                  child: Slider(
-                    value: _playbackPosition,
-                    onChanged: (value) {
-                      setState(() {
-                        _playbackPosition = value;
-                      });
-                    },
+                const Text(
+                  'Call Details',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
                 ),
-
-                // Time and controls
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Current position
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        _formatDuration(
-                          _playbackPosition * widget.callLog.duration.inSeconds,
-                        ),
-                        style: TextStyle(color: Colors.white.withOpacity(0.9)),
-                      ),
-                    ),
-
-                    // Play/Pause button
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            AppTheme.primaryColor,
-                            AppTheme.primaryColor.withOpacity(0.8),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.primaryColor.withOpacity(0.3),
-                            blurRadius: 10,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          _isPlaying ? Icons.pause : Icons.play_arrow,
-                          color: Colors.white,
-                          size: 32,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isPlaying = !_isPlaying;
-                          });
-                        },
-                      ),
-                    ),
-
-                    // Total duration
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        _formatDuration(
-                          widget.callLog.duration.inSeconds.toDouble(),
-                        ),
-                        style: TextStyle(color: Colors.white.withOpacity(0.9)),
-                      ),
-                    ),
-                  ],
-                ),
+                // Container(
+                //   padding: const EdgeInsets.symmetric(
+                //     horizontal: 12,
+                //     vertical: 6,
+                //   ),
+                //   decoration: BoxDecoration(
+                //     color: Colors.grey.withOpacity(0.2),
+                //     borderRadius: BorderRadius.circular(16),
+                //   ),
+                //   child: Text(
+                //     widget.callLog.formattedDate,
+                //     style: TextStyle(
+                //       color: Colors.white.withOpacity(0.9),
+                //       fontWeight: FontWeight.w500,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
-          ),
-
-          // Additional call details
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Call Details',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+            const SizedBox(height: 16),
+            Card(
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(
+                  color: AppTheme.primaryColor.withOpacity(0.3),
+                  width: 1,
                 ),
               ),
-              // Container(
-              //   padding: const EdgeInsets.symmetric(
-              //     horizontal: 12,
-              //     vertical: 6,
-              //   ),
-              //   decoration: BoxDecoration(
-              //     color: Colors.grey.withOpacity(0.2),
-              //     borderRadius: BorderRadius.circular(16),
-              //   ),
-              //   child: Text(
-              //     widget.callLog.formattedDate,
-              //     style: TextStyle(
-              //       color: Colors.white.withOpacity(0.9),
-              //       fontWeight: FontWeight.w500,
-              //     ),
-              //   ),
-              // ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 8,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: BorderSide(
-                color: AppTheme.primaryColor.withOpacity(0.3),
-                width: 1,
-              ),
-            ),
-            color: AppTheme.secondaryColor,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  _buildDetailRowCard('Date', widget.callLog.formattedDate),
-                  //   const Divider(color: Colors.grey),
-                  _buildDetailRowCard('Time', formattedTime),
-                  //  const Divider(color: Colors.grey),
-                  _buildDetailRowCard(
-                    'Duration',
-                    widget.callLog.formattedDuration,
-                  ),
-                  //    const Divider(color: Colors.grey),
-                  _buildDetailRowCard(
-                    'Status',
-                    widget.callLog.statusText,
-                    statusColor: _getStatusColor(),
-                  ),
-                  if (widget.callLog is LiveKitCallLog) ...[
+              color: AppTheme.secondaryColor,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    _buildDetailRowCard('Date', widget.callLog.formattedDate),
+                    //   const Divider(color: Colors.grey),
+                    _buildDetailRowCard('Time', formattedTime),
+                    //  const Divider(color: Colors.grey),
+                    _buildDetailRowCard(
+                      'Duration',
+                      widget.callLog.formattedDuration,
+                    ),
                     //    const Divider(color: Colors.grey),
                     _buildDetailRowCard(
-                      'Agent',
-                      (widget.callLog as LiveKitCallLog).agentName ?? 'Maya',
+                      'Status',
+                      widget.callLog.statusText,
+                      statusColor: _getStatusColor(),
                     ),
-                    //   const Divider(color: Colors.grey),
-                    // _buildDetailRowCard(
-                    //   'Email',
-                    //   (widget.callLog as LiveKitCallLog).userEmail,
-                    // ),
-                  ] else if (widget.callLog is TwilioCallLog) ...[
-                    //   const Divider(color: Colors.grey),
-                    _buildDetailRowCard(
-                      'Type',
-                      (widget.callLog as TwilioCallLog).isOutgoing
-                          ? 'Outgoing'
-                          : 'Incoming',
-                    ),
-                    //   const Divider(color: Colors.grey),
-                    // _buildDetailRowCard(
-                    //   'Phone',
-                    //   (widget.callLog as TwilioCallLog).phoneNumber,
-                    // ),
+                    if (widget.callLog is LiveKitCallLog) ...[
+                      //    const Divider(color: Colors.grey),
+                      _buildDetailRowCard(
+                        'Agent',
+                        (widget.callLog as LiveKitCallLog).agentName ?? 'Maya',
+                      ),
+                      //   const Divider(color: Colors.grey),
+                      // _buildDetailRowCard(
+                      //   'Email',
+                      //   (widget.callLog as LiveKitCallLog).userEmail,
+                      // ),
+                    ] else if (widget.callLog is TwilioCallLog) ...[
+                      //   const Divider(color: Colors.grey),
+                      _buildDetailRowCard(
+                        'Type',
+                        (widget.callLog as TwilioCallLog).isOutgoing
+                            ? 'Outgoing'
+                            : 'Incoming',
+                      ),
+                      //   const Divider(color: Colors.grey),
+                      // _buildDetailRowCard(
+                      //   'Phone',
+                      //   (widget.callLog as TwilioCallLog).phoneNumber,
+                      // ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -764,69 +771,71 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
       },
     ];
 
-    return SingleChildScrollView(
+    return ListView(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Call Transcription',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Text(
-                  widget.callLog.formattedDuration,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Call Transcription',
                   style: TextStyle(
-                    color: AppTheme.primaryColor,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 8,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: BorderSide(
-                color: AppTheme.primaryColor.withOpacity(0.3),
-                width: 1,
-              ),
-            ),
-            color: AppTheme.secondaryColor,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (final entry in transcription)
-                    _buildTranscriptionEntry(
-                      entry['speaker'],
-                      entry['text'],
-                      entry['timestamp'],
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Text(
+                    widget.callLog.formattedDuration,
+                    style: TextStyle(
+                      color: AppTheme.primaryColor,
+                      fontWeight: FontWeight.bold,
                     ),
-                ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Card(
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(
+                  color: AppTheme.primaryColor.withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              color: AppTheme.secondaryColor,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final entry in transcription)
+                      _buildTranscriptionEntry(
+                        entry['speaker'],
+                        entry['text'],
+                        entry['timestamp'],
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 
