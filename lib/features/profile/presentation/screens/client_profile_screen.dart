@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
@@ -226,10 +223,10 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
 
         /////////////Phone Number////////////////////
 
-        String? initialValue = _phoneNumber;
+        String initialValue = _phoneNumber;
 
-        // // Parse initial value if it exists
-        if (initialValue != null && initialValue.isNotEmpty) {
+        // Parse initial value if it exists
+        if (initialValue.isNotEmpty) {
           // Try to extract country code and number
           // Most international numbers follow format +[country code][number]
           // We need to properly identify the country code part
@@ -281,7 +278,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
             child: Container(
               padding: EdgeInsets.symmetric(
                 vertical: isTablet ? 48 : 24,
-                horizontal: isTablet ? 48 : 0.0,
+                horizontal: isTablet ? 48 : 24.0,
               ),
               constraints: BoxConstraints(
                 minHeight:
@@ -304,8 +301,10 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _fullNameController,
+                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         hintText: AppStrings.fullName,
+                        hintStyle: TextStyle(color: Colors.white60),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -325,8 +324,10 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _companyNameController,
+                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         hintText: AppStrings.companyName,
+                        hintStyle: TextStyle(color: Colors.white60),
                       ),
                     ),
                     // const SizedBox(height: 16),
@@ -392,8 +393,10 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     _isPoBox
                         ? TextFormField(
                           controller: _addressController,
+                          style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
                             hintText: 'Enter PO Box number',
+                            hintStyle: TextStyle(color: Colors.white60),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -413,8 +416,10 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _apartmentController,
+                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         hintText: AppStrings.apartment,
+                        hintStyle: TextStyle(color: Colors.white60),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -422,8 +427,10 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _cityController,
+                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         hintText: AppStrings.city,
+                        hintStyle: TextStyle(color: Colors.white60),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -442,8 +449,10 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _stateController,
+                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         hintText: AppStrings.state,
+                        hintStyle: TextStyle(color: Colors.white60),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -457,8 +466,10 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _zipCodeController,
+                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         hintText: AppStrings.zipCode,
+                        hintStyle: TextStyle(color: Colors.white60),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -626,9 +637,13 @@ class _PhoneNumberFieldState extends State<_PhoneNumberField> {
 
     return IntlPhoneField(
       controller: _controller,
+      style: const TextStyle(color: Colors.white),
+      dropdownTextStyle: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: 'Phone Number',
+        labelStyle: const TextStyle(color: Colors.white70),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        hintStyle: const TextStyle(color: Colors.white60),
       ),
       initialCountryCode: initialCountryCode,
       // countries: supportedCountries,
