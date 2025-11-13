@@ -909,39 +909,18 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
       transcript = (widget.callLog as TwilioCallLog).transcript;
     }
 
-    // If no transcript available, show dummy data or message
+    // If no transcript available, show a message
     if (transcript == null || transcript.isEmpty) {
-      // Dummy transcription data for demo purposes
-      final List<Map<String, dynamic>> dummyTranscription = [
-        {
-          'speaker': 'Agent',
-          'text':
-              'Hello, thank you for calling Moinc support. How can I help you today?',
-          'timestamp': '00:05',
-        },
-        {
-          'speaker': 'User',
-          'text':
-              'Hi, I\'m having an issue with my account. I can\'t seem to log in.',
-          'timestamp': '00:12',
-        },
-        // More dummy data...
-      ];
-
-      return _buildTranscriptionContent(dummyTranscription);
+      // Simple dummy text for demonstration
+      transcript = "No transcription available for this call.";
     }
 
-    // Parse the real transcript into a format we can display
-    // For now, we'll just show the raw transcript as a single entry
+    // Create a simple transcription data with just the text
     final List<Map<String, dynamic>> transcriptionData = [
       {
-        'speaker':
-            widget.callLog is TwilioCallLog &&
-                    (widget.callLog as TwilioCallLog).isOutgoing
-                ? 'You'
-                : 'Caller',
+        'speaker': '', // Empty speaker
         'text': transcript,
-        'timestamp': '00:00',
+        'timestamp': '', // Empty timestamp
       },
     ];
 
@@ -1076,71 +1055,16 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
     String text,
     String timestamp,
   ) {
-    final isAgent = speaker.toLowerCase() == 'agent';
-
+    // Simplified version - just show the transcription text
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Speaker avatar
-          CircleAvatar(
-            radius: 16,
-            backgroundColor:
-                isAgent
-                    ? AppTheme.primaryColor.withOpacity(0.2)
-                    : Colors.grey.withOpacity(0.2),
-            child: Text(
-              speaker[0].toUpperCase(),
-              style: TextStyle(
-                color: isAgent ? AppTheme.primaryColor : Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-
-          // Message content
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Speaker name and timestamp
-                Row(
-                  children: [
-                    Text(
-                      speaker,
-                      style: TextStyle(
-                        color: isAgent ? AppTheme.primaryColor : Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      timestamp,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-
-                // Message text
-                Text(
-                  text,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+      child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.white.withOpacity(0.9),
+          fontSize: 16,
+          height: 1.5,
+        ),
       ),
     );
   }
