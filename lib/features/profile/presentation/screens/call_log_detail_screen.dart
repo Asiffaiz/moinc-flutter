@@ -85,8 +85,11 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
           _playbackPosition = 0.0; // Reset to beginning for next play
           _position = Duration.zero; // Reset position
         });
-        // Seek back to beginning so it's ready to play again
-        _audioPlayer.seek(Duration.zero);
+        // Seek back to beginning so it's ready to play again, but don't auto-play
+        _audioPlayer.seek(Duration.zero).then((_) {
+          // Ensure we're paused after seeking
+          _audioPlayer.pause();
+        });
       }
     });
   }
