@@ -157,7 +157,10 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
   @override
   void dispose() {
     // Dispose the audio player when screen is disposed (navigating back)
-    _audioPlayer.dispose();
+    // Make sure audio is stopped before disposing
+    _audioPlayer.stop().then((_) {
+      _audioPlayer.dispose();
+    });
     _tabController.dispose();
     // Remove observer
     WidgetsBinding.instance.removeObserver(this);
@@ -167,12 +170,10 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
   @override
   void deactivate() {
     // Called when widget is being removed from the widget tree
-    // We don't need to call setState here as it causes exceptions
-    if (_isPlaying) {
-      _audioPlayer.pause();
-      // Don't call setState here to avoid exceptions
-      _isPlaying = false;
-    }
+    // Stop audio playback immediately when navigating away
+    _audioPlayer.stop();
+    // Don't call setState here to avoid exceptions
+    _isPlaying = false;
     super.deactivate();
   }
 
