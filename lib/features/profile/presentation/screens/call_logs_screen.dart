@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/profile/data/services/call_logs_service.dart';
 import 'package:moinc/features/profile/domain/models/call_log_model.dart';
+import 'package:moinc/features/profile/presentation/screens/call_log_detail_screen.dart';
 
 class CallLogsScreen extends StatefulWidget {
   const CallLogsScreen({super.key});
@@ -131,6 +132,7 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
         ),
       ),
       child: ListTile(
+        onTap: () => _navigateToCallDetails(log),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
           backgroundColor:
@@ -241,6 +243,7 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
         ),
       ),
       child: ListTile(
+        onTap: () => _navigateToCallDetails(log),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
           backgroundColor:
@@ -353,4 +356,14 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
   }
 
   // Status colors are now handled directly in the UI
+
+  // Navigate to call details screen
+  void _navigateToCallDetails(CallLog log) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CallLogDetailScreen(callLog: log),
+      ),
+    );
+  }
 }
