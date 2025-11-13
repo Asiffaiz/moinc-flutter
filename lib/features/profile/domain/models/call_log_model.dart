@@ -86,6 +86,8 @@ class TwilioCallLog extends CallLog {
   final String phoneNumber;
   final String? callerName;
   final bool isOutgoing;
+  final String? recordingUrl;
+  final String? transcript;
 
   TwilioCallLog({
     required String id,
@@ -95,6 +97,8 @@ class TwilioCallLog extends CallLog {
     required this.phoneNumber,
     this.callerName,
     this.isOutgoing = false,
+    this.recordingUrl,
+    this.transcript,
   }) : super(
          id: id,
          timestamp: timestamp,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/profile/domain/models/call_log_model.dart';
 
@@ -15,8 +16,15 @@ class CallLogDetailScreen extends StatefulWidget {
 class _CallLogDetailScreenState extends State<CallLogDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
+  // Audio player
+  final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isPlaying = false;
+  bool _isLoading = false;
   double _playbackPosition = 0.0;
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
+  String? _audioUrl;
 
   @override
   void initState() {
@@ -29,10 +37,107 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
         setState(() {});
       }
     });
+
+    // Setup audio player
+    _setupAudioPlayer();
+  }
+
+  void _setupAudioPlayer() {
+    // Check if this call log has a recording
+    if (widget.callLog is TwilioCallLog) {
+      final twilioLog = widget.callLog as TwilioCallLog;
+      _audioUrl = twilioLog.recordingUrl;
+    }
+
+    // Setup listeners
+    _audioPlayer.playerStateStream.listen((state) {
+      if (state.playing != _isPlaying) {
+        setState(() {
+          _isPlaying = state.playing;
+        });
+      }
+    });
+
+    _audioPlayer.positionStream.listen((position) {
+      setState(() {
+        _position = position;
+        if (_duration.inSeconds > 0) {
+          _playbackPosition = position.inSeconds / _duration.inSeconds;
+        }
+      });
+    });
+
+    _audioPlayer.durationStream.listen((duration) {
+      if (duration != null) {
+        setState(() {
+          _duration = duration;
+        });
+      }
+    });
+
+    _audioPlayer.processingStateStream.listen((state) {
+      if (state == ProcessingState.completed) {
+        setState(() {
+          _isPlaying = false;
+          _playbackPosition = 0.0;
+          _position = Duration.zero;
+        });
+        _audioPlayer.seek(Duration.zero);
+      }
+    });
+  }
+
+  Future<void> _loadAudio() async {
+    if (_audioUrl == null) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await _audioPlayer.setUrl(_audioUrl!);
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to load audio: $e')));
+    }
+  }
+
+  void _togglePlayPause() async {
+    print(_audioUrl);
+    if (_audioUrl == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No recording available for this call')),
+      );
+      return;
+    }
+
+    if (_audioPlayer.playerState.processingState == ProcessingState.idle) {
+      // First time playing, need to load audio
+      await _loadAudio();
+    }
+
+    if (_isPlaying) {
+      await _audioPlayer.pause();
+    } else {
+      await _audioPlayer.play();
+    }
+  }
+
+  void _seekAudio(double value) {
+    final position = Duration(seconds: (value * _duration.inSeconds).toInt());
+    _audioPlayer.seek(position);
   }
 
   @override
   void dispose() {
+    _audioPlayer.dispose();
     _tabController.dispose();
     super.dispose();
   }
@@ -514,11 +619,9 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                       overlayColor: AppTheme.primaryColor.withOpacity(0.2),
                     ),
                     child: Slider(
-                      value: _playbackPosition,
+                      value: _playbackPosition.clamp(0.0, 1.0),
                       onChanged: (value) {
-                        setState(() {
-                          _playbackPosition = value;
-                        });
+                        _seekAudio(value);
                       },
                     ),
                   ),
@@ -538,10 +641,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          _formatDuration(
-                            _playbackPosition *
-                                widget.callLog.duration.inSeconds,
-                          ),
+                          _formatDuration(_position.inSeconds.toDouble()),
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.9),
                           ),
@@ -570,18 +670,26 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                             ),
                           ],
                         ),
-                        child: IconButton(
-                          icon: Icon(
-                            _isPlaying ? Icons.pause : Icons.play_arrow,
-                            color: Colors.white,
-                            size: 32,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isPlaying = !_isPlaying;
-                            });
-                          },
-                        ),
+                        child:
+                            _isLoading
+                                ? Center(
+                                  child: SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                )
+                                : IconButton(
+                                  icon: Icon(
+                                    _isPlaying ? Icons.pause : Icons.play_arrow,
+                                    color: Colors.white,
+                                    size: 32,
+                                  ),
+                                  onPressed: _togglePlayPause,
+                                ),
                       ),
 
                       // Total duration
@@ -595,9 +703,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          _formatDuration(
-                            widget.callLog.duration.inSeconds.toDouble(),
-                          ),
+                          _formatDuration(_duration.inSeconds.toDouble()),
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.9),
                           ),
@@ -706,71 +812,52 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
   }
 
   Widget _buildTranscriptionTab() {
-    // Dummy transcription data
-    final List<Map<String, dynamic>> transcription = [
+    // Check if this is a Twilio call with transcript
+    String? transcript;
+    if (widget.callLog is TwilioCallLog) {
+      transcript = (widget.callLog as TwilioCallLog).transcript;
+    }
+
+    // If no transcript available, show dummy data or message
+    if (transcript == null || transcript.isEmpty) {
+      // Dummy transcription data for demo purposes
+      final List<Map<String, dynamic>> dummyTranscription = [
+        {
+          'speaker': 'Agent',
+          'text':
+              'Hello, thank you for calling Moinc support. How can I help you today?',
+          'timestamp': '00:05',
+        },
+        {
+          'speaker': 'User',
+          'text':
+              'Hi, I\'m having an issue with my account. I can\'t seem to log in.',
+          'timestamp': '00:12',
+        },
+        // More dummy data...
+      ];
+
+      return _buildTranscriptionContent(dummyTranscription);
+    }
+
+    // Parse the real transcript into a format we can display
+    // For now, we'll just show the raw transcript as a single entry
+    final List<Map<String, dynamic>> transcriptionData = [
       {
-        'speaker': 'Agent',
-        'text':
-            'Hello, thank you for calling Moinc support. How can I help you today?',
-        'timestamp': '00:05',
-      },
-      {
-        'speaker': 'User',
-        'text':
-            'Hi, I\'m having an issue with my account. I can\'t seem to log in.',
-        'timestamp': '00:12',
-      },
-      {
-        'speaker': 'Agent',
-        'text':
-            'I\'m sorry to hear that. Let me help you troubleshoot this issue. Can you please provide your email address?',
-        'timestamp': '00:18',
-      },
-      {
-        'speaker': 'User',
-        'text': 'Sure, it\'s user@example.com',
-        'timestamp': '00:25',
-      },
-      {
-        'speaker': 'Agent',
-        'text':
-            'Thank you. I\'m checking your account now. It looks like your account was temporarily locked due to multiple failed login attempts. I can help you reset it.',
-        'timestamp': '00:32',
-      },
-      {
-        'speaker': 'User',
-        'text': 'That would be great, thank you.',
-        'timestamp': '00:45',
-      },
-      {
-        'speaker': 'Agent',
-        'text':
-            'I\'ve sent a password reset link to your email. Please check your inbox and follow the instructions to reset your password.',
-        'timestamp': '00:52',
-      },
-      {
-        'speaker': 'User',
-        'text': 'Got it, I\'ll check my email. Thanks for your help!',
-        'timestamp': '01:05',
-      },
-      {
-        'speaker': 'Agent',
-        'text':
-            'You\'re welcome! Is there anything else I can help you with today?',
-        'timestamp': '01:12',
-      },
-      {
-        'speaker': 'User',
-        'text': 'No, that\'s all. Have a great day!',
-        'timestamp': '01:18',
-      },
-      {
-        'speaker': 'Agent',
-        'text': 'You too! Thank you for calling Moinc support. Goodbye!',
-        'timestamp': '01:25',
+        'speaker':
+            widget.callLog is TwilioCallLog &&
+                    (widget.callLog as TwilioCallLog).isOutgoing
+                ? 'You'
+                : 'Caller',
+        'text': transcript,
+        'timestamp': '00:00',
       },
     ];
 
+    return _buildTranscriptionContent(transcriptionData);
+  }
+
+  Widget _buildTranscriptionContent(List<Map<String, dynamic>> transcription) {
     return ListView(
       padding: const EdgeInsets.all(16.0),
       children: [
@@ -823,12 +910,23 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (final entry in transcription)
-                      _buildTranscriptionEntry(
-                        entry['speaker'],
-                        entry['text'],
-                        entry['timestamp'],
-                      ),
+                    if (transcription.isEmpty)
+                      const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text(
+                            'No transcription available for this call',
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        ),
+                      )
+                    else
+                      for (final entry in transcription)
+                        _buildTranscriptionEntry(
+                          entry['speaker'],
+                          entry['text'],
+                          entry['timestamp'],
+                        ),
                   ],
                 ),
               ),

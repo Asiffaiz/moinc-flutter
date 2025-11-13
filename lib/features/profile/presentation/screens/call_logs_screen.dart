@@ -12,69 +12,170 @@ class CallLogsScreen extends StatefulWidget {
 }
 
 class _CallLogsScreenState extends State<CallLogsScreen> {
-  // Removed SingleTickerProviderStateMixin as we don't need tabs
-  // late TabController _tabController;
-  late List<CallLog> _callLogs;
   final CallLogsService _callLogsService = CallLogsService();
+
+  // API response data
+  List<CallLog> _callLogs = [];
+  bool _isLoading = true;
+  bool _hasError = false;
+  String _errorMessage = '';
+
+  // Pagination
+  int _currentPage = 1;
+  int _totalPages = 1;
+  bool _hasMoreData = false;
+  bool _isLoadingMore = false;
+  final int _itemsPerPage = 25;
+
+  // Scroll controller for pagination
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    // Commented out tab controller as we're showing all logs without tabs
-    // _tabController = TabController(length: 3, vsync: this);
-    _callLogs = _callLogsService.getDummyCallLogs();
-    _callLogs.sort(
-      (a, b) => b.timestamp.compareTo(a.timestamp),
-    ); // Sort by date (newest first)
+    _fetchCallLogs();
+
+    // Add scroll listener for pagination
+    _scrollController.addListener(_scrollListener);
   }
 
   @override
   void dispose() {
-    // _tabController.dispose();
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
     super.dispose();
   }
 
-  // Using all logs directly since we don't have tabs
-  List<CallLog> get _allLogs => _callLogs;
+  // Scroll listener for pagination
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200 &&
+        !_isLoadingMore &&
+        _hasMoreData) {
+      _loadMoreData();
+    }
+  }
 
-  // Commented out since we're not using tabs
-  // List<CallLog> get _livekitLogs =>
-  //     _callLogs.where((log) => log.type == CallLogType.liveKit).toList();
+  // Fetch initial call logs
+  Future<void> _fetchCallLogs() async {
+    setState(() {
+      _isLoading = true;
+      _hasError = false;
+    });
 
-  // List<CallLog> get _twilioLogs =>
-  //     _callLogs.where((log) => log.type == CallLogType.twilio).toList();
+    try {
+      final response = await _callLogsService.fetchCallLogs(
+        page: _currentPage,
+        limit: _itemsPerPage,
+      );
+      final logs = _callLogsService.convertApiResponseToCallLogs(response);
+
+      setState(() {
+        _callLogs = logs;
+        _totalPages = response.pagination.totalPages;
+        _hasMoreData = response.pagination.hasNext;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _hasError = true;
+        _errorMessage = e.toString();
+
+        // Fallback to dummy data if API fails
+        _callLogs = _callLogsService.getDummyCallLogs();
+      });
+    }
+  }
+
+  // Load more data when scrolling
+  Future<void> _loadMoreData() async {
+    if (_isLoadingMore) return;
+
+    setState(() {
+      _isLoadingMore = true;
+    });
+
+    try {
+      final nextPage = _currentPage + 1;
+      final response = await _callLogsService.fetchCallLogs(
+        page: nextPage,
+        limit: _itemsPerPage,
+      );
+      final newLogs = _callLogsService.convertApiResponseToCallLogs(response);
+
+      setState(() {
+        _callLogs.addAll(newLogs);
+        _currentPage = nextPage;
+        _hasMoreData = response.pagination.hasNext;
+        _isLoadingMore = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoadingMore = false;
+      });
+    }
+  }
+
+  // Refresh call logs
+  Future<void> _refreshCallLogs() async {
+    setState(() {
+      _currentPage = 1;
+    });
+    await _fetchCallLogs();
+    return Future.value();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
-      // appBar: AppBar(
-      //   title: const Text('Call Logs'),
-      //   backgroundColor: AppTheme.secondaryColor,
-      //   foregroundColor: AppTheme.primaryColor,
-      //   // Commented out tab bar
-      //   // bottom: TabBar(
-      //   //   controller: _tabController,
-      //   //   labelColor: AppTheme.primaryColor,
-      //   //   unselectedLabelColor: Colors.white70,
-      //   //   indicatorColor: AppTheme.primaryColor,
-      //   //   tabs: const [
-      //   //     Tab(text: 'All'),
-      //   //     Tab(text: 'LiveKit'),
-      //   //     Tab(text: 'Twilio'),
-      //   //   ],
-      //   // ),
-      // ),
-      body: _buildCallLogsList(_allLogs),
-      // Commented out tab bar view
-      // body: TabBarView(
-      //   controller: _tabController,
-      //   children: [
-      //     _buildCallLogsList(_allLogs),
-      //     _buildCallLogsList(_livekitLogs),
-      //     _buildCallLogsList(_twilioLogs),
-      //   ],
-      // ),
+      body:
+          _isLoading
+              ? _buildLoadingIndicator()
+              : _hasError
+              ? _buildErrorView()
+              : RefreshIndicator(
+                onRefresh: _refreshCallLogs,
+                color: AppTheme.primaryColor,
+                child: _buildCallLogsList(_callLogs),
+              ),
+    );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return Center(
+      child: CircularProgressIndicator(color: AppTheme.primaryColor),
+    );
+  }
+
+  Widget _buildErrorView() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, color: Colors.red, size: 60),
+          const SizedBox(height: 16),
+          Text(
+            'Failed to load call logs',
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _errorMessage,
+            style: TextStyle(color: Colors.white70),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: _fetchCallLogs,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryColor,
+            ),
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -89,9 +190,20 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
     }
 
     return ListView.builder(
-      itemCount: logs.length,
+      controller: _scrollController,
+      itemCount: logs.length + (_hasMoreData ? 1 : 0),
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
+        if (index == logs.length) {
+          // Show loading indicator at the bottom
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Center(
+              child: CircularProgressIndicator(color: AppTheme.primaryColor),
+            ),
+          );
+        }
+
         final log = logs[index];
         return _buildCallLogItem(log);
       },
