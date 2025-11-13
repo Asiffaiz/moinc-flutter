@@ -14,7 +14,7 @@ class CallLogDetailScreen extends StatefulWidget {
 }
 
 class _CallLogDetailScreenState extends State<CallLogDetailScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late TabController _tabController;
 
   // Audio player
@@ -29,6 +29,9 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
   @override
   void initState() {
     super.initState();
+    // Register observer for app lifecycle changes
+    WidgetsBinding.instance.addObserver(this);
+
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       // This is called when the tab selection changes
@@ -79,9 +82,10 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
       if (state == ProcessingState.completed) {
         setState(() {
           _isPlaying = false;
-          _playbackPosition = 0.0;
-          _position = Duration.zero;
+          _playbackPosition = 0.0; // Reset to beginning for next play
+          _position = Duration.zero; // Reset position
         });
+        // Seek back to beginning so it's ready to play again
         _audioPlayer.seek(Duration.zero);
       }
     });
@@ -121,6 +125,14 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
     if (_audioPlayer.playerState.processingState == ProcessingState.idle) {
       // First time playing, need to load audio
       await _loadAudio();
+    } else if (_audioPlayer.playerState.processingState ==
+        ProcessingState.completed) {
+      // If audio was completed, seek to beginning before playing again
+      await _audioPlayer.seek(Duration.zero);
+      setState(() {
+        _playbackPosition = 0.0;
+        _position = Duration.zero;
+      });
     }
 
     if (_isPlaying) {
@@ -137,9 +149,42 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
 
   @override
   void dispose() {
+    // Dispose the audio player when screen is disposed (navigating back)
     _audioPlayer.dispose();
     _tabController.dispose();
+    // Remove observer
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    // Called when widget is being removed from the widget tree
+    // We don't need to call setState here as it causes exceptions
+    if (_isPlaying) {
+      _audioPlayer.pause();
+      // Don't call setState here to avoid exceptions
+      _isPlaying = false;
+    }
+    super.deactivate();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Handle app lifecycle changes (minimize, background, etc.)
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      // App is minimized or in background
+      if (_isPlaying) {
+        _audioPlayer.pause();
+        if (mounted) {
+          setState(() {
+            _isPlaying = false;
+          });
+        }
+      }
+    }
+    super.didChangeAppLifecycleState(state);
   }
 
   // Get initials for avatar
@@ -626,90 +671,109 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                     ),
                   ),
 
-                  // Time and controls
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Current position
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          _formatDuration(_position.inSeconds.toDouble()),
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
-                          ),
-                        ),
-                      ),
-
-                      // Play/Pause button
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            colors: [
-                              AppTheme.primaryColor,
-                              AppTheme.primaryColor.withOpacity(0.8),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppTheme.primaryColor.withOpacity(0.3),
-                              blurRadius: 10,
-                              spreadRadius: 2,
+                  // Time and controls with fixed layout
+                  SizedBox(
+                    height: 80, // Fixed height for the controls row
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Current position - Fixed width container
+                        SizedBox(
+                          width: 70, // Fixed width to prevent shifting
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
                             ),
-                          ],
-                        ),
-                        child:
-                            _isLoading
-                                ? Center(
-                                  child: SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                )
-                                : IconButton(
-                                  icon: Icon(
-                                    _isPlaying ? Icons.pause : Icons.play_arrow,
-                                    color: Colors.white,
-                                    size: 32,
-                                  ),
-                                  onPressed: _togglePlayPause,
-                                ),
-                      ),
-
-                      // Total duration
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          _formatDuration(_duration.inSeconds.toDouble()),
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              _formatDuration(_position.inSeconds.toDouble()),
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                              ),
+                              textAlign: TextAlign.center, // Center text
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+
+                        // Play/Pause button - Fixed size container
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                AppTheme.primaryColor,
+                                AppTheme.primaryColor.withOpacity(0.8),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppTheme.primaryColor.withOpacity(0.3),
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              customBorder: const CircleBorder(),
+                              onTap: _togglePlayPause,
+                              child:
+                                  _isLoading
+                                      ? const Center(
+                                        child: SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                      )
+                                      : Center(
+                                        child: Icon(
+                                          _isPlaying
+                                              ? Icons.pause
+                                              : Icons.play_arrow,
+                                          color: Colors.white,
+                                          size: 32,
+                                        ),
+                                      ),
+                            ),
+                          ),
+                        ),
+
+                        // Total duration - Fixed width container
+                        SizedBox(
+                          width: 70, // Fixed width to prevent shifting
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              _formatDuration(_duration.inSeconds.toDouble()),
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                              ),
+                              textAlign: TextAlign.center, // Center text
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
