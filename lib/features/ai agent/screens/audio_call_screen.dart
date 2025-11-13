@@ -684,7 +684,10 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                               : 'Talk Now',
                       onPressed: _toggleCall,
                       color:
-                          connectionState == app_ctrl.ConnectionState.connecting
+                          connectionState ==
+                                      app_ctrl.ConnectionState.connecting ||
+                                  connectionState ==
+                                      app_ctrl.ConnectionState.connected
                               ? Colors.red
                               : const Color.fromARGB(255, 55, 212, 144),
                       isProgressing:
