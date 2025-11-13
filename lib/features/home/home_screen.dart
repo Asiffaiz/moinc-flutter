@@ -15,36 +15,86 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
+  late AnimationController _appBarAnimationController;
+  late Animation<double> _appBarAnimation;
+
+  app_ctrl.ConnectionState? _previousConnectionState;
+
+  @override
+  void initState() {
+    super.initState();
+    _appBarAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _appBarAnimation = CurvedAnimation(
+      parent: _appBarAnimationController,
+      curve: Curves.easeInOut,
+    );
+
+    // Initialize with the correct state
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final connectionState = context.read<app_ctrl.AppCtrl>().connectionState;
+      _previousConnectionState = connectionState;
+      if (connectionState == app_ctrl.ConnectionState.disconnected) {
+        _appBarAnimationController.value = 1.0;
+      } else {
+        _appBarAnimationController.value = 0.0;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _appBarAnimationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final connectionState = context.watch<app_ctrl.AppCtrl>().connectionState;
+
+    // Only animate if the connection state has changed
+    if (_previousConnectionState != connectionState) {
+      if (connectionState == app_ctrl.ConnectionState.disconnected) {
+        _appBarAnimationController.forward();
+      } else {
+        _appBarAnimationController.reverse();
+      }
+      _previousConnectionState = connectionState;
+    }
+
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
-      appBar:
-          connectionState == app_ctrl.ConnectionState.disconnected
-              ? AppBar(
-                title: const Text('${AppConstants.appName} AI'),
-                backgroundColor: AppTheme.secondaryColor,
-                foregroundColor: AppTheme.primaryColor,
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.notifications_outlined),
-                    onPressed: () {
-                      // Handle notifications
-                    },
-                  ),
-                  // IconButton(
-                  //   icon: const Icon(Icons.settings_outlined),
-                  //   onPressed: () {
-                  //     _showSettingsBottomSheet(context);
-                  //   },
-                  // ),
-                ],
-              )
-              : null,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: SizeTransition(
+          sizeFactor: _appBarAnimation,
+          axisAlignment: -1.0,
+          child: AppBar(
+            title: const Text('${AppConstants.appName} AI'),
+            backgroundColor: AppTheme.secondaryColor,
+            foregroundColor: AppTheme.primaryColor,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.notifications_outlined),
+                onPressed: () {
+                  // Handle notifications
+                },
+              ),
+              // IconButton(
+              //   icon: const Icon(Icons.settings_outlined),
+              //   onPressed: () {
+              //     _showSettingsBottomSheet(context);
+              //   },
+              // ),
+            ],
+          ),
+        ),
+      ),
       body: SafeArea(
         child: IndexedStack(
           index: _currentIndex,
@@ -63,53 +113,54 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      bottomNavigationBar:
-          connectionState == app_ctrl.ConnectionState.disconnected
-              ? BottomNavigationBar(
-                currentIndex: _currentIndex,
-                onTap: (index) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
-                type: BottomNavigationBarType.fixed,
-                items: [
-                  BottomNavigationBarItem(
-                    icon: Image.asset(
-                      'assets/icons/ic_home.png',
-                      height: 24,
-                      width: 24,
-                      color: Colors.white,
-                    ),
-                    activeIcon: Image.asset(
-                      'assets/icons/ic_home.png',
-                      height: 24,
-                      width: 24,
-                      color: AppTheme.primaryColor,
-                    ),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.folder_outlined),
-                    activeIcon: Icon(Icons.folder),
-                    label: 'Documents',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.analytics_outlined),
-                    activeIcon: Icon(Icons.analytics),
-                    label: 'Reports',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.person_outline),
-                    activeIcon: Icon(Icons.person),
-                    label: 'Profile',
-                  ),
-                ],
-                backgroundColor: AppTheme.secondaryColor,
-                selectedItemColor: AppTheme.primaryColor,
-                unselectedItemColor: Colors.white70,
-              )
-              : null,
+      bottomNavigationBar: SizeTransition(
+        sizeFactor: _appBarAnimation,
+        axisAlignment: 1.0,
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icons/ic_home.png',
+                height: 24,
+                width: 24,
+                color: Colors.white,
+              ),
+              activeIcon: Image.asset(
+                'assets/icons/ic_home.png',
+                height: 24,
+                width: 24,
+                color: AppTheme.primaryColor,
+              ),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.folder_outlined),
+              activeIcon: Icon(Icons.folder),
+              label: 'Documents',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.analytics_outlined),
+              activeIcon: Icon(Icons.analytics),
+              label: 'Reports',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+          backgroundColor: AppTheme.secondaryColor,
+          selectedItemColor: AppTheme.primaryColor,
+          unselectedItemColor: Colors.white70,
+        ),
+      ),
     );
   }
 
