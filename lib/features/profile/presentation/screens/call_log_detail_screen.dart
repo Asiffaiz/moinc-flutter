@@ -78,18 +78,22 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
       }
     });
 
-    _audioPlayer.processingStateStream.listen((state) {
+    _audioPlayer.processingStateStream.listen((state) async {
       if (state == ProcessingState.completed) {
-        setState(() {
-          _isPlaying = false;
-          _playbackPosition = 0.0; // Reset to beginning for next play
-          _position = Duration.zero; // Reset position
-        });
-        // Seek back to beginning so it's ready to play again, but don't auto-play
-        _audioPlayer.seek(Duration.zero).then((_) {
-          // Ensure we're paused after seeking
-          _audioPlayer.pause();
-        });
+        // First pause the player to prevent auto-play
+        await _audioPlayer.pause();
+
+        // Then seek back to beginning
+        await _audioPlayer.seek(Duration.zero);
+
+        // Finally update the UI state - this ensures icon and position update together
+        if (mounted) {
+          setState(() {
+            _isPlaying = false;
+            _playbackPosition = 0.0;
+            _position = Duration.zero;
+          });
+        }
       }
     });
   }
