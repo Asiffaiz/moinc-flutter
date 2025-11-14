@@ -6,6 +6,7 @@ import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/ai%20agent/screens/custom_dialer_screen.dart';
 import 'package:moinc/features/ai%20agent/widgets/control_bar.dart';
 import 'package:moinc/features/auth/presentation/bloc/user_cubit.dart';
+import 'package:moinc/services/telephony_service.dart';
 // import 'package:moinc/services/call_service.dart'; // Commented out as it's not currently used
 // import 'package:moinc/services/telephony_service.dart'; // Commented out as it's not currently used
 import 'package:moinc/utils/custom_toast.dart';
@@ -703,37 +704,38 @@ class _CallMeBottomSheetState extends State<_CallMeBottomSheet> {
 
     try {
       // Make the API call
-      // final telephonyService = TelephonyService();
-      // final result = await telephonyService.initiateCall(
-      //   widget.phoneController.text,
-      //   name: widget.nameController.text,
-      //   email: widget.emailController.text,
-      // );
+      final telephonyService = TelephonyService();
+      final result = await telephonyService.initiateCall(
+        widget.phoneController.text,
+        name: widget.nameController.text,
+        email: widget.emailController.text,
+      );
 
-      await Future.delayed(const Duration(seconds: 3), () {});
+      // await Future.delayed(const Duration(seconds: 3), () {});
 
       // Hide loading state and close the dialog
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-        Navigator.pop(context);
-      }
+      if (result['success']) {
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+          Navigator.pop(context);
+        }
 
-      // Handle the result as success
-      if (context.mounted) {
-        // Use the passed AppCtrl instance instead of trying to read from context
-        widget.appCtrl.disableAgentControlFor30Seconds();
+        // Handle the result as success
+        if (context.mounted) {
+          // Use the passed AppCtrl instance instead of trying to read from context
+          widget.appCtrl.disableAgentControlFor30Seconds();
 
-        // Show success message
-        CustomToast.showCustomeToast(
-          'Please wait, your agent will be available in 30 seconds',
-          AppTheme.primaryColor,
-        );
+          // Show success message
+          CustomToast.showCustomeToast(
+            'Please wait, your agent will be available in 30 seconds',
+            AppTheme.primaryColor,
+          );
 
-        // Commented out navigation to custom dialer screen
-        // Will be used in the future
-        /*
+          // Commented out navigation to custom dialer screen
+          // Will be used in the future
+          /*
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -746,6 +748,7 @@ class _CallMeBottomSheetState extends State<_CallMeBottomSheet> {
           ),
         );
         */
+        }
       }
     } catch (e) {
       // Handle any exceptions
