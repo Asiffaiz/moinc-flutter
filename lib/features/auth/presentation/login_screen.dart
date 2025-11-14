@@ -7,6 +7,7 @@ import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_event.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_state.dart';
+import 'package:moinc/features/auth/presentation/forgot_password_screen.dart';
 import 'package:moinc/features/auth/presentation/signup_screen.dart';
 import 'package:moinc/features/auth/presentation/widgets/social_auth_buttons.dart';
 import 'package:moinc/utils/custom_toast.dart';
@@ -390,6 +391,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             TextButton(
                               onPressed: () {
                                 // Handle forgot password
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => ForgotPasswordScreen(),
+                                  ),
+                                );
                               },
                               child: Text(
                                 'Forgot Password?',

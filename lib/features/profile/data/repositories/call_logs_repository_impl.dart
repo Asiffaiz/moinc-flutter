@@ -25,7 +25,7 @@ class CallLogsRepositoryImpl implements CallLogsRepository {
     int limit = 25,
   }) async {
     try {
-      final response = await _apiClient.post(_apiUrl, {
+      final response = await _apiClient.postWithoutToken(_apiUrl, {
         'accountno': _accountNo,
         'page': page,
         'limit': limit,

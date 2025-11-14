@@ -136,18 +136,18 @@ class AuthService {
   // Logout user
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     // Check if Remember Me is enabled
     final rememberMe = prefs.getBool('remember_me') ?? false;
     String? savedEmail;
     String? savedPassword;
-    
+
     // If Remember Me is enabled, save the credentials before clearing
     if (rememberMe) {
       savedEmail = prefs.getString('email');
       savedPassword = prefs.getString('password');
     }
-    
+
     // Clear all user data
     await prefs.remove(SharedPreferenceKeys.tokenKey);
     await prefs.remove(SharedPreferenceKeys.accountNoKey);
@@ -164,7 +164,7 @@ class AuthService {
     await prefs.remove(SharedPreferenceKeys.stateKey);
     await prefs.remove(SharedPreferenceKeys.zipKey);
     await prefs.remove(SharedPreferenceKeys.countryKey);
-    
+
     // If Remember Me was enabled, restore the saved credentials
     if (rememberMe && savedEmail != null && savedPassword != null) {
       await prefs.setBool('remember_me', true);

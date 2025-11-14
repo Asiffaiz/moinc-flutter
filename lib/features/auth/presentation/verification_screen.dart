@@ -1,35 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:moinc/config/constants.dart';
+import 'package:moinc/config/constants/strings.dart';
 import 'package:moinc/config/theme.dart';
-import 'package:moinc/features/home/home_screen.dart';
-import 'package:moinc/utils/custom_toast.dart';
 
 import 'dart:async';
 
-import 'bloc/auth_bloc.dart';
-import 'bloc/auth_event.dart';
-import 'bloc/auth_state.dart';
+import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:moinc/features/auth/presentation/bloc/auth_event.dart';
+import 'package:moinc/features/auth/presentation/bloc/auth_state.dart';
+import 'package:moinc/features/auth/presentation/reset_password_screen.dart';
+import 'package:moinc/utils/custom_toast.dart';
 
-class RegisterVerificationScreen extends StatefulWidget {
+class VerificationScreen extends StatefulWidget {
   final String email;
-  final Map<String, dynamic> registrationData;
 
-  const RegisterVerificationScreen({
-    super.key,
-    required this.email,
-    required this.registrationData,
-  });
+  const VerificationScreen({super.key, required this.email});
 
   @override
-  State<RegisterVerificationScreen> createState() =>
-      _RegisterVerificationScreenState();
+  State<VerificationScreen> createState() => _VerificationScreenState();
 }
 
-class _RegisterVerificationScreenState
-    extends State<RegisterVerificationScreen> {
+class _VerificationScreenState extends State<VerificationScreen> {
   final List<TextEditingController> _codeControllers = List.generate(
     4,
     (index) => TextEditingController(),
@@ -48,51 +40,25 @@ class _RegisterVerificationScreenState
   @override
   void initState() {
     super.initState();
-
-    // context.read<AuthBloc>().add(
-    //   SendVerifyRegisterCodeRequested(email: widget.email),
-    // );
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _startTimer();
-    });
+    _startTimer();
   }
 
   void _startTimer() {
-    // Cancel any existing timer
     _timer?.cancel();
-    _timer = null;
-
-    // Immediately update the state with new timer values
     setState(() {
       _timeLeft = 60; // Reset to 60 seconds
       _isExpired = false;
-      
-      // Note: We don't clear PIN fields here anymore
-      // PIN fields are only cleared explicitly during resend
     });
 
-    // Force a rebuild to ensure the UI shows the updated timer value
-    Future.microtask(() {
-      if (mounted) {
-        setState(() {}); // Force rebuild with updated _timeLeft
-      }
-    });
-
-    // Create a new timer after the state has been updated
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (mounted) {
-        setState(() {
-          if (_timeLeft > 0) {
-            _timeLeft--;
-          } else {
-            _isExpired = true;
-            timer.cancel();
-          }
-        });
-      } else {
-        timer.cancel();
-      }
+      setState(() {
+        if (_timeLeft > 0) {
+          _timeLeft--;
+        } else {
+          _isExpired = true;
+          timer.cancel();
+        }
+      });
     });
   }
 
@@ -127,7 +93,7 @@ class _RegisterVerificationScreenState
         VerifyCodeRequested(
           email: widget.email,
           code: pincode,
-          pincodeFor: 'registration',
+          pincodeFor: 'forget_password',
         ),
       );
     }
@@ -138,13 +104,10 @@ class _RegisterVerificationScreenState
       _isResending = true;
       _errorMessage = null;
       _successMessage = null;
-      _isExpired = false; // Reset expired state immediately on resend
-      _timeLeft = 60; // Immediately update the time display
     });
 
     context.read<AuthBloc>().add(
-      // ResendVerificationCodeRequested(email: widget.email),
-      SendVerifyRegisterResendCodeRequested(email: widget.email),
+      ResendVerificationCodeRequested(email: widget.email),
     );
   }
 
@@ -153,45 +116,41 @@ class _RegisterVerificationScreenState
     return seconds.toString();
   }
 
-  void _signUp() {
-    // Dispatch the registration event
-    if (widget.registrationData != null) {
-      context.read<AuthBloc>().add(
-        RegisterWithApiRequested(userData: widget.registrationData),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state.status == AuthStatus.registerPinVerified) {
-          _signUp();
-        } else if (state.status == AuthStatus.hasMandatoryAgreements) {
-          // context.go(AppRoutes.unsignedAgreements);
-        } else if (state.status == AuthStatus.registeredSuccessfully) {
-          Navigator.pushAndRemoveUntil(
+        if (state.status == AuthStatus.pinVerified) {
+          // For verification code success
+          // Navigate to reset password screen with email and code
+          final pincode =
+              _codeControllers.map((controller) => controller.text).join();
+
+          Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-            (route) => false,
+            MaterialPageRoute(
+              builder:
+                  (context) =>
+                      ResetPasswordScreen(email: widget.email, code: pincode),
+            ),
           );
-        } else if (state.status == AuthStatus.registerCodeResent) {
+        } else if (state.status == AuthStatus.forgotPasswordCodeResent) {
           // For resend code success
           setState(() {
             _isResending = false;
             _isLoading = false; // Ensure main button doesn't show loader
             _successMessage = null; // Don't show message in widget
+            _startTimer(); // Restart timer after resending
           });
-          
+
           // Show toast for success
           CustomToast.showCustomeToast(
             'Verification code resent successfully',
             AppTheme.successColor,
           );
-          
+
           // Clear PIN fields after resend
           for (var controller in _codeControllers) {
             controller.clear();
@@ -200,34 +159,21 @@ class _RegisterVerificationScreenState
           if (_focusNodes.isNotEmpty) {
             _focusNodes[0].requestFocus();
           }
-          
-          // Call _startTimer() outside of setState to ensure proper timer initialization
-          Future.delayed(Duration.zero, () {
-            if (mounted) {
-              _startTimer();
-            }
-          });
-        } else if (state.status == AuthStatus.registerPinVerificationError) {
+        } else if (state.status == AuthStatus.error ||
+            state.status == AuthStatus.registerPinVerificationError) {
           setState(() {
             _errorMessage = null; // Don't show message in widget
-            _isResending = false; // Ensure resend loader is stopped on error
-          });
-          
-          // Show toast message for error
-          CustomToast.showCustomeToast(
-            state.errorMessage ?? 'Invalid verification code. Please try again.',
-            AppTheme.errorColor,
-          );
-        } else if (state.errorMessage == "already_created" &&
-            state.status == AuthStatus.error) {
-          setState(() {
-            _isLoading = false;
+            _isResending = false;
           });
 
+          // Show toast message for error
           CustomToast.showCustomeToast(
-            'Account already created with this email address. Please choose another one',
+            state.errorMessage ??
+                'Invalid verification code. Please try again.',
             AppTheme.errorColor,
           );
+
+          // Don't clear PIN fields on error - user may want to make small corrections
         }
 
         // Only update loading state if not currently resending
@@ -250,7 +196,7 @@ class _RegisterVerificationScreenState
         body: SafeArea(
           child: SingleChildScrollView(
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
               constraints: BoxConstraints(
                 minHeight:
                     screenSize.height -
@@ -263,7 +209,9 @@ class _RegisterVerificationScreenState
                 children: [
                   Text(
                     'Enter the 4-digit verification code sent to your email to reset your password.',
-                    style: AppTheme.bodyLarge.copyWith(color: Colors.white70),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: Colors.white70),
                   ),
                   const SizedBox(height: 32),
 
@@ -272,20 +220,21 @@ class _RegisterVerificationScreenState
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppTheme.errorColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: AppTheme.errorColor.withOpacity(0.5),
-                        ),
+                        color: AppTheme.errorColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppTheme.errorColor),
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.error_outline, color: AppTheme.errorColor),
+                          const Icon(
+                            Icons.error_outline,
+                            color: AppTheme.errorColor,
+                          ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               _errorMessage!,
-                              style: TextStyle(color: AppTheme.errorColor),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
                         ],
@@ -299,15 +248,13 @@ class _RegisterVerificationScreenState
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppTheme.successColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: AppTheme.successColor.withOpacity(0.5),
-                        ),
+                        color: AppTheme.successColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppTheme.successColor),
                       ),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.check_circle_outline,
                             color: AppTheme.successColor,
                           ),
@@ -315,7 +262,7 @@ class _RegisterVerificationScreenState
                           Expanded(
                             child: Text(
                               _successMessage!,
-                              style: TextStyle(color: AppTheme.successColor),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
                         ],
@@ -325,21 +272,18 @@ class _RegisterVerificationScreenState
                   ],
 
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Code sent to your email: ',
-                        style: AppTheme.bodyMedium.copyWith(
-                          color: Colors.white,
-                        ),
+                        '${AppStrings.codeSentText} ',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyLarge?.copyWith(color: Colors.white),
                       ),
-                      Flexible(
-                        child: Text(
-                          widget.email,
-                          style: AppTheme.bodyMedium.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.primaryColor,
-                          ),
+                      Text(
+                        widget.email,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primaryColor,
                         ),
                       ),
                     ],
@@ -355,14 +299,15 @@ class _RegisterVerificationScreenState
                     decoration: BoxDecoration(
                       color:
                           _isExpired
-                              ? AppTheme.errorColor.withOpacity(0.1)
-                              : AppTheme.secondaryColor.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(12),
+                              ? AppTheme.errorColor.withOpacity(0.2)
+                              : AppTheme.primaryColor.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color:
                             _isExpired
                                 ? AppTheme.errorColor
-                                : AppTheme.primaryColor.withOpacity(0.5),
+                                : AppTheme.primaryColor,
+                        width: 1,
                       ),
                     ),
                     child: Row(
@@ -380,9 +325,7 @@ class _RegisterVerificationScreenState
                         Text(
                           _isExpired
                               ? 'Code expired'
-                              : (_timeLeft > 0
-                                  ? 'Code expires in: ${_formatTime(_timeLeft)} seconds'
-                                  : 'Code expires in: 60 seconds'),
+                              : 'Code expires in: ${_formatTime(_timeLeft)} seconds',
                           style: TextStyle(
                             color:
                                 _isExpired
@@ -406,16 +349,18 @@ class _RegisterVerificationScreenState
                               ? null
                               : _verifyCode,
                       style: AppTheme.primaryButtonStyle.copyWith(
-                        backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                          // Don't change color when disabled due to loading
-                          if (states.contains(MaterialState.disabled) && _isLoading) {
-                            return AppTheme.primaryColor;
-                          }
-                          if (states.contains(MaterialState.disabled)) {
-                            return Colors.grey.shade700;
-                          }
-                          return AppTheme.primaryColor;
-                        }),
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>((states) {
+                              // Don't change color when disabled due to loading
+                              if (states.contains(MaterialState.disabled) &&
+                                  _isLoading) {
+                                return AppTheme.primaryColor;
+                              }
+                              if (states.contains(MaterialState.disabled)) {
+                                return Colors.grey.shade700;
+                              }
+                              return AppTheme.primaryColor;
+                            }),
                       ),
                       child:
                           _isLoading
@@ -428,8 +373,13 @@ class _RegisterVerificationScreenState
                                 ),
                               )
                               : Text(
-                                _isExpired ? 'Code Expired' : 'Continue',
-                                style: AppTheme.buttonText,
+                                _isExpired
+                                    ? 'Code Expired'
+                                    : AppStrings.continueText,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                     ),
                   ),
@@ -439,9 +389,9 @@ class _RegisterVerificationScreenState
                     children: [
                       Text(
                         _isExpired ? "Code expired. " : "Didn't receive code? ",
-                        style: AppTheme.bodyMedium.copyWith(
-                          color: Colors.white70,
-                        ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: Colors.white),
                       ),
                       TextButton(
                         onPressed:
@@ -450,7 +400,6 @@ class _RegisterVerificationScreenState
                                     (!_isExpired && _timeLeft > 0))
                                 ? null
                                 : _resendCode,
-
                         style: TextButton.styleFrom(
                           foregroundColor: AppTheme.primaryColor,
                         ),
@@ -470,7 +419,7 @@ class _RegisterVerificationScreenState
                                       : (_timeLeft > 0
                                           ? "Wait ${_formatTime(_timeLeft)}s"
                                           : "Resend Now"),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: AppTheme.primaryColor,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -500,39 +449,31 @@ class _RegisterVerificationScreenState
             focusNode: _focusNodes[index],
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
             decoration: InputDecoration(
               contentPadding: EdgeInsets.zero,
-              filled: true,
-              fillColor:
-                  _isExpired
-                      ? AppTheme.secondaryColor.withOpacity(0.3)
-                      : AppTheme.secondaryColor,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: AppTheme.primaryColor.withOpacity(0.5),
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: AppTheme.primaryColor.withOpacity(0.5),
-                ),
+                borderSide: BorderSide(color: AppTheme.primaryColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(color: AppTheme.primaryColor, width: 2),
               ),
-              errorBorder: OutlineInputBorder(
+              enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: AppTheme.errorColor),
+                borderSide: BorderSide(color: AppTheme.primaryColor),
               ),
               counterText: '',
+              filled: true,
+              fillColor:
+                  _isExpired
+                      ? Colors.grey.shade800.withOpacity(0.5)
+                      : AppTheme.secondaryColor.withOpacity(0.7),
             ),
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
