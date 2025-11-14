@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/profile/domain/models/call_log_model.dart';
+import 'package:moinc/utils/custom_toast.dart';
 
 class CallLogDetailScreen extends StatefulWidget {
   final CallLog callLog;
@@ -126,18 +127,22 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
       setState(() {
         _isLoading = false;
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to load audio: $e')));
+
+      CustomToast.showCustomeToast(
+        'Failed to load audio: $e',
+        AppTheme.errorColor,
+      );
     }
   }
 
   void _togglePlayPause() async {
-    print(_audioUrl);
+  
     if (_audioUrl == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No recording available for this call')),
+      CustomToast.showCustomeToast(
+        'No recording available for this call',
+        AppTheme.errorColor,
       );
+  
       return;
     }
 

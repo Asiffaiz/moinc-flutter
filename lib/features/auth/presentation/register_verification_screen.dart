@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/home/home_screen.dart';
+import 'package:moinc/utils/custom_toast.dart';
 
 import 'dart:async';
 
@@ -206,13 +207,9 @@ class _RegisterVerificationScreenState
             _isLoading = false;
           });
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Account already created with this email address. Please choose another one',
-              ),
-              backgroundColor: AppTheme.errorColor,
-            ),
+          CustomToast.showCustomeToast(
+            'Account already created with this email address. Please choose another one',
+            AppTheme.errorColor,
           );
         }
 

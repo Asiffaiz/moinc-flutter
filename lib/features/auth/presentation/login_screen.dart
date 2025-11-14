@@ -9,6 +9,7 @@ import 'package:moinc/features/auth/presentation/bloc/auth_event.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_state.dart';
 import 'package:moinc/features/auth/presentation/signup_screen.dart';
 import 'package:moinc/features/auth/presentation/widgets/social_auth_buttons.dart';
+import 'package:moinc/utils/custom_toast.dart';
 import 'package:moinc/utils/form_label.dart';
 import 'package:moinc/utils/validators.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,12 +28,12 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
   bool _isLoading = false;
-  
+
   // SharedPreferences keys
   static const String _keyRememberMe = 'remember_me';
   static const String _keyEmail = 'email';
   static const String _keyPassword = 'password';
-  
+
   @override
   void initState() {
     super.initState();
@@ -45,16 +46,16 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
-  
+
   // Load saved credentials if Remember Me was checked
   Future<void> _loadSavedCredentials() async {
     final prefs = await SharedPreferences.getInstance();
     final rememberMe = prefs.getBool(_keyRememberMe) ?? false;
-    
+
     if (rememberMe) {
       final email = prefs.getString(_keyEmail) ?? '';
       final password = prefs.getString(_keyPassword) ?? '';
-      
+
       setState(() {
         _rememberMe = rememberMe;
         _emailController.text = email;
@@ -62,11 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     }
   }
-  
+
   // Save credentials if Remember Me is checked
   Future<void> _saveCredentials() async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     if (_rememberMe) {
       await prefs.setBool(_keyRememberMe, true);
       await prefs.setString(_keyEmail, _emailController.text);
@@ -89,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       // Save credentials if Remember Me is checked
       await _saveCredentials();
-      
+
       setState(() {
         _isLoading = true;
       });
@@ -164,12 +165,9 @@ class _LoginScreenState extends State<LoginScreen> {
               //  _errorMessage = 'Invalid Email OR Password';
               _isLoading = false;
             });
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Invalid Email OR Password'),
-                backgroundColor: AppTheme.errorColor,
-              ),
+            CustomToast.showCustomeToast(
+              'Invalid Email OR Password',
+              AppTheme.errorColor,
             );
           }
           //  else if (state.errorMessage == "already_created") {

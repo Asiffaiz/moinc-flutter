@@ -12,6 +12,7 @@ import 'package:moinc/features/auth/presentation/widgets/country_dropdown.dart';
 import 'package:moinc/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:moinc/features/profile/presentation/bloc/profile_event.dart';
 import 'package:moinc/features/profile/presentation/bloc/profile_state.dart';
+import 'package:moinc/utils/custom_toast.dart';
 import 'package:moinc/utils/form_label.dart';
 import 'package:moinc/utils/validators.dart';
 import 'package:moinc/widgets/password_text_field.dart';
@@ -112,20 +113,20 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
         _isLoading = true;
       });
       if (_addressController.text.isEmpty) {
-        setState(() {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please enter an address')),
-          );
-        });
+        CustomToast.showCustomeToast(
+          'Please enter an address',
+          AppTheme.errorColor,
+        );
+     
+    
         return;
       }
 
       if (_selectedCountry == null) {
-        setState(() {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please select a country')),
-          );
-        });
+        CustomToast.showCustomeToast(
+          'Please select a country',
+          AppTheme.errorColor,
+        );
         return;
       }
 
@@ -193,16 +194,20 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
           setState(() {
             _isLoading = false;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Profile updated successfully')),
+          CustomToast.showCustomeToast(
+            'Profile updated successfully',
+            AppTheme.primaryColor,
           );
+       
           context.read<UserCubit>().updateName(state.profile!['name'] ?? '');
         } else if (state.status == ProfileStatus.error) {
           setState(() {
             _isLoading = false;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Something went wrong try again!')),
+
+          CustomToast.showCustomeToast(
+            'Something went wrong try again!',
+            AppTheme.errorColor,
           );
         } else if (state.status == ProfileStatus.loaded &&
             state.profile != null) {

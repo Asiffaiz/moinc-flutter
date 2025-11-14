@@ -19,6 +19,7 @@ import 'package:moinc/features/auth/presentation/widgets/consent_checkbox.dart';
 import 'package:moinc/features/auth/presentation/widgets/country_dropdown.dart';
 import 'package:moinc/features/auth/presentation/widgets/phone_number_field.dart';
 import 'package:moinc/features/auth/presentation/widgets/social_auth_buttons_register.dart';
+import 'package:moinc/utils/custom_toast.dart';
 
 import 'package:moinc/utils/form_label.dart';
 import 'package:moinc/utils/validators.dart';
@@ -145,20 +146,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     if (isFormValid && _dataConsentChecked) {
       if (_addressController.text.isEmpty) {
-        setState(() {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please enter an address')),
-          );
-        });
+        CustomToast.showCustomeToast(
+          'Please enter an address',
+          AppTheme.errorColor,
+        );
+
         return;
       }
 
       if (_selectedCountry == null) {
-        setState(() {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please select a country')),
-          );
-        });
+        CustomToast.showCustomeToast(
+          'Please select a country',
+          AppTheme.errorColor,
+        );
+
         return;
       }
 
@@ -277,8 +278,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           );
         } else if (state.status == AuthStatus.error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage ?? 'An error occurred')),
+          CustomToast.showCustomeToast(
+            state.errorMessage ?? 'An error occurred',
+            AppTheme.errorColor,
           );
         }
         //<===============WORKING CODE WITHOUT VERIFICATION CODE===============>

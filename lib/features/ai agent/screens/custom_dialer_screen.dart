@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/services/call_service.dart';
+import 'package:moinc/utils/custom_toast.dart';
 import 'package:provider/provider.dart';
 
 class CustomDialerScreen extends StatefulWidget {
@@ -82,11 +83,9 @@ class _CustomDialerScreenState extends State<CustomDialerScreen> {
 
           // Show error if needed
           if (callService.callState == CallState.failed && mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Call failed. Please try again.'),
-                backgroundColor: Colors.red,
-              ),
+            CustomToast.showCustomeToast(
+              'Call failed. Please try again.',
+              AppTheme.errorColor,
             );
           }
         }
@@ -139,11 +138,9 @@ class _CustomDialerScreenState extends State<CustomDialerScreen> {
     );
 
     if (!success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to connect call. Please try again.'),
-          backgroundColor: Colors.red,
-        ),
+      CustomToast.showCustomeToast(
+        'Failed to connect call. Please try again.',
+        AppTheme.errorColor,
       );
     }
 

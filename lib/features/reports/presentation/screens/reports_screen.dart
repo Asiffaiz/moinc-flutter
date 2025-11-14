@@ -5,6 +5,7 @@ import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/reports/domain/models/reports_model.dart';
 import 'package:moinc/features/reports/presentation/bloc/reports_bloc.dart';
 import 'package:moinc/features/reports/presentation/screens/report_webview_screen.dart';
+import 'package:moinc/utils/custom_toast.dart';
 import 'package:moinc/widgets/custom_error_dialog.dart';
 import 'package:moinc/widgets/dashboard_shimmer.dart';
 
@@ -135,11 +136,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
           }
 
           if (state is ReportUrlError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage),
-                backgroundColor: Colors.red,
-              ),
+            CustomToast.showCustomeToast(
+              state.errorMessage,
+              AppTheme.errorColor,
             );
           }
         },

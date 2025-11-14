@@ -6,8 +6,9 @@ import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/ai%20agent/screens/custom_dialer_screen.dart';
 import 'package:moinc/features/ai%20agent/widgets/control_bar.dart';
 import 'package:moinc/features/auth/presentation/bloc/user_cubit.dart';
-import 'package:moinc/services/call_service.dart';
+// import 'package:moinc/services/call_service.dart'; // Commented out as it's not currently used
 import 'package:moinc/services/telephony_service.dart';
+import 'package:moinc/utils/custom_toast.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/app_ctrl.dart' as app_ctrl;
@@ -60,269 +61,22 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   }
 
   void _showCallMeDialog(BuildContext context) {
-    // Use showModalBottomSheet instead of showDialog for better keyboard handling
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Important for keyboard handling
       backgroundColor: Colors.transparent,
-      builder: (context) {
+      builder: (BuildContext context) {
         // Calculate bottom padding to avoid keyboard overlap
         final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
         // Get the navigation bar height to avoid buttons being hidden
         final bottomNavHeight = MediaQuery.of(context).padding.bottom;
 
-        return Padding(
-          padding: EdgeInsets.only(bottom: bottomPadding),
-          child: Container(
-            padding: EdgeInsets.fromLTRB(24, 24, 24, 24 + bottomNavHeight),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
-            // Constrain the height to prevent overflow
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // User icon logo at the top
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppTheme.primaryColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.primaryColor.withOpacity(0.3),
-                          blurRadius: 10,
-                          spreadRadius: 2,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.person,
-                      size: 45,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  const Text(
-                    'Enter your information',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _nameController,
-                    keyboardType: TextInputType.name,
-                    style: const TextStyle(color: Colors.black87, fontSize: 16),
-                    decoration: InputDecoration(
-                      hintText: 'Full Name',
-                      hintStyle: TextStyle(color: Colors.grey.shade500),
-                      prefixIcon: Icon(
-                        Icons.person,
-                        color: HexColor("#0033A0"),
-                      ),
-                      filled: true,
-                      fillColor: Colors.grey.shade100,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 198, 196, 232),
-                          width: 2,
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    style: const TextStyle(color: Colors.black87, fontSize: 16),
-                    decoration: InputDecoration(
-                      hintText: 'Email Address',
-                      hintStyle: TextStyle(color: Colors.grey.shade500),
-                      prefixIcon: Icon(Icons.email, color: HexColor("#0033A0")),
-                      filled: true,
-                      fillColor: Colors.grey.shade100,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 198, 196, 232),
-                          width: 2,
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                    style: const TextStyle(color: Colors.black87, fontSize: 16),
-                    decoration: InputDecoration(
-                      hintText: 'Phone number',
-                      hintStyle: TextStyle(color: Colors.grey.shade500),
-                      prefixIcon: Icon(Icons.phone, color: HexColor("#0033A0")),
-                      filled: true,
-                      fillColor: Colors.grey.shade100,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 198, 196, 232),
-                          width: 2,
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.grey.shade700,
-                          ),
-                          child: const Text('Cancel'),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: SizedBox(
-                          height: 40,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.primaryColor,
-                              foregroundColor: Colors.black,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 4,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 3,
-                            ),
-                            onPressed: () async {
-                              // Process phone number here
-                              if (_phoneController.text.isNotEmpty) {
-                                // Get the call service and set it to ringing state
-                                final callService = Provider.of<CallService>(
-                                  context,
-                                  listen: false,
-                                );
-
-                                // Start the call in ringing state
-                                callService.startRinging(_phoneController.text);
-
-                                // Close the dialog
-                                Navigator.pop(context);
-
-                                // Show the dialer screen immediately in ringing state
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => CustomDialerScreen(
-                                          initialPhoneNumber:
-                                              _phoneController.text,
-                                          isRinging: true,
-                                        ),
-                                  ),
-                                );
-
-                                // Now make the API call in the background
-                                final telephonyService = TelephonyService();
-                                final result = await telephonyService
-                                    .initiateCall(
-                                      _phoneController.text,
-                                      name: _nameController.text,
-                                      email: _emailController.text,
-                                    );
-
-                                if (result['success']) {
-                                  // API call succeeded, update the call state
-                                  if (context.mounted) {
-                                    // Extract call data from API response
-                                    final callData =
-                                        result['data'] as Map<String, dynamic>;
-
-                                    // Debug log to see what's in the response
-                                    print('Call API response data: $callData');
-
-                                    // Use the SIP call ID if available, otherwise fall back to session ID
-                                    final String callId =
-                                        result['sipCallId'] ??
-                                        result['sessionId'];
-
-                                    // Update the call with the appropriate call ID and data from the API
-                                    callService.initiateCall(
-                                      result['phoneNumber'],
-                                      sessionId: callId,
-                                      callData: callData,
-                                      skipRingingState:
-                                          true, // Skip ringing since we're already showing it
-                                    );
-                                  }
-                                } else {
-                                  // API call failed, end the call
-                                  callService.endCall();
-
-                                  // Show error message
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          result['message'] ??
-                                              'Failed to initiate call',
-                                        ),
-                                        backgroundColor: Colors.red,
-                                      ),
-                                    );
-                                  }
-                                }
-                              } else {
-                                Navigator.pop(context);
-                              }
-                            },
-                            child: const Text(
-                              'Submit',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
+        return _CallMeBottomSheet(
+          bottomPadding: bottomPadding,
+          bottomNavHeight: bottomNavHeight,
+          nameController: _nameController,
+          emailController: _emailController,
+          phoneController: _phoneController,
         );
       },
     );
@@ -600,5 +354,363 @@ class _AudioCallScreenState extends State<AudioCallScreen>
         ),
       ),
     );
+  }
+}
+
+// Separate StatefulWidget for the bottom sheet to manage its own loading state
+class _CallMeBottomSheet extends StatefulWidget {
+  final double bottomPadding;
+  final double bottomNavHeight;
+  final TextEditingController nameController;
+  final TextEditingController emailController;
+  final TextEditingController phoneController;
+
+  const _CallMeBottomSheet({
+    required this.bottomPadding,
+    required this.bottomNavHeight,
+    required this.nameController,
+    required this.emailController,
+    required this.phoneController,
+  });
+
+  @override
+  State<_CallMeBottomSheet> createState() => _CallMeBottomSheetState();
+}
+
+class _CallMeBottomSheetState extends State<_CallMeBottomSheet> {
+  bool isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: widget.bottomPadding),
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(24, 24, 24, 24 + widget.bottomNavHeight),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // Form content
+              AbsorbPointer(
+                absorbing: isLoading,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // User icon logo at the top
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppTheme.primaryColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppTheme.primaryColor.withOpacity(0.3),
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.person,
+                          size: 45,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        'Enter your information',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: widget.nameController,
+                        keyboardType: TextInputType.name,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Full Name',
+                          hintStyle: TextStyle(color: Colors.grey.shade500),
+                          prefixIcon: Icon(
+                            Icons.person,
+                            color: HexColor("#0033A0"),
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey.shade100,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 198, 196, 232),
+                              width: 2,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: widget.emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Email Address',
+                          hintStyle: TextStyle(color: Colors.grey.shade500),
+                          prefixIcon: Icon(
+                            Icons.email,
+                            color: HexColor("#0033A0"),
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey.shade100,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 198, 196, 232),
+                              width: 2,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: widget.phoneController,
+                        keyboardType: TextInputType.phone,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Phone number',
+                          hintStyle: TextStyle(color: Colors.grey.shade500),
+                          prefixIcon: Icon(
+                            Icons.phone,
+                            color: HexColor("#0033A0"),
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey.shade100,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 198, 196, 232),
+                              width: 2,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed:
+                                  isLoading
+                                      ? null
+                                      : () => Navigator.pop(context),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.grey.shade700,
+                              ),
+                              child: const Text('Cancel'),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: SizedBox(
+                              height: 40,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppTheme.primaryColor,
+                                  foregroundColor: Colors.black,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 14,
+                                    vertical: 4,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 3,
+                                ),
+                                onPressed: isLoading ? null : _submitForm,
+                                child: const Text(
+                                  'Submit',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Loading indicator overlay - only shows within the form area
+              if (isLoading)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppTheme.primaryColor,
+                              ),
+                              strokeWidth: 3,
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'Processing...',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _submitForm() async {
+    if (widget.phoneController.text.isEmpty) {
+      return;
+    }
+
+    // Show loading state
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Make the API call
+      // final telephonyService = TelephonyService();
+      // final result = await telephonyService.initiateCall(
+      //   widget.phoneController.text,
+      //   name: widget.nameController.text,
+      //   email: widget.emailController.text,
+      // );
+
+      await Future.delayed(const Duration(seconds: 3), () {});
+
+      // Hide loading state and close the dialog
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.pop(context);
+      }
+
+      // Handle the result
+      if (true) {
+        // if (result['success']) {
+        if (context.mounted) {
+          // Show success message
+          CustomToast.showCustomeToast(
+            'Please wait, your agent will be available in 30 seconds',
+            AppTheme.primaryColor,
+          );
+
+          // Commented out navigation to custom dialer screen
+          // Will be used in the future
+          /*
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => CustomDialerScreen(
+                    initialPhoneNumber:
+                        widget.phoneController.text,
+                    isRinging: true,
+                  ),
+            ),
+          );
+          */
+        }
+      } else {
+        // Show error message
+
+     
+        if (context.mounted) {
+        CustomToast.showCustomeToast(
+          "result['message'] ?? 'Failed to initiate call'",
+          AppTheme.errorColor,
+        );
+        }
+      }
+    } catch (e) {
+      // Handle any exceptions
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.pop(context);
+
+        if (context.mounted) {
+          CustomToast.showCustomeToast(
+            'Error: $e',
+            AppTheme.errorColor,
+          );
+       
+        }
+      }
+    }
   }
 }
