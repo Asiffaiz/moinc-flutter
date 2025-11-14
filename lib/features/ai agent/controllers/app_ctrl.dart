@@ -44,6 +44,7 @@ class AppCtrl extends ChangeNotifier {
   bool _isFullScreen = false;
   bool isScreenshareEnabled = false;
   bool isHoldEnabled = false;
+  bool isDiabledAgentControl = false;
   final messageCtrl = TextEditingController();
   final messageFocusNode = FocusNode();
 
@@ -84,6 +85,15 @@ class AppCtrl extends ChangeNotifier {
     messageCtrl.dispose();
     _cancelAgentTimer();
     super.dispose();
+  }
+
+  void disableAgentControlFor30Seconds() {
+    isDiabledAgentControl = true;
+    notifyListeners();
+    Future.delayed(const Duration(seconds: 30), () {
+      isDiabledAgentControl = false;
+      notifyListeners();
+    });
   }
 
   void sendMessage() async {

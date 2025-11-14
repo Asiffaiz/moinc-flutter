@@ -7,7 +7,7 @@ import 'package:moinc/features/ai%20agent/screens/custom_dialer_screen.dart';
 import 'package:moinc/features/ai%20agent/widgets/control_bar.dart';
 import 'package:moinc/features/auth/presentation/bloc/user_cubit.dart';
 // import 'package:moinc/services/call_service.dart'; // Commented out as it's not currently used
-import 'package:moinc/services/telephony_service.dart';
+// import 'package:moinc/services/telephony_service.dart'; // Commented out as it's not currently used
 import 'package:moinc/utils/custom_toast.dart';
 import 'package:provider/provider.dart';
 
@@ -61,6 +61,9 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   }
 
   void _showCallMeDialog(BuildContext context) {
+    // Get the AppCtrl instance from the current context
+    final appCtrl = context.read<app_ctrl.AppCtrl>();
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Important for keyboard handling
@@ -77,6 +80,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
           nameController: _nameController,
           emailController: _emailController,
           phoneController: _phoneController,
+          appCtrl: appCtrl, // Pass the AppCtrl instance to the bottom sheet
         );
       },
     );
@@ -132,6 +136,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
     required Widget icon,
     required String label,
     required VoidCallback onPressed,
+    required bool isDisabled,
   }) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
@@ -160,7 +165,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: onPressed,
+              onTap: isDisabled ? null : onPressed,
               splashColor: Colors.white.withOpacity(0.2),
               highlightColor: Colors.white.withOpacity(0.1),
               child: Padding(
@@ -289,6 +294,10 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                   return ConstrainedBox(
                     constraints: const BoxConstraints(minWidth: 250),
                     child: Button(
+                      isDisabled:
+                          context
+                              .watch<app_ctrl.AppCtrl>()
+                              .isDiabledAgentControl,
                       text:
                           isCallActive
                               ? connectionState ==
@@ -323,6 +332,10 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                             children: [
                               Expanded(
                                 child: _buildGlassmorphicButton(
+                                  isDisabled:
+                                      context
+                                          .watch<app_ctrl.AppCtrl>()
+                                          .isDiabledAgentControl,
                                   icon: const Icon(
                                     Icons.dialpad_rounded,
                                     color: Colors.white,
@@ -335,6 +348,10 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                               const SizedBox(width: 16),
                               Expanded(
                                 child: _buildGlassmorphicButton(
+                                  isDisabled:
+                                      context
+                                          .watch<app_ctrl.AppCtrl>()
+                                          .isDiabledAgentControl,
                                   icon: const Icon(
                                     Icons.call,
                                     color: Colors.white,
@@ -364,6 +381,7 @@ class _CallMeBottomSheet extends StatefulWidget {
   final TextEditingController nameController;
   final TextEditingController emailController;
   final TextEditingController phoneController;
+  final app_ctrl.AppCtrl appCtrl; // Add AppCtrl instance
 
   const _CallMeBottomSheet({
     required this.bottomPadding,
@@ -371,6 +389,7 @@ class _CallMeBottomSheet extends StatefulWidget {
     required this.nameController,
     required this.emailController,
     required this.phoneController,
+    required this.appCtrl, // Required parameter
   });
 
   @override
@@ -658,42 +677,32 @@ class _CallMeBottomSheetState extends State<_CallMeBottomSheet> {
         Navigator.pop(context);
       }
 
-      // Handle the result
-      if (true) {
-        // if (result['success']) {
-        if (context.mounted) {
-          // Show success message
-          CustomToast.showCustomeToast(
-            'Please wait, your agent will be available in 30 seconds',
-            AppTheme.primaryColor,
-          );
+      // Handle the result as success
+      if (context.mounted) {
+        // Use the passed AppCtrl instance instead of trying to read from context
+        widget.appCtrl.disableAgentControlFor30Seconds();
 
-          // Commented out navigation to custom dialer screen
-          // Will be used in the future
-          /*
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => CustomDialerScreen(
-                    initialPhoneNumber:
-                        widget.phoneController.text,
-                    isRinging: true,
-                  ),
-            ),
-          );
-          */
-        }
-      } else {
-        // Show error message
-
-     
-        if (context.mounted) {
+        // Show success message
         CustomToast.showCustomeToast(
-          "result['message'] ?? 'Failed to initiate call'",
-          AppTheme.errorColor,
+          'Please wait, your agent will be available in 30 seconds',
+          AppTheme.primaryColor,
         );
-        }
+
+        // Commented out navigation to custom dialer screen
+        // Will be used in the future
+        /*
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => CustomDialerScreen(
+                  initialPhoneNumber:
+                      widget.phoneController.text,
+                  isRinging: true,
+                ),
+          ),
+        );
+        */
       }
     } catch (e) {
       // Handle any exceptions
@@ -704,11 +713,7 @@ class _CallMeBottomSheetState extends State<_CallMeBottomSheet> {
         Navigator.pop(context);
 
         if (context.mounted) {
-          CustomToast.showCustomeToast(
-            'Error: $e',
-            AppTheme.errorColor,
-          );
-       
+          CustomToast.showCustomeToast('Error: $e', AppTheme.errorColor);
         }
       }
     }

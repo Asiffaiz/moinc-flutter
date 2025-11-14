@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen>
 
             // Reports Tab
             // _buildReportsTab(),
-            CallLogsScreen(),
+            const CallLogsScreen(),
             // Profile Tab
             _buildProfileTab(),
           ],
@@ -175,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildDashboardTab() {
-    return DashboardHomeContent();
+    return const DashboardHomeContent();
 
     // SingleChildScrollView(
     //   child: Padding(
