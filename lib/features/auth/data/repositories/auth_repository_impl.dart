@@ -163,9 +163,9 @@ class AuthRepositoryImpl implements AuthRepository {
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      print('idToken ======> ${googleAuth.idToken}');
-      print('accessToken => ${googleAuth.accessToken}');
-      print('googleUser======>: ${googleUser}');
+      // print('idToken ======> ${googleAuth.idToken}');
+      // print('accessToken => ${googleAuth.accessToken}');
+      // print('googleUser======>: ${googleUser}');
       // Get user information from Google account without Firebase authentication
       final userModel = UserModel(
         id: googleUser.id,
