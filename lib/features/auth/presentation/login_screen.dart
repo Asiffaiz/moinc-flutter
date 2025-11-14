@@ -69,22 +69,28 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state.status == AuthStatus.apiAuthenticated) {
           setState(() {
-            //_successMessage = "Login successful. Redirecting to dashboard...";
             _isLoading = false;
           });
 
           // Navigate to dashboard after a short delay
           Future.delayed(const Duration(seconds: 1), () {
-            Navigator.pushReplacementNamed(
-              context,
-              AppConstants.dashboardRoute,
-            );
+            // Check if this is a Google Sign-In
+            final isGoogleSignIn =
+                state.additionalData?['isGoogleSignIn'] == true;
 
-            //   Navigator.pushAndRemoveUntil(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => const HomeScreen()),
-            //   (route) => false,
-            // );
+            if (isGoogleSignIn) {
+              // For Google Sign-In, use named route to preserve providers
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                AppConstants.dashboardRoute,
+                (route) => false, // Remove all previous routes
+              );
+            } else {
+              // For regular login, use pushReplacementNamed
+              Navigator.pushReplacementNamed(
+                context,
+                AppConstants.dashboardRoute,
+              );
+            }
           });
         } else if (state.status == AuthStatus.hasMandatoryAgreements) {
           // context.go(AppRoutes.unsignedAgreements);

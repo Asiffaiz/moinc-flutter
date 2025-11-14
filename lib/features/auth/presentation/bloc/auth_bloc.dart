@@ -160,7 +160,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // add(const CheckMandatoryAgreements());
         emit(
           state.copyWith(
-            status: AuthStatus.apiLoginAuthenticated,
+            status: AuthStatus.apiAuthenticated,
             apiUserData: result,
           ),
         );
@@ -794,7 +794,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           userExists['requestType'] == "user_login") {
         // If user exists, login with API
         // add(const CheckMandatoryAgreements());
-        emit(state.copyWith(status: AuthStatus.apiAuthenticated));
+        emit(
+          state.copyWith(
+            status: AuthStatus.apiAuthenticated,
+            additionalData: {'isGoogleSignIn': true},
+          ),
+        );
       } else {
         // Use the Google user data we already have in state
         if (state.user != null) {
