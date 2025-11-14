@@ -373,17 +373,26 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
                             : AppTheme.primaryColor,
                     size: 20,
                   )
-                  : Text(
-                    nameInitial,
-                    style: TextStyle(
-                      color:
-                          log.status == CallStatus.missed ||
-                                  log.status == CallStatus.failed
-                              ? Colors.red
-                              : AppTheme.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  : Icon(
+                    Icons.person,
+                    color:
+                        log.status == CallStatus.missed ||
+                                log.status == CallStatus.failed
+                            ? Colors.red
+                            : AppTheme.primaryColor,
+                    size: 20,
                   ),
+          // Text(
+          //   nameInitial,
+          //   style: TextStyle(
+          //     color:
+          //         log.status == CallStatus.missed ||
+          //                 log.status == CallStatus.failed
+          //             ? Colors.red
+          //             : AppTheme.primaryColor,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
         ),
         title: Text(
           log.callerName ?? 'Unknown',

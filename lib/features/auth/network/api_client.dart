@@ -85,10 +85,10 @@ class ApiClient {
   // POST request with auth token
   Future<ApiResponse> post(String url, dynamic body) async {
     return _executeRequest(() async {
-      // final token = await _tokenService.getAccessToken();
-      final token =
-          'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2hhc2giOiJkMDRkMjNhMmY2ZTE4ZTRlODE0NTlhMjc0YzkzNmVmOCIsImlhdCI6MTc2Mjk5MjE5OCwiZXhwIjoxNzYzMDM1Mzk4fQ.WJMuaeCagrLAYF2uEivNv_2ztyGW3z6ZajQVkonxKwx46KbLtyFDN_qVNnMAquizpD7HP8HkxgwB38Ra80TuCKybk5FZJYGxWcVQJx9X6iB02qkbJS2zFKk9DoBfL4ZRvnDqSEngmqWOQkx8eug1YKft7TMfhXQYrx8vye96AnbpGNJpTqz0yZ-ktZYf0DSwBt2mWv1JxzcP0Jpxz85R_sfJ5xZPjOhJO_3yY13_EayQLPFgD0QGZXEEZ2zBHWrvhIxoPbi_WOG0CXXvcT4Seg3iy6HC1BUQ-O2BWHZF7K2dRiWGlahIS95dD2CR3BuWtDUlDSjCPgPg0OvqmkK1BA';
-      print(token);
+      final token = await _tokenService.getAccessToken();
+      // final token =
+      //     'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2hhc2giOiJkMDRkMjNhMmY2ZTE4ZTRlODE0NTlhMjc0YzkzNmVmOCIsImlhdCI6MTc2Mjk5MjE5OCwiZXhwIjoxNzYzMDM1Mzk4fQ.WJMuaeCagrLAYF2uEivNv_2ztyGW3z6ZajQVkonxKwx46KbLtyFDN_qVNnMAquizpD7HP8HkxgwB38Ra80TuCKybk5FZJYGxWcVQJx9X6iB02qkbJS2zFKk9DoBfL4ZRvnDqSEngmqWOQkx8eug1YKft7TMfhXQYrx8vye96AnbpGNJpTqz0yZ-ktZYf0DSwBt2mWv1JxzcP0Jpxz85R_sfJ5xZPjOhJO_3yY13_EayQLPFgD0QGZXEEZ2zBHWrvhIxoPbi_WOG0CXXvcT4Seg3iy6HC1BUQ-O2BWHZF7K2dRiWGlahIS95dD2CR3BuWtDUlDSjCPgPg0OvqmkK1BA';
+     
       if (token == null) {
         return _createErrorResponse(401, 'No authentication token available');
       }

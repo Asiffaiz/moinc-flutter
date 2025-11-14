@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state.status == AuthStatus.apiLoginAuthenticated) {
+        if (state.status == AuthStatus.apiAuthenticated) {
           setState(() {
             //_successMessage = "Login successful. Redirecting to dashboard...";
             _isLoading = false;
@@ -79,6 +79,12 @@ class _LoginScreenState extends State<LoginScreen> {
               context,
               AppConstants.dashboardRoute,
             );
+
+            //   Navigator.pushAndRemoveUntil(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => const HomeScreen()),
+            //   (route) => false,
+            // );
           });
         } else if (state.status == AuthStatus.hasMandatoryAgreements) {
           // context.go(AppRoutes.unsignedAgreements);
