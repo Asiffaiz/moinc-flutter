@@ -45,6 +45,7 @@ class AppCtrl extends ChangeNotifier {
   bool isScreenshareEnabled = false;
   bool isHoldEnabled = false;
   bool isDiabledAgentControl = false;
+  int remainingDisabledTime = 0; // Track remaining time in seconds
   final messageCtrl = TextEditingController();
   final messageFocusNode = FocusNode();
 
@@ -60,8 +61,9 @@ class AppCtrl extends ChangeNotifier {
 
   bool isSendButtonEnabled = false;
 
-  // Timer for checking agent connection
+  // Timers
   Timer? _agentConnectionTimer;
+  Timer? _disableControlTimer;
 
   AppCtrl() {
     final format = DateFormat('HH:mm:ss');
@@ -84,15 +86,37 @@ class AppCtrl extends ChangeNotifier {
   void dispose() {
     messageCtrl.dispose();
     _cancelAgentTimer();
+    _disableControlTimer?.cancel();
     super.dispose();
   }
 
   void disableAgentControlFor30Seconds() {
+    // Cancel any existing timer
+    _disableControlTimer?.cancel();
+
+    // Set initial values
     isDiabledAgentControl = true;
+    remainingDisabledTime = 30;
     notifyListeners();
-    Future.delayed(const Duration(seconds: 30), () {
-      isDiabledAgentControl = false;
+
+    // Create a periodic timer that fires every second
+    _disableControlTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      // Decrement the remaining time
+      remainingDisabledTime--;
+
+      // Notify listeners to update UI
       notifyListeners();
+
+      // Check if we've reached zero
+      if (remainingDisabledTime <= 0) {
+        // Cancel the timer
+        timer.cancel();
+        _disableControlTimer = null;
+
+        // Reset the disabled state
+        isDiabledAgentControl = false;
+        notifyListeners();
+      }
     });
   }
 

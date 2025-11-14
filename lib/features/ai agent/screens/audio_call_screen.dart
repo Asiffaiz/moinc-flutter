@@ -205,167 +205,210 @@ class _AudioCallScreenState extends State<AudioCallScreen>
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              BlocBuilder<UserCubit, UserState>(
-                builder: (context, state) {
-                  return Text(
-                    'Hello, ${state.name}!',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  );
-                },
-              ),
-              const Text(
-                'How can I help you today?',
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-              const SizedBox(height: 40),
-              // Audio Visualizer
-              Container(
-                height: 180,
-                width: 180,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color.fromARGB(255, 62, 166, 214),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.purple.shade200.withOpacity(0.2),
-                      blurRadius: 15,
-                      spreadRadius: 4,
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: AnimatedBuilder(
-                    animation: _animationController,
-                    builder: (context, child) {
-                      return Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Animated circles for audio visualization
-                          if (isCallActive)
-                            ...List.generate(3, (index) {
-                              return AnimatedOpacity(
-                                opacity: isCallActive ? 1.0 : 0.0,
-                                duration: const Duration(milliseconds: 500),
-                                child: Container(
-                                  width: 120 + (index * 30 * _animation.value),
-                                  height: 120 + (index * 30 * _animation.value),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white.withOpacity(
-                                      0.1 - (index * 0.03),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                          // Mic icon
-                          Icon(
-                            isCallActive ? Icons.mic : Icons.mic_none,
-                            size: 80,
-                            color: Colors.black,
-                          ),
-                        ],
+              // Main content
+              Column(
+                children: [
+                  BlocBuilder<UserCubit, UserState>(
+                    builder: (context, state) {
+                      return Text(
+                        'Hello, ${state.name}!',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       );
                     },
                   ),
-                ),
-              ),
-              const SizedBox(height: 40),
-              // Talk Now / Cancel Button
-              Builder(
-                builder: (context) {
-                  // Listen for connection state changes
-                  final connectionState =
-                      context.watch<app_ctrl.AppCtrl>().connectionState;
-
-                  // Update UI based on connection state
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _updateUIBasedOnConnectionState(connectionState);
-                  });
-
-                  return ConstrainedBox(
-                    constraints: const BoxConstraints(minWidth: 250),
-                    child: Button(
-                      isDisabled:
-                          context
-                              .watch<app_ctrl.AppCtrl>()
-                              .isDiabledAgentControl,
-                      text:
-                          isCallActive
-                              ? connectionState ==
-                                      app_ctrl.ConnectionState.connecting
-                                  ? 'Connecting'
-                                  : 'Disconnect'
-                              : 'Talk Now',
-                      onPressed: _toggleCall,
-                      color:
-                          connectionState ==
-                                      app_ctrl.ConnectionState.connecting ||
-                                  connectionState ==
-                                      app_ctrl.ConnectionState.connected
-                              ? Colors.red
-                              : const Color.fromARGB(255, 55, 212, 144),
-                      isProgressing:
-                          connectionState ==
-                          app_ctrl.ConnectionState.connecting,
+                  const Text(
+                    'How can I help you today?',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                  const SizedBox(height: 40),
+                  // Audio Visualizer
+                  Container(
+                    height: 180,
+                    width: 180,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color.fromARGB(255, 62, 166, 214),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.purple.shade200.withOpacity(0.2),
+                          blurRadius: 15,
+                          spreadRadius: 4,
+                        ),
+                      ],
                     ),
-                  );
-                },
-              ),
-              const Spacer(),
-              // Glassmorphic Dial In and Call Me buttons
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child:
-                      isCallActive
-                          ? const ControlBar()
-                          : Row(
+                    child: Center(
+                      child: AnimatedBuilder(
+                        animation: _animationController,
+                        builder: (context, child) {
+                          return Stack(
+                            alignment: Alignment.center,
                             children: [
-                              Expanded(
-                                child: _buildGlassmorphicButton(
-                                  isDisabled:
-                                      context
-                                          .watch<app_ctrl.AppCtrl>()
-                                          .isDiabledAgentControl,
-                                  icon: const Icon(
-                                    Icons.dialpad_rounded,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                  label: 'Dial In',
-                                  onPressed: _dialIn,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: _buildGlassmorphicButton(
-                                  isDisabled:
-                                      context
-                                          .watch<app_ctrl.AppCtrl>()
-                                          .isDiabledAgentControl,
-                                  icon: const Icon(
-                                    Icons.call,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                  label: 'Call Me',
-                                  onPressed: () => _showCallMeDialog(context),
-                                ),
+                              // Animated circles for audio visualization
+                              if (isCallActive)
+                                ...List.generate(3, (index) {
+                                  return AnimatedOpacity(
+                                    opacity: isCallActive ? 1.0 : 0.0,
+                                    duration: const Duration(milliseconds: 500),
+                                    child: Container(
+                                      width:
+                                          120 + (index * 30 * _animation.value),
+                                      height:
+                                          120 + (index * 30 * _animation.value),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white.withOpacity(
+                                          0.1 - (index * 0.03),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              // Mic icon
+                              Icon(
+                                isCallActive ? Icons.mic : Icons.mic_none,
+                                size: 80,
+                                color: Colors.black,
                               ),
                             ],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  // Talk Now / Cancel Button
+                  Builder(
+                    builder: (context) {
+                      // Listen for connection state changes
+                      final connectionState =
+                          context.watch<app_ctrl.AppCtrl>().connectionState;
+
+                      // Update UI based on connection state
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        _updateUIBasedOnConnectionState(connectionState);
+                      });
+
+                      return ConstrainedBox(
+                        constraints: const BoxConstraints(minWidth: 250),
+                        child: Button(
+                          isDisabled:
+                              context
+                                  .watch<app_ctrl.AppCtrl>()
+                                  .isDiabledAgentControl,
+                          text:
+                              isCallActive
+                                  ? connectionState ==
+                                          app_ctrl.ConnectionState.connecting
+                                      ? 'Connecting'
+                                      : 'Disconnect'
+                                  : 'Talk Now',
+                          onPressed: _toggleCall,
+                          color:
+                              connectionState ==
+                                          app_ctrl.ConnectionState.connecting ||
+                                      connectionState ==
+                                          app_ctrl.ConnectionState.connected
+                                  ? Colors.red
+                                  : const Color.fromARGB(255, 55, 212, 144),
+                          isProgressing:
+                              connectionState ==
+                              app_ctrl.ConnectionState.connecting,
+                        ),
+                      );
+                    },
+                  ),
+                  const Spacer(),
+                  // Glassmorphic Dial In and Call Me buttons
+                  SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child:
+                          isCallActive
+                              ? const ControlBar()
+                              : Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildGlassmorphicButton(
+                                      isDisabled:
+                                          context
+                                              .watch<app_ctrl.AppCtrl>()
+                                              .isDiabledAgentControl,
+                                      icon: const Icon(
+                                        Icons.dialpad_rounded,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                      label: 'Dial In',
+                                      onPressed: _dialIn,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: _buildGlassmorphicButton(
+                                      isDisabled:
+                                          context
+                                              .watch<app_ctrl.AppCtrl>()
+                                              .isDiabledAgentControl,
+                                      icon: const Icon(
+                                        Icons.call,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                      label: 'Call Me',
+                                      onPressed:
+                                          () => _showCallMeDialog(context),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
+
+              // Countdown timer in yellow circle (top-right corner)
+              Positioned(
+                top: 10,
+                right: 10,
+                child: Selector<app_ctrl.AppCtrl, int>(
+                  selector: (_, appCtrl) => appCtrl.remainingDisabledTime,
+                  builder: (_, remainingTime, __) {
+                    // Only show when there's remaining time
+                    if (remainingTime <= 0) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.transparent,
+                        border: Border.all(color: Colors.amber, width: 2.0),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$remainingTime',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-              const SizedBox(height: 24),
             ],
           ),
         ),
