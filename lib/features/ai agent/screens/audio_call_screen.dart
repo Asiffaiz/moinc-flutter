@@ -27,7 +27,6 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   final TextEditingController _emailController = TextEditingController();
 
   bool isCallActive = false;
-
   bool isMuted = false;
   bool isOnHold = false;
   late AnimationController _animationController;
@@ -45,14 +44,13 @@ class _AudioCallScreenState extends State<AudioCallScreen>
       begin: 0.5,
       end: 1.0,
     ).animate(_animationController);
-
-    // Ensure system UI is hidden when audio call screen initializes
-    // app_ctrl.SystemUIVisibility.hideSystemUI();
   }
 
   @override
   void dispose() {
     _phoneController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
     _animationController.dispose();
 
     // Restore system UI when screen is disposed
@@ -62,305 +60,273 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   }
 
   void _showCallMeDialog(BuildContext context) {
-    showDialog(
+    // Use showModalBottomSheet instead of showDialog for better keyboard handling
+    showModalBottomSheet(
       context: context,
-      builder:
-          (context) => Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            elevation: 10,
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                // boxShadow: [
-                //   BoxShadow(
-                //     color: Colors.purple.withOpacity(0.3),
-                //     blurRadius: 15,
-                //     spreadRadius: 5,
-                //   ),
-                // ],
+      isScrollControlled: true, // Important for keyboard handling
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        // Calculate bottom padding to avoid keyboard overlap
+        final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+        // Get the navigation bar height to avoid buttons being hidden
+        final bottomNavHeight = MediaQuery.of(context).padding.bottom;
+
+        return Padding(
+          padding: EdgeInsets.only(bottom: bottomPadding),
+          child: Container(
+            padding: EdgeInsets.fromLTRB(24, 24, 24, 24 + bottomNavHeight),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // User icon logo at the top
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppTheme.primaryColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.primaryColor.withOpacity(0.3),
-                            blurRadius: 10,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.person,
-                        size: 45,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Enter your information',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    TextField(
-                      controller: _nameController,
-                      keyboardType: TextInputType.name,
-                      style: const TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Full Name',
-                        hintStyle: TextStyle(color: Colors.grey.shade500),
-                        prefixIcon: Icon(
-                          Icons.person,
-                          color: HexColor("#0033A0"),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey.shade100,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 198, 196, 232),
-                            width: 2,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      style: const TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Email Address',
-                        hintStyle: TextStyle(color: Colors.grey.shade500),
-                        prefixIcon: Icon(
-                          Icons.email,
-                          color: HexColor("#0033A0"),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey.shade100,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 198, 196, 232),
-                            width: 2,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      style: const TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Phone number',
-                        hintStyle: TextStyle(color: Colors.grey.shade500),
-                        prefixIcon: Icon(
-                          Icons.phone,
-                          color: HexColor("#0033A0"),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey.shade100,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 198, 196, 232),
-                            width: 2,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.grey.shade700,
-                            ),
-                            child: const Text('Cancel'),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: SizedBox(
-                            height: 40,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppTheme.primaryColor,
-                                foregroundColor: Colors.black,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 4,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                elevation: 3,
-                              ),
-                              onPressed: () async {
-                                // Process phone number here
-                                if (_phoneController.text.isNotEmpty) {
-                                  // Get the call service and set it to ringing state
-                                  final callService = Provider.of<CallService>(
-                                    context,
-                                    listen: false,
-                                  );
-
-                                  // Start the call in ringing state
-                                  callService.startRinging(
-                                    _phoneController.text,
-                                  );
-
-                                  // Close the dialog
-                                  Navigator.pop(context);
-
-                                  // Show the dialer screen immediately in ringing state
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => CustomDialerScreen(
-                                            initialPhoneNumber:
-                                                _phoneController.text,
-                                            isRinging: true,
-                                          ),
-                                    ),
-                                  );
-
-                                  // Now make the API call in the background
-                                  final telephonyService = TelephonyService();
-                                  final result = await telephonyService
-                                      .initiateCall(
-                                        _phoneController.text,
-                                        name: _nameController.text,
-                                        email: _emailController.text,
-                                      );
-
-                                  if (result['success']) {
-                                    // API call succeeded, update the call state
-                                    if (context.mounted) {
-                                      // Extract call data from API response
-                                      final callData =
-                                          result['data']
-                                              as Map<String, dynamic>;
-
-                                      // Debug log to see what's in the response
-                                      print(
-                                        'Call API response data: $callData',
-                                      );
-
-                                      // Use the SIP call ID if available, otherwise fall back to session ID
-                                      final String callId =
-                                          result['sipCallId'] ??
-                                          result['sessionId'];
-
-                                      // Update the call with the appropriate call ID and data from the API
-                                      callService.initiateCall(
-                                        result['phoneNumber'],
-                                        sessionId: callId,
-                                        callData: callData,
-                                        skipRingingState:
-                                            true, // Skip ringing since we're already showing it
-                                      );
-                                    }
-                                  } else {
-                                    // API call failed, end the call
-                                    callService.endCall();
-
-                                    // Show error message
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            result['message'] ??
-                                                'Failed to initiate call',
-                                          ),
-                                          backgroundColor: Colors.red,
-                                        ),
-                                      );
-                                    }
-                                  }
-                                } else {
-                                  Navigator.pop(context);
-                                }
-                              },
-                              child: const Text(
-                                'Submit',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
+            ),
+            // Constrain the height to prevent overflow
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // User icon logo at the top
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppTheme.primaryColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppTheme.primaryColor.withOpacity(0.3),
+                          blurRadius: 10,
+                          spreadRadius: 2,
                         ),
                       ],
                     ),
-                  ],
-                ),
+                    child: const Icon(
+                      Icons.person,
+                      size: 45,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Enter your information',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _nameController,
+                    keyboardType: TextInputType.name,
+                    style: const TextStyle(color: Colors.black87, fontSize: 16),
+                    decoration: InputDecoration(
+                      hintText: 'Full Name',
+                      hintStyle: TextStyle(color: Colors.grey.shade500),
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: HexColor("#0033A0"),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 198, 196, 232),
+                          width: 2,
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    style: const TextStyle(color: Colors.black87, fontSize: 16),
+                    decoration: InputDecoration(
+                      hintText: 'Email Address',
+                      hintStyle: TextStyle(color: Colors.grey.shade500),
+                      prefixIcon: Icon(Icons.email, color: HexColor("#0033A0")),
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 198, 196, 232),
+                          width: 2,
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    style: const TextStyle(color: Colors.black87, fontSize: 16),
+                    decoration: InputDecoration(
+                      hintText: 'Phone number',
+                      hintStyle: TextStyle(color: Colors.grey.shade500),
+                      prefixIcon: Icon(Icons.phone, color: HexColor("#0033A0")),
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 198, 196, 232),
+                          width: 2,
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.grey.shade700,
+                          ),
+                          child: const Text('Cancel'),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.primaryColor,
+                              foregroundColor: Colors.black,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 4,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 3,
+                            ),
+                            onPressed: () async {
+                              // Process phone number here
+                              if (_phoneController.text.isNotEmpty) {
+                                // Get the call service and set it to ringing state
+                                final callService = Provider.of<CallService>(
+                                  context,
+                                  listen: false,
+                                );
+
+                                // Start the call in ringing state
+                                callService.startRinging(_phoneController.text);
+
+                                // Close the dialog
+                                Navigator.pop(context);
+
+                                // Show the dialer screen immediately in ringing state
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => CustomDialerScreen(
+                                          initialPhoneNumber:
+                                              _phoneController.text,
+                                          isRinging: true,
+                                        ),
+                                  ),
+                                );
+
+                                // Now make the API call in the background
+                                final telephonyService = TelephonyService();
+                                final result = await telephonyService
+                                    .initiateCall(
+                                      _phoneController.text,
+                                      name: _nameController.text,
+                                      email: _emailController.text,
+                                    );
+
+                                if (result['success']) {
+                                  // API call succeeded, update the call state
+                                  if (context.mounted) {
+                                    // Extract call data from API response
+                                    final callData =
+                                        result['data'] as Map<String, dynamic>;
+
+                                    // Debug log to see what's in the response
+                                    print('Call API response data: $callData');
+
+                                    // Use the SIP call ID if available, otherwise fall back to session ID
+                                    final String callId =
+                                        result['sipCallId'] ??
+                                        result['sessionId'];
+
+                                    // Update the call with the appropriate call ID and data from the API
+                                    callService.initiateCall(
+                                      result['phoneNumber'],
+                                      sessionId: callId,
+                                      callData: callData,
+                                      skipRingingState:
+                                          true, // Skip ringing since we're already showing it
+                                    );
+                                  }
+                                } else {
+                                  // API call failed, end the call
+                                  callService.endCall();
+
+                                  // Show error message
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          result['message'] ??
+                                              'Failed to initiate call',
+                                        ),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
+                                }
+                              } else {
+                                Navigator.pop(context);
+                              }
+                            },
+                            child: const Text(
+                              'Submit',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
+        );
+      },
     );
   }
-
-  // void _dialIn() {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => const CustomDialerScreen()),
-  //   );
-  // }
 
   void _dialIn() {
     // Navigate to the custom dialer screen
@@ -433,7 +399,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
               BoxShadow(
                 color: AppTheme.secondaryColor.withOpacity(0.3),
                 blurRadius: 10,
-                offset: Offset(0, 4),
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -472,120 +438,21 @@ class _AudioCallScreenState extends State<AudioCallScreen>
     );
   }
 
-  Widget _buildCircularControlButton({
-    required IconData icon,
-    required String label,
-    required bool isActive,
-    required VoidCallback onPressed,
-  }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(50),
-          child: Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors:
-                    isActive
-                        ? [Colors.blue.shade400, Colors.blue.shade700]
-                        : [Colors.grey.shade200, Colors.grey.shade400],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow:
-                  isActive
-                      ? [
-                        BoxShadow(
-                          color: Colors.blue.shade300.withOpacity(0.6),
-                          blurRadius: 12,
-                          spreadRadius: 2,
-                        ),
-                      ]
-                      : [],
-            ),
-            child: Icon(
-              icon,
-              color: isActive ? Colors.white : Colors.grey.shade800,
-              size: 28,
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: TextStyle(
-            color: isActive ? Colors.blue.shade900 : Colors.grey.shade600,
-            fontWeight: FontWeight.w600,
-            fontSize: 12,
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.secondaryColor,
-        // gradient: LinearGradient(
-        //   begin: Alignment.topLeft,
-        //   end: Alignment.bottomRight,
-        //   colors: [Colors.blue.shade50, Colors.blue.shade300],
-        // ),
-      ),
+      decoration: BoxDecoration(color: AppTheme.secondaryColor),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.transparent,
-        // appBar: AppBar(
-        //   title: const Text('VOICE ADMINS'),
-        //   centerTitle: true,
-        //   backgroundColor: Colors.transparent,
-        //   elevation: 0,
-        //   iconTheme: const IconThemeData(color: Colors.white),
-        // ),
         body: SafeArea(
           child: Column(
-            // mainAxisSize: MainAxisSize.min,
             children: [
-              // Padding(
-              //   padding: const EdgeInsets.all(16.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.start,
-              //     children: [
-              //       IconButton(
-              //         icon:
-              //             Platform.isAndroid
-              //                 ? const Icon(
-              //                   Icons.arrow_back,
-              //                   color: Colors.white,
-              //                 )
-              //                 : const Icon(
-              //                   Icons.arrow_back_ios_new_rounded,
-              //                   color: Colors.white,
-              //                 ),
-              //         onPressed: () {
-              //           Navigator.pop(context);
-              //         },
-              //       ),
-              //       // IconButton(
-              //       //   icon: const Icon(Icons.settings),
-              //       //   onPressed: () {},
-              //       // ),
-              //     ],
-              //   ),
-              // ),
-              // const Spacer(),
               BlocBuilder<UserCubit, UserState>(
                 builder: (context, state) {
                   return Text(
                     'Hello, ${state.name}!',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -607,13 +474,6 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: const Color.fromARGB(255, 62, 166, 214),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: AppTheme.primaryColor.withOpacity(0.3),
-                  //     blurRadius: 15,
-                  //     spreadRadius: 5,
-                  //   ),
-                  // ],
                   boxShadow: [
                     BoxShadow(
                       color: Colors.purple.shade200.withOpacity(0.2),
@@ -673,7 +533,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                   });
 
                   return ConstrainedBox(
-                    constraints: BoxConstraints(minWidth: 250),
+                    constraints: const BoxConstraints(minWidth: 250),
                     child: Button(
                       text:
                           isCallActive
@@ -705,33 +565,6 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                   child:
                       isCallActive
                           ? const ControlBar()
-                          //  Row(
-                          //   mainAxisAlignment: MainAxisAlignment.center,
-                          //   children: [
-                          //     _buildCircularControlButton(
-                          //       icon: isMuted ? Icons.mic_off : Icons.mic,
-                          //       label: 'Mute',
-                          //       isActive: isMuted,
-                          //       onPressed: () {
-                          //         setState(() => isMuted = !isMuted);
-                          //         // TODO: Integrate mute logic in your call controller
-                          //       },
-                          //     ),
-                          //     const SizedBox(width: 40),
-                          //     _buildCircularControlButton(
-                          //       icon:
-                          //           isOnHold
-                          //               ? Icons.pause_circle_filled
-                          //               : Icons.pause_circle_outline,
-                          //       label: 'Hold',
-                          //       isActive: isOnHold,
-                          //       onPressed: () {
-                          //         setState(() => isOnHold = !isOnHold);
-                          //         // TODO: Integrate hold/resume logic
-                          //       },
-                          //     ),
-                          //   ],
-                          // )
                           : Row(
                             children: [
                               Expanded(
@@ -762,40 +595,6 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                 ),
               ),
               const SizedBox(height: 24),
-              // Terms and Privacy
-              // Padding(
-              //   padding: const EdgeInsets.only(bottom: 16.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       TextButton(
-              //         onPressed: () {
-              //           launchUrl(Uri.parse(ApiEndpoints.termsAndConditions));
-              //         },
-              //         child: const Text(
-              //           'Terms & Conditions',
-              //           style: TextStyle(
-              //             color: Colors.white,
-              //             decoration: TextDecoration.underline,
-              //           ),
-              //         ),
-              //       ),
-              //       const Text('|', style: TextStyle(color: Colors.white)),
-              //       TextButton(
-              //         onPressed: () {
-              //           launchUrl(Uri.parse(ApiEndpoints.privacyPolicy));
-              //         },
-              //         child: const Text(
-              //           'Privacy Policy',
-              //           style: TextStyle(
-              //             color: Colors.white,
-              //             decoration: TextDecoration.underline,
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
             ],
           ),
         ),
