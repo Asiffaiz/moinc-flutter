@@ -328,6 +328,9 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                   ),
                   const Spacer(),
                   // Glassmorphic Dial In and Call Me buttons
+                  Text("Please wait, your agent will be available in 30 seconds",style: TextStyle(
+                    fontSize: 16
+                  ),),
                   SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
