@@ -16,19 +16,41 @@ class TelephonyService {
     String phoneNumber, {
     String? name,
     String? email,
+    String? agentId,
+    String? roomName,
   }) async {
     try {
       // Format phone number if needed (ensure it has country code)
       String formattedNumber = _formatPhoneNumber(phoneNumber);
 
       // Prepare the payload
+      // final payload = {
+      //   "agent_id": "1d1b9e95-f4cd-46d7-985e-fb4884bb08e7",
+      //   "number_id": "PN121d84b1628b15c46031cc1bed4f834f",
+      //   "sip_number": "+15072047942",
+      //   "sip_trunk_id": "ST_oafQcvwdUJU8",
+      //   "sip_call_to": formattedNumber, // User's phone number
+      //   "room_name": "moinc_room",
+      //   "participant_identity": name ?? "User",
+      //   "participant_name": name ?? "User",
+      //   "wait_until_answered": true,
+      //   "krisp_enabled": true,
+      //   // Additional lead information
+      //   "lead_info": {
+      //     "name": name ?? "",
+      //     "email": email ?? "",
+      //     "phone": formattedNumber,
+      //     "timestamp": DateTime.now().toIso8601String(),
+      //   },
+      // };
+
       final payload = {
-        "agent_id": "1d1b9e95-f4cd-46d7-985e-fb4884bb08e7",
+        "agent_id": agentId,
         "number_id": "PN121d84b1628b15c46031cc1bed4f834f",
         "sip_number": "+15072047942",
         "sip_trunk_id": "ST_oafQcvwdUJU8",
         "sip_call_to": formattedNumber, // User's phone number
-        "room_name": "moinc_room",
+        "room_name": roomName,
         "participant_identity": name ?? "User",
         "participant_name": name ?? "User",
         "wait_until_answered": true,

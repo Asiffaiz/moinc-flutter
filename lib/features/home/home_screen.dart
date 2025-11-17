@@ -4,6 +4,7 @@ import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/dashboard/presentation/widgets/dashboard_home_content.dart';
 import 'package:moinc/features/documents/presentation/screens/documents_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/call_logs_screen.dart';
+import 'package:moinc/features/profile/presentation/screens/notifications_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/profile_screen_home.dart';
 import 'package:moinc/features/reports/presentation/screens/reports_screen.dart';
 import 'package:provider/provider.dart';
@@ -83,7 +84,12 @@ class _HomeScreenState extends State<HomeScreen>
               IconButton(
                 icon: const Icon(Icons.notifications_outlined),
                 onPressed: () {
-                  // Handle notifications
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationsScreen(),
+                    ),
+                  );
                 },
               ),
               // IconButton(

@@ -787,6 +787,8 @@ class _CallMeBottomSheetState extends State<_CallMeBottomSheet> {
         widget.phoneController.text,
         name: widget.nameController.text,
         email: widget.emailController.text,
+        agentId: widget.appCtrl.publicAgentModel?.agentId,
+        roomName: widget.appCtrl.publicAgentModel?.livekitRoom,
       );
 
       // await Future.delayed(const Duration(seconds: 3), () {});
