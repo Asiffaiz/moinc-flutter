@@ -1,8 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:moinc/config/constants/strings.dart';
 
-
-
 class Validators {
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -55,6 +53,24 @@ class Validators {
   static String? validateName(String? value) {
     if (value == null || value.isEmpty) {
       return AppStrings.nameRequired;
+    }
+
+    return null;
+  }
+
+  static String? validatePhone(String? value) {
+    if (value == null || value.isEmpty) {
+      return AppStrings.phoneRequired;
+    }
+
+    // Remove common phone number formatting characters
+    final cleanedPhone = value.replaceAll(RegExp(r'[\s\-\(\)]'), '');
+
+    // Check if it contains only digits and optional + at the start
+    final phoneRegExp = RegExp(r'^\+?[0-9]{10,15}$');
+
+    if (!phoneRegExp.hasMatch(cleanedPhone)) {
+      return AppStrings.invalidPhone;
     }
 
     return null;

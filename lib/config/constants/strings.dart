@@ -31,7 +31,7 @@ class AppStrings {
   static const String website = 'Website';
   static const String companyDescription = 'Company description';
   static const String companySize = 'Company size';
-  
+
   // Auth Messages
   static const String authLoginJourneyText =
       'Use you verified email and password to login to your account.';
@@ -46,10 +46,12 @@ class AppStrings {
   // Error Messages
   static const String emailRequired = 'Email is required';
   static const String passwordRequired = 'Password is required';
-    static const String confirmPasswordRequired = 'Confirm password is required';
+  static const String confirmPasswordRequired = 'Confirm password is required';
   static const String nameRequired = 'Name is required';
+  static const String phoneRequired = 'Phone number is required';
   static const String invalidEmail = 'Please enter a valid email';
   static const String invalidPassword =
       'Password must be at least 6 characters';
+  static const String invalidPhone = 'Please enter a valid phone number';
   static const String passwordsDoNotMatch = 'Passwords do not match';
 }
