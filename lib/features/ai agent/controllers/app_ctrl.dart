@@ -10,6 +10,8 @@ import 'package:livekit_components/livekit_components.dart' as components;
 import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
 
+import '../data/services/agent_service.dart';
+import '../domain/models/agent_model.dart';
 import '../exts.dart';
 import '../services/token_service.dart';
 
@@ -58,6 +60,13 @@ class AppCtrl extends ChangeNotifier {
   bool _roomListenersInitialized = false;
 
   final tokenService = TokenService();
+  final agentService = AgentService();
+
+  // Agent information from API
+  AgentModel? _agentModel;
+  AgentModel? publicAgentModel;
+
+  AgentModel? get agentModel => _agentModel;
 
   bool isSendButtonEnabled = false;
 
@@ -243,12 +252,17 @@ class AppCtrl extends ChangeNotifier {
       // Set up room event listeners
       _setupRoomListeners();
 
-      // Generate a token from the API instead of using hardcoded credentials
-      final String roomName =
-          "moinc_room"; // Replace with your actual room name or make it configurable
-      final String agentName =
-          "Maya"; // Replace with your actual agent name or make it configurable
-      final String agentId = "1d1b9e95-f4cd-46d7-985e-fb4884bb08e7";
+      // Use agent information from API, fallback to defaults if not available
+      if (_agentModel == null) {
+        _logger.warning(
+          "Agent model not set, using default values. Make sure to fetch agent before connecting.",
+        );
+      }
+
+      final String roomName = _agentModel?.livekitRoom ?? "moinc_room";
+      final String agentName = _agentModel?.agentName ?? "Maya";
+      final String agentId =
+          _agentModel?.agentId ?? "1d1b9e95-f4cd-46d7-985e-fb4884bb08e7";
 
       _logger.info("Requesting token for room: $roomName, agent: $agentName");
 
@@ -470,5 +484,30 @@ class AppCtrl extends ChangeNotifier {
   void toggleHold() {
     isHoldEnabled = !isHoldEnabled;
     notifyListeners();
+  }
+
+  /// Sets the agent model from API response
+  void setAgentModel(AgentModel agentModel) {
+    _agentModel = agentModel;
+    publicAgentModel = agentModel;
+    _logger.info(
+      "Agent model set: ${agentModel.agentName} (${agentModel.agentId})",
+    );
+    notifyListeners();
+  }
+
+
+
+  /// Fetches agent information from API
+  Future<void> fetchAgent() async {
+    try {
+      _logger.info("Fetching agent information from API...");
+      final agent = await agentService.getAgentWithClientAccountNo();
+      setAgentModel(agent);
+      _logger.info("Agent information fetched successfully");
+    } catch (e) {
+      _logger.severe("Failed to fetch agent information: $e");
+      // Don't throw, allow app to continue with default values
+    }
   }
 }

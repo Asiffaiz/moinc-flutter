@@ -146,6 +146,10 @@ class ApiEndpoints {
   static final String updateClientProfile =
       '$baseUrl/appApis/update_client_profile';
 
+  // Agent endpoints
+  static final String getAgentWithClientAccountNo =
+      '$baseUrl/appApis/get_agent_with_client_accountno';
+
   // Add more endpoints as needed, organized by feature
 
   static final String privacyPolicy = 'https://www.moinc.ai/privacy';

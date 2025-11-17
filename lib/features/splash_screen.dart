@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/constants/shared_prefence_keys.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/ai%20agent/app.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_event.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_state.dart';
@@ -94,6 +95,13 @@ class _SplashScreenState extends State<SplashScreen>
 
     if (mounted) {
       if (isAuthenticated) {
+        // Fetch agent information before navigating to dashboard
+        try {
+          await appCtrl.fetchAgent();
+        } catch (e) {
+          // Log error but continue navigation
+          debugPrint('Error fetching agent: $e');
+        }
         // User is authenticated, navigate to dashboard
         Navigator.pushReplacementNamed(context, AppConstants.dashboardRoute);
       } else {
