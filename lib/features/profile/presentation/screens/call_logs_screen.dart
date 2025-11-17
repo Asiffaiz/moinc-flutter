@@ -181,10 +181,28 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
 
   Widget _buildCallLogsList(List<CallLog> logs) {
     if (logs.isEmpty) {
-      return const Center(
-        child: Text(
-          'No call logs found',
-          style: TextStyle(color: Colors.white70),
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'No call logs found',
+              style: TextStyle(color: Colors.white70),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: _refreshCallLogs,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryColor,
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+              ),
+              child: const Text('Refresh'),
+            ),
+          ],
         ),
       );
     }
