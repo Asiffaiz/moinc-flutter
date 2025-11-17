@@ -10,7 +10,14 @@ class TokenService {
   static const String _tokenExpiryKey = 'api_token_expiry';
 
   // API credentials (should be moved to secure storage in production)
-  static const String _username = "6ff1e963-9d1d-4053-a143-51201d48be3a";
+  // Development credentials==========================================>
+
+  // static const String _username = "6ff1e963-9d1d-4053-a143-51201d48be3a";
+  // static const String _password =
+  //     "88b974ec343af71c7ac1b3e63f004ef9c8044ab5ca06f37716ebc1feb991b453";
+
+  // Production credentials==========================================>
+  static const String _username = "6ff1e963-9d1d-4053-a143-51201d48lk3b";
   static const String _password =
       "88b974ec343af71c7ac1b3e63f004ef9c8044ab5ca06f37716ebc1feb991b453";
 

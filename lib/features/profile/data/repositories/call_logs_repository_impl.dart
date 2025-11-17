@@ -3,10 +3,11 @@ import 'package:moinc/features/auth/network/api_client.dart';
 import 'package:moinc/features/profile/domain/models/twilio_call_log_response.dart';
 import 'package:moinc/features/profile/domain/models/call_log_model.dart';
 import 'package:moinc/features/profile/domain/repositories/call_logs_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CallLogsRepositoryImpl implements CallLogsRepository {
   final ApiClient _apiClient;
-
+  var accountNo = '';
   // API endpoint
   static const String _apiUrl =
       'https://logs.voiceadmins.com/get_twilio_calls.php';
@@ -14,7 +15,7 @@ class CallLogsRepositoryImpl implements CallLogsRepository {
 
   // Account number - in a real app, this would come from user authentication
   // static const String _accountNo = '562224562224';
-  static const String _accountNo = '3703637036';
+  // static const String _accountNo = '3703637036';
 
   CallLogsRepositoryImpl({required ApiClient apiClient})
     : _apiClient = apiClient;
@@ -25,8 +26,11 @@ class CallLogsRepositoryImpl implements CallLogsRepository {
     int limit = 25,
   }) async {
     try {
+      const String _accountNoKey = 'client_acn__';
+      final prefs = await SharedPreferences.getInstance();
+      accountNo = prefs.getString(_accountNoKey) ?? '';
       final response = await _apiClient.postWithoutToken(_apiUrl, {
-        'accountno': _accountNo,
+        'accountno': accountNo,
         'page': page,
         'limit': limit,
       });
@@ -44,7 +48,7 @@ class CallLogsRepositoryImpl implements CallLogsRepository {
           return TwilioCallLogResponse(
             status: 'error',
             baseUrl: _baseUrl,
-            accountno: _accountNo,
+            accountno: accountNo,
             pagination: Pagination(
               page: page,
               limit: limit,
@@ -63,7 +67,7 @@ class CallLogsRepositoryImpl implements CallLogsRepository {
         return TwilioCallLogResponse(
           status: 'error',
           baseUrl: _baseUrl,
-          accountno: _accountNo,
+          accountno: accountNo,
           pagination: Pagination(
             page: page,
             limit: limit,
@@ -82,7 +86,7 @@ class CallLogsRepositoryImpl implements CallLogsRepository {
       return TwilioCallLogResponse(
         status: 'error',
         baseUrl: _baseUrl,
-        accountno: _accountNo,
+        accountno: accountNo,
         pagination: Pagination(
           page: page,
           limit: limit,

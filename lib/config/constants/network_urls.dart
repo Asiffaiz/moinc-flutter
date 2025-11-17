@@ -6,7 +6,11 @@ class NetworkUrls {
       "https://dev-agents.onboardsoft.me/client/register/c1e02efbb6c89f5aaeaf1c8d09dbc63d";
 
   // static const apiBaseUrl = "https://agents.hugeuc.me/lynkai";
-  static const apiBaseUrl = "https://dev-kyc.onboardsoft.me/backend_api";
+  // Development credentials==========================================>
+  // static const apiBaseUrl = "https://dev-kyc.onboardsoft.me/backend_api";
+
+  // Production credentials==========================================>
+  static const apiBaseUrl = "https://kyc.onboardsoft.me/backend_api";
 
   static const webBaseUrl = "https://dev-agents.onboardsoft.me";
 }
