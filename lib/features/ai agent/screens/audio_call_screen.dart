@@ -12,6 +12,7 @@ import 'package:moinc/services/telephony_service.dart';
 import 'package:moinc/utils/custom_toast.dart';
 import 'package:moinc/utils/validators.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../controllers/app_ctrl.dart' as app_ctrl;
 import '../widgets/button.dart';
@@ -88,12 +89,28 @@ class _AudioCallScreenState extends State<AudioCallScreen>
     );
   }
 
-  void _dialIn() {
-    // Navigate to the custom dialer screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const CustomDialerScreen()),
-    );
+  // void _dialIn() {
+  //   // Navigate to the custom dialer screen
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const CustomDialerScreen()),
+  //   );
+  // }
+
+  void _dialIn() async {
+    // Replace with your actual phone number
+    const phoneNumber = '+15072047942';
+    final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not launch dialer')),
+        );
+      }
+    }
   }
 
   void _toggleCall() {
