@@ -99,37 +99,44 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   void _toggleCall() {
     final appCtrl = context.read<app_ctrl.AppCtrl>();
 
-    setState(() {
-      isCallActive = !isCallActive;
-    });
+    // Get current connection state to determine action
+    final currentState = appCtrl.connectionState;
 
-    if (isCallActive) {
-      // Connect call
-      appCtrl.connect();
-      // Start animation with higher speed for active call
-      _animationController.duration = const Duration(milliseconds: 800);
-      _animationController.repeat(reverse: true);
-    } else {
-      // Disconnect call
+    if (currentState == app_ctrl.ConnectionState.connected ||
+        currentState == app_ctrl.ConnectionState.connecting) {
+      // If connected or connecting, disconnect
       appCtrl.disconnect();
-      // Slow down animation for inactive state
-      _animationController.duration = const Duration(seconds: 2);
-      _animationController.repeat(reverse: true);
+    } else {
+      // If disconnected, connect
+      appCtrl.connect();
     }
+
+    // DO NOT toggle isCallActive here - let it be updated by listening to connectionState
+    // The UI will update automatically via the BlocBuilder/Selector watching connectionState
   }
 
   // Update UI when connection state changes
   void _updateUIBasedOnConnectionState(
     app_ctrl.ConnectionState connectionState,
   ) {
-    if (connectionState == app_ctrl.ConnectionState.disconnected &&
-        isCallActive) {
+    // Sync isCallActive with actual connection state
+    final shouldBeActive =
+        connectionState == app_ctrl.ConnectionState.connected ||
+        connectionState == app_ctrl.ConnectionState.connecting;
+
+    if (shouldBeActive != isCallActive) {
       setState(() {
-        isCallActive = false;
+        isCallActive = shouldBeActive;
       });
-      // Reset animation to slower speed
-      _animationController.duration = const Duration(seconds: 2);
-      _animationController.repeat(reverse: true);
+
+      // Update animation speed based on call state
+      if (shouldBeActive) {
+        _animationController.duration = const Duration(milliseconds: 800);
+        _animationController.repeat(reverse: true);
+      } else {
+        _animationController.duration = const Duration(seconds: 2);
+        _animationController.repeat(reverse: true);
+      }
     }
   }
 
@@ -250,43 +257,58 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                         ],
                       ),
                       child: Center(
-                        child: AnimatedBuilder(
-                          animation: _animationController,
-                          builder: (context, child) {
-                            return Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                // Animated circles for audio visualization
-                                if (isCallActive)
-                                  ...List.generate(3, (index) {
-                                    return AnimatedOpacity(
-                                      opacity: isCallActive ? 1.0 : 0.0,
-                                      duration: const Duration(
-                                        milliseconds: 500,
-                                      ),
-                                      child: Container(
-                                        width:
-                                            120 +
-                                            (index * 30 * _animation.value),
-                                        height:
-                                            120 +
-                                            (index * 30 * _animation.value),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.white.withOpacity(
-                                            0.1 - (index * 0.03),
+                        child: Builder(
+                          builder: (context) {
+                            // Get connection state from AppCtrl for reliable state
+                            final connectionState =
+                                context
+                                    .watch<app_ctrl.AppCtrl>()
+                                    .connectionState;
+                            final isActive =
+                                connectionState ==
+                                    app_ctrl.ConnectionState.connected ||
+                                connectionState ==
+                                    app_ctrl.ConnectionState.connecting;
+
+                            return AnimatedBuilder(
+                              animation: _animationController,
+                              builder: (context, child) {
+                                return Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    // Animated circles for audio visualization
+                                    if (isActive)
+                                      ...List.generate(3, (index) {
+                                        return AnimatedOpacity(
+                                          opacity: isActive ? 1.0 : 0.0,
+                                          duration: const Duration(
+                                            milliseconds: 500,
                                           ),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                // Mic icon
-                                Icon(
-                                  isCallActive ? Icons.mic : Icons.mic_none,
-                                  size: 80,
-                                  color: Colors.black,
-                                ),
-                              ],
+                                          child: Container(
+                                            width:
+                                                120 +
+                                                (index * 30 * _animation.value),
+                                            height:
+                                                120 +
+                                                (index * 30 * _animation.value),
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.white.withOpacity(
+                                                0.1 - (index * 0.03),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    // Mic icon
+                                    Icon(
+                                      isActive ? Icons.mic : Icons.mic_none,
+                                      size: 80,
+                                      color: Colors.black,
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           },
                         ),
@@ -313,11 +335,12 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                                     .watch<app_ctrl.AppCtrl>()
                                     .isDiabledAgentControl,
                             text:
-                                isCallActive
-                                    ? connectionState ==
-                                            app_ctrl.ConnectionState.connecting
-                                        ? 'Connecting'
-                                        : 'Disconnect'
+                                connectionState ==
+                                        app_ctrl.ConnectionState.connecting
+                                    ? 'Connecting'
+                                    : connectionState ==
+                                        app_ctrl.ConnectionState.connected
+                                    ? 'Disconnect'
                                     : 'Talk Now',
                             onPressed: _toggleCall,
                             color:

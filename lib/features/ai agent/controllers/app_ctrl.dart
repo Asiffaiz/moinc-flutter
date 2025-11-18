@@ -70,6 +70,9 @@ class AppCtrl extends ChangeNotifier {
 
   bool isSendButtonEnabled = false;
 
+  // Flag to track if UI wants the call (prevents state mismatch)
+  bool _uiWantsCall = false;
+
   // Timers
   Timer? _agentConnectionTimer;
   Timer? _disableControlTimer;
@@ -199,8 +202,17 @@ class AppCtrl extends ChangeNotifier {
       // Check if room disconnected
       if (room.connectionState == sdk.ConnectionState.disconnected) {
         _logger.warning("Room disconnected - checking reason");
+
+        // CRITICAL: If room disconnected but UI doesn't want call, ensure we're synced
+        if (!_uiWantsCall) {
+          _logger.info(
+            "Room disconnected and UI doesn't want call - state is correct",
+          );
+        }
+
         // Reset UI state when room disconnects
         connectionState = ConnectionState.disconnected;
+        _uiWantsCall = false; // Ensure flag is synced
 
         // Show toast message to inform the user
         // Fluttertoast.showToast(
@@ -213,6 +225,17 @@ class AppCtrl extends ChangeNotifier {
         //     fontSize: 16.0);
 
         notifyListeners();
+      } else if (room.connectionState == sdk.ConnectionState.connected) {
+        // CRITICAL: If room is connected but UI doesn't want call, disconnect immediately
+        if (!_uiWantsCall) {
+          _logger.warning(
+            "Room connected but UI doesn't want call - disconnecting immediately",
+          );
+          room.disconnect();
+          connectionState = ConnectionState.disconnected;
+          notifyListeners();
+          return;
+        }
       }
 
       notifyListeners();
@@ -223,6 +246,7 @@ class AppCtrl extends ChangeNotifier {
       _logger.severe("Room disconnected event received");
       // Reset UI state when disconnection event is received
       connectionState = ConnectionState.disconnected;
+      _uiWantsCall = false; // Ensure flag is synced on disconnect
 
       // Show toast message to inform the user about the disconnection
       // Fluttertoast.showToast(
@@ -241,7 +265,18 @@ class AppCtrl extends ChangeNotifier {
   }
 
   void connect() async {
-    _logger.info("Connect....");
+    _logger.info("Connect called at ${DateTime.now()}");
+
+    // Block duplicate connect calls
+    if (connectionState == ConnectionState.connecting ||
+        connectionState == ConnectionState.connected) {
+      _logger.warning("BLOCKED: Already connecting/connected");
+      return;
+    }
+
+    // Set UI intent flag
+    _uiWantsCall = true;
+
     connectionState = ConnectionState.connecting;
     notifyListeners();
 
@@ -301,6 +336,19 @@ class AppCtrl extends ChangeNotifier {
         _logger.info("Room connection state: ${room.connectionState}");
         _logger.info("Local participant: ${room.localParticipant?.identity}");
         _logger.info("Room name: ${room.name}");
+
+        // CRITICAL: Check if UI still wants the call after connection
+        // This prevents agent from staying connected when UI shows "Connect" button
+        if (!_uiWantsCall) {
+          _logger.warning(
+            "UI canceled while connecting → disconnecting immediately",
+          );
+          await room.disconnect();
+          connectionState = ConnectionState.disconnected;
+          _exitFullScreen();
+          notifyListeners();
+          return;
+        }
       } catch (e) {
         _logger.severe("Error generating token or connecting: $e");
         connectionState = ConnectionState.disconnected;
@@ -364,6 +412,17 @@ class AppCtrl extends ChangeNotifier {
   }
 
   void disconnect() async {
+    _logger.info("Disconnect called at ${DateTime.now()}");
+
+    // Set UI intent flag to false immediately
+    _uiWantsCall = false;
+
+    // If already disconnected, return early
+    if (connectionState == ConnectionState.disconnected) {
+      _logger.info("Already disconnected, returning");
+      return;
+    }
+
     // First update the connection state to trigger UI changes
     connectionState = ConnectionState.disconnected;
     notifyListeners();
@@ -495,8 +554,6 @@ class AppCtrl extends ChangeNotifier {
     );
     notifyListeners();
   }
-
-
 
   /// Fetches agent information from API
   Future<void> fetchAgent() async {
