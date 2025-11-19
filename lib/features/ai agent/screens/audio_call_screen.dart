@@ -99,7 +99,8 @@ class _AudioCallScreenState extends State<AudioCallScreen>
 
   void _dialIn() async {
     // Replace with your actual phone number
-    const phoneNumber = '+15072047942';
+    final appCtrl = context.read<app_ctrl.AppCtrl>();
+    final phoneNumber = appCtrl.publicAgentModel?.sipNumber ?? '';
     final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
 
     if (await canLaunchUrl(uri)) {
@@ -829,10 +830,11 @@ class _CallMeBottomSheetState extends State<_CallMeBottomSheet> {
         email: widget.emailController.text,
         agentId: widget.appCtrl.publicAgentModel?.agentId,
         roomName: widget.appCtrl.publicAgentModel?.livekitRoom,
+        agentModel: widget.appCtrl.publicAgentModel,
       );
 
       // await Future.delayed(const Duration(seconds: 3), () {});
-
+      print(result);
       // Hide loading state and close the dialog
       if (result['success']) {
         if (mounted) {
@@ -868,6 +870,19 @@ class _CallMeBottomSheetState extends State<_CallMeBottomSheet> {
           ),
         );
         */
+        }
+      } else {
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+          Navigator.pop(context);
+        }
+        if (context.mounted) {
+          CustomToast.showCustomeToast(
+            'Error: ${result['message']}',
+            AppTheme.errorColor,
+          );
         }
       }
     } catch (e) {

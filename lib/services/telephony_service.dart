@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:moinc/features/ai%20agent/domain/models/agent_model.dart';
 
 class TelephonyService {
   static const String _baseUrl = 'https://amd.voiceadmins.com/api';
@@ -18,6 +19,7 @@ class TelephonyService {
     String? email,
     String? agentId,
     String? roomName,
+    AgentModel? agentModel,
   }) async {
     try {
       // Format phone number if needed (ensure it has country code)
@@ -46,8 +48,8 @@ class TelephonyService {
 
       final payload = {
         "agent_id": agentId,
-        "number_id": "PN121d84b1628b15c46031cc1bed4f834f",
-        "sip_number": "+15072047942",
+        "number_id": agentModel?.numberId,
+        "sip_number": agentModel?.sipNumber,
         "sip_trunk_id": "ST_oafQcvwdUJU8",
         "sip_call_to": formattedNumber, // User's phone number
         "room_name": roomName,
@@ -74,7 +76,7 @@ class TelephonyService {
         body: jsonEncode(payload),
       );
       // .timeout(const Duration(seconds: 30));
-
+      print(response.body);
       if (kDebugMode) {
         print('Call API response: ${response.statusCode}');
         print('Call API body: ${response.body}');

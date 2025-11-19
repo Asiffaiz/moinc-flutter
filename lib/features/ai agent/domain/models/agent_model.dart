@@ -7,12 +7,19 @@ class AgentModel {
   final String telephonyToken;
   final String userFormEnabled;
 
+  final String sipNumber;
+  final String numberId;
+  final String accountSid;
+
   AgentModel({
     required this.agentId,
     required this.agentName,
     required this.livekitRoom,
     required this.telephonyToken,
     required this.userFormEnabled,
+    required this.sipNumber,
+    required this.numberId,
+    required this.accountSid,
   });
 
   factory AgentModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +33,9 @@ class AgentModel {
       livekitRoom: popupData['livekit_room'] as String? ?? '',
       telephonyToken: popupData['telephony_token'] as String? ?? '',
       userFormEnabled: popupData['userFormEnabled'] as String? ?? 'No',
+      sipNumber: json['sip_number'] as String? ?? '',
+      numberId: json['number_id'] as String? ?? '',
+      accountSid: json['account_sid'] as String? ?? '',
     );
   }
 
