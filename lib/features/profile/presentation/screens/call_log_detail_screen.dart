@@ -632,11 +632,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
 
             // Audio player section
             widget.callLog is TwilioCallLog &&
-<<<<<<< HEAD
                     (widget.callLog as TwilioCallLog).recordingUrl != null
-=======
-                    (widget.callLog as TwilioCallLog).transcript != null
->>>>>>> f949c3c1f72cc76897b87d093f653627409450bc
                 ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -670,11 +666,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                 : const SizedBox.shrink(),
             const SizedBox(height: 16),
             widget.callLog is TwilioCallLog &&
-<<<<<<< HEAD
                     (widget.callLog as TwilioCallLog).recordingUrl != null
-=======
-                    (widget.callLog as TwilioCallLog).transcript != null
->>>>>>> f949c3c1f72cc76897b87d093f653627409450bc
                 ? Container(
                   padding: const EdgeInsets.all(20.0),
                   decoration: BoxDecoration(
@@ -701,13 +693,10 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                   ),
                   child: Column(
                     children: [
-<<<<<<< HEAD
                       // Text(
                       //   "URL: ${(widget.callLog as TwilioCallLog).recordingUrl ?? ''}",
                       //   style: TextStyle(color: Colors.white),
                       // ),
-=======
->>>>>>> f949c3c1f72cc76897b87d093f653627409450bc
                       // Audio player title
                       Row(
                         children: [
