@@ -136,13 +136,12 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
   }
 
   void _togglePlayPause() async {
-  
     if (_audioUrl == null) {
       CustomToast.showCustomeToast(
         'No recording available for this call',
         AppTheme.errorColor,
       );
-  
+
       return;
     }
 
@@ -338,20 +337,32 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                                             : AppTheme.primaryColor,
                                     size: 40,
                                   )
-                                  : Text(
-                                    initials,
-                                    style: TextStyle(
-                                      color:
-                                          widget.callLog.status ==
-                                                      CallStatus.missed ||
-                                                  widget.callLog.status ==
-                                                      CallStatus.failed
-                                              ? Colors.red
-                                              : AppTheme.primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 28,
-                                    ),
+                                  : Icon(
+                                    Icons.person,
+                                    color:
+                                        widget.callLog.status ==
+                                                    CallStatus.missed ||
+                                                widget.callLog.status ==
+                                                    CallStatus.failed
+                                            ? Colors.red
+                                            : AppTheme.primaryColor,
+                                    size: 40,
                                   ),
+
+                          //  Text(
+                          //   initials,
+                          //   style: TextStyle(
+                          //     color:
+                          //         widget.callLog.status ==
+                          //                     CallStatus.missed ||
+                          //                 widget.callLog.status ==
+                          //                     CallStatus.failed
+                          //             ? Colors.red
+                          //             : AppTheme.primaryColor,
+                          //     fontWeight: FontWeight.bold,
+                          //     fontSize: 28,
+                          //   ),
+                          // ),
                         ),
                         const SizedBox(height: 16),
                         // Caller name
@@ -605,211 +616,227 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
             const SizedBox(height: 24),
 
             // Audio player section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Audio Recording',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-                // Container(
-                //   padding: const EdgeInsets.symmetric(
-                //     horizontal: 12,
-                //     vertical: 6,
-                //   ),
-                //   decoration: BoxDecoration(
-                //     color: AppTheme.primaryColor.withOpacity(0.1),
-                //     borderRadius: BorderRadius.circular(16),
-                //   ),
-                //   child: Text(
-                //     widget.callLog.formattedDuration,
-                //     style: TextStyle(
-                //       color: AppTheme.primaryColor,
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                // ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(20.0),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppTheme.secondaryColor,
-                    AppTheme.secondaryColor.withOpacity(0.8),
+            widget.callLog is TwilioCallLog &&
+                    (widget.callLog as TwilioCallLog).transcript != null
+                ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Audio Recording',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(
+                    //     horizontal: 12,
+                    //     vertical: 6,
+                    //   ),
+                    //   decoration: BoxDecoration(
+                    //     color: AppTheme.primaryColor.withOpacity(0.1),
+                    //     borderRadius: BorderRadius.circular(16),
+                    //   ),
+                    //   child: Text(
+                    //     widget.callLog.formattedDuration,
+                    //     style: TextStyle(
+                    //       color: AppTheme.primaryColor,
+                    //       fontWeight: FontWeight.bold,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
+                )
+                : const SizedBox.shrink(),
+            const SizedBox(height: 16),
+            widget.callLog is TwilioCallLog &&
+                    (widget.callLog as TwilioCallLog).transcript != null
+                ? Container(
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppTheme.secondaryColor,
+                        AppTheme.secondaryColor.withOpacity(0.8),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                    border: Border.all(
+                      color: AppTheme.primaryColor.withOpacity(0.3),
+                      width: 1,
+                    ),
                   ),
-                ],
-                border: Border.all(
-                  color: AppTheme.primaryColor.withOpacity(0.3),
-                  width: 1,
-                ),
-              ),
-              child: Column(
-                children: [
-                  // Audio player title
-                  Row(
+                  child: Column(
                     children: [
-                      Icon(Icons.mic, color: AppTheme.primaryColor, size: 20),
-                      // const SizedBox(width: 8),
-                      // Text(
-                      //   'Audio Recording',
-                      //   style: TextStyle(
-                      //     color: Colors.white,
-                      //     fontWeight: FontWeight.w500,
-                      //     fontSize: 16,
-                      //   ),
-                      // ),
+                      // Audio player title
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.mic,
+                            color: AppTheme.primaryColor,
+                            size: 20,
+                          ),
+                          // const SizedBox(width: 8),
+                          // Text(
+                          //   'Audio Recording',
+                          //   style: TextStyle(
+                          //     color: Colors.white,
+                          //     fontWeight: FontWeight.w500,
+                          //     fontSize: 16,
+                          //   ),
+                          // ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Audio progress bar
+                      SliderTheme(
+                        data: SliderThemeData(
+                          trackHeight: 6,
+                          thumbShape: const RoundSliderThumbShape(
+                            enabledThumbRadius: 8,
+                          ),
+                          overlayShape: const RoundSliderOverlayShape(
+                            overlayRadius: 16,
+                          ),
+                          activeTrackColor: AppTheme.primaryColor,
+                          inactiveTrackColor: Colors.grey.withOpacity(0.3),
+                          thumbColor: Colors.white,
+                          overlayColor: AppTheme.primaryColor.withOpacity(0.2),
+                        ),
+                        child: Slider(
+                          value: _playbackPosition.clamp(0.0, 1.0),
+                          onChanged: (value) {
+                            _seekAudio(value);
+                          },
+                        ),
+                      ),
+
+                      // Time and controls with fixed layout
+                      SizedBox(
+                        height: 80, // Fixed height for the controls row
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Current position - Fixed width container
+                            SizedBox(
+                              width: 70, // Fixed width to prevent shifting
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  _formatDuration(
+                                    _position.inSeconds.toDouble(),
+                                  ),
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.9),
+                                  ),
+                                  textAlign: TextAlign.center, // Center text
+                                ),
+                              ),
+                            ),
+
+                            // Play/Pause button - Fixed size container
+                            Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    AppTheme.primaryColor,
+                                    AppTheme.primaryColor.withOpacity(0.8),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppTheme.primaryColor.withOpacity(
+                                      0.3,
+                                    ),
+                                    blurRadius: 10,
+                                    spreadRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  customBorder: const CircleBorder(),
+                                  onTap: _togglePlayPause,
+                                  child:
+                                      _isLoading
+                                          ? const Center(
+                                            child: SizedBox(
+                                              width: 24,
+                                              height: 24,
+                                              child: CircularProgressIndicator(
+                                                color: Colors.white,
+                                                strokeWidth: 2,
+                                              ),
+                                            ),
+                                          )
+                                          : Center(
+                                            child: Icon(
+                                              _isPlaying
+                                                  ? Icons.pause
+                                                  : Icons.play_arrow,
+                                              color: Colors.white,
+                                              size: 32,
+                                            ),
+                                          ),
+                                ),
+                              ),
+                            ),
+
+                            // Total duration - Fixed width container
+                            SizedBox(
+                              width: 70, // Fixed width to prevent shifting
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  _formatDuration(
+                                    _duration.inSeconds.toDouble(),
+                                  ),
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.9),
+                                  ),
+                                  textAlign: TextAlign.center, // Center text
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-
-                  const SizedBox(height: 20),
-
-                  // Audio progress bar
-                  SliderTheme(
-                    data: SliderThemeData(
-                      trackHeight: 6,
-                      thumbShape: const RoundSliderThumbShape(
-                        enabledThumbRadius: 8,
-                      ),
-                      overlayShape: const RoundSliderOverlayShape(
-                        overlayRadius: 16,
-                      ),
-                      activeTrackColor: AppTheme.primaryColor,
-                      inactiveTrackColor: Colors.grey.withOpacity(0.3),
-                      thumbColor: Colors.white,
-                      overlayColor: AppTheme.primaryColor.withOpacity(0.2),
-                    ),
-                    child: Slider(
-                      value: _playbackPosition.clamp(0.0, 1.0),
-                      onChanged: (value) {
-                        _seekAudio(value);
-                      },
-                    ),
-                  ),
-
-                  // Time and controls with fixed layout
-                  SizedBox(
-                    height: 80, // Fixed height for the controls row
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Current position - Fixed width container
-                        SizedBox(
-                          width: 70, // Fixed width to prevent shifting
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              _formatDuration(_position.inSeconds.toDouble()),
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
-                              ),
-                              textAlign: TextAlign.center, // Center text
-                            ),
-                          ),
-                        ),
-
-                        // Play/Pause button - Fixed size container
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: LinearGradient(
-                              colors: [
-                                AppTheme.primaryColor,
-                                AppTheme.primaryColor.withOpacity(0.8),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppTheme.primaryColor.withOpacity(0.3),
-                                blurRadius: 10,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              customBorder: const CircleBorder(),
-                              onTap: _togglePlayPause,
-                              child:
-                                  _isLoading
-                                      ? const Center(
-                                        child: SizedBox(
-                                          width: 24,
-                                          height: 24,
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
-                                            strokeWidth: 2,
-                                          ),
-                                        ),
-                                      )
-                                      : Center(
-                                        child: Icon(
-                                          _isPlaying
-                                              ? Icons.pause
-                                              : Icons.play_arrow,
-                                          color: Colors.white,
-                                          size: 32,
-                                        ),
-                                      ),
-                            ),
-                          ),
-                        ),
-
-                        // Total duration - Fixed width container
-                        SizedBox(
-                          width: 70, // Fixed width to prevent shifting
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              _formatDuration(_duration.inSeconds.toDouble()),
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
-                              ),
-                              textAlign: TextAlign.center, // Center text
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                )
+                : const SizedBox.shrink(),
 
             // Additional call details
             const SizedBox(height: 24),

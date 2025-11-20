@@ -165,14 +165,19 @@ class AppTheme {
   static ThemeData lightTheme() {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryColor,
+      colorScheme: ColorScheme(
+        brightness: Brightness.dark, // Dark theme for dark backgrounds
         primary: primaryColor,
+        onPrimary: Colors.black,
         secondary: secondaryColor,
+        onSecondary: primaryColor,
         error: errorColor,
-        background: backgroundColor,
+        onError: Colors.white,
         surface: cardColor,
-        brightness: Brightness.light,
+        onSurface:
+            Colors.white, // Text color on surface (for toolbar menu items)
+        background: backgroundColor,
+        onBackground: Colors.white,
       ),
       scaffoldBackgroundColor: backgroundColor,
       appBarTheme: AppBarTheme(
@@ -239,6 +244,11 @@ class AppTheme {
         bodyMedium: bodyMedium,
         bodySmall: bodySmall,
       ),
+      textSelectionTheme: const TextSelectionThemeData(
+        cursorColor: primaryColor,
+        selectionColor: primaryColor,
+        selectionHandleColor: primaryColor,
+      ),
     );
   }
 
@@ -246,14 +256,19 @@ class AppTheme {
   static ThemeData darkTheme() {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryColor,
-        primary: primaryColor,
-        secondary: secondaryColor,
-        error: errorColor,
-        background: darkBackgroundColor,
-        surface: const Color(0xFF00142A),
+      colorScheme: ColorScheme(
         brightness: Brightness.dark,
+        primary: primaryColor,
+        onPrimary: Colors.black,
+        secondary: secondaryColor,
+        onSecondary: primaryColor,
+        error: errorColor,
+        onError: Colors.white,
+        surface: const Color(0xFF00142A),
+        onSurface:
+            Colors.white, // Text color on surface (for toolbar menu items)
+        background: darkBackgroundColor,
+        onBackground: Colors.white,
       ),
       scaffoldBackgroundColor: darkBackgroundColor,
       appBarTheme: AppBarTheme(
@@ -318,6 +333,11 @@ class AppTheme {
         bodyLarge: bodyLarge.copyWith(color: Colors.white),
         bodyMedium: bodyMedium.copyWith(color: Colors.white),
         bodySmall: bodySmall.copyWith(color: Colors.white70),
+      ),
+      textSelectionTheme: const TextSelectionThemeData(
+        cursorColor: primaryColor,
+        selectionColor: primaryColor,
+        selectionHandleColor: primaryColor,
       ),
     );
   }

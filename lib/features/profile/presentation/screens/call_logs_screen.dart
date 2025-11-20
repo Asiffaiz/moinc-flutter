@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/ai%20agent/controllers/app_ctrl.dart'
+    as app_ctrl;
 import 'package:moinc/features/profile/data/services/call_logs_service.dart';
 import 'package:moinc/features/profile/domain/models/call_log_model.dart';
 import 'package:moinc/features/profile/presentation/screens/call_log_detail_screen.dart';
+import 'package:provider/provider.dart';
 
 class CallLogsScreen extends StatefulWidget {
   const CallLogsScreen({super.key});
@@ -64,9 +67,12 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
     });
 
     try {
+      final appCtrl = context.read<app_ctrl.AppCtrl>();
+      final partnerAccountNo = appCtrl.publicAgentModel?.partnerAccountNo ?? "";
       final response = await _callLogsService.fetchCallLogs(
         page: _currentPage,
         limit: _itemsPerPage,
+        partnerAccountNo: partnerAccountNo,
       );
       final logs = _callLogsService.convertApiResponseToCallLogs(response);
 
@@ -181,34 +187,44 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
 
   Widget _buildCallLogsList(List<CallLog> logs) {
     if (logs.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'No call logs found',
-              style: TextStyle(color: Colors.white70),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _refreshCallLogs,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primaryColor,
-                foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
+      // Return a scrollable widget for RefreshIndicator to work
+      return ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'No call logs found',
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: _refreshCallLogs,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryColor,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                    ),
+                    child: const Text('Refresh'),
+                  ),
+                ],
               ),
-              child: const Text('Refresh'),
             ),
-          ],
-        ),
+          ),
+        ],
       );
     }
 
     return ListView.builder(
       controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(), // Enable pull-to-refresh
       itemCount: logs.length + (_hasMoreData ? 1 : 0),
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {

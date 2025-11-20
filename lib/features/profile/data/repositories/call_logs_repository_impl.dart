@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:moinc/features/ai%20agent/app.dart';
 import 'package:moinc/features/auth/network/api_client.dart';
 import 'package:moinc/features/profile/domain/models/twilio_call_log_response.dart';
 import 'package:moinc/features/profile/domain/models/call_log_model.dart';
@@ -24,17 +25,19 @@ class CallLogsRepositoryImpl implements CallLogsRepository {
   Future<TwilioCallLogResponse> fetchCallLogs({
     int page = 1,
     int limit = 25,
+    String? partnerAccountNo,
   }) async {
     try {
       const String _accountNoKey = 'client_acn__';
       final prefs = await SharedPreferences.getInstance();
       accountNo = prefs.getString(_accountNoKey) ?? '';
+
       final response = await _apiClient.postWithoutToken(_apiUrl, {
-        'accountno': accountNo,
+        'accountno': partnerAccountNo,
         'page': page,
         'limit': limit,
       });
-
+      // 'accountno': "3703637036",
       print(
         'API Response: ${response.statusCode}, ${response.data != null ? 'Has data' : 'No data'}',
       );
