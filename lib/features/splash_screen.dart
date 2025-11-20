@@ -97,7 +97,6 @@ class _SplashScreenState extends State<SplashScreen>
       if (isAuthenticated) {
         // Fetch agent information before navigating to dashboard
         try {
-          final prefs = await SharedPreferences.getInstance();
           await appCtrl.fetchAgent();
         } catch (e) {
           // Log error but continue navigation

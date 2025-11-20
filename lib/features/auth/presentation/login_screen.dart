@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/constants/strings.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/ai%20agent/app.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_event.dart';
 import 'package:moinc/features/auth/presentation/bloc/auth_state.dart';
@@ -122,26 +123,54 @@ class _LoginScreenState extends State<LoginScreen> {
             _isLoading = false;
           });
 
-          // Navigate to dashboard after a short delay
-          Future.delayed(const Duration(seconds: 1), () {
-            // Check if this is a Google Sign-In
-            final isGoogleSignIn =
-                state.additionalData?['isGoogleSignIn'] == true;
+          try {
+            appCtrl.fetchAgent().then((value) {
+              // Navigate to dashboard after a short delay
+              Future.delayed(Duration.zero, () {
+                // Check if this is a Google Sign-In
+                final isGoogleSignIn =
+                    state.additionalData?['isGoogleSignIn'] == true;
 
-            if (isGoogleSignIn) {
-              // For Google Sign-In, use named route to preserve providers
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                AppConstants.dashboardRoute,
-                (route) => false, // Remove all previous routes
-              );
-            } else {
-              // For regular login, use pushReplacementNamed
-              Navigator.pushReplacementNamed(
-                context,
-                AppConstants.dashboardRoute,
-              );
-            }
-          });
+                if (isGoogleSignIn) {
+                  // For Google Sign-In, use named route to preserve providers
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    AppConstants.dashboardRoute,
+                    (route) => false, // Remove all previous routes
+                  );
+                } else {
+                  // For regular login, use pushReplacementNamed
+                  Navigator.pushReplacementNamed(
+                    context,
+                    AppConstants.dashboardRoute,
+                  );
+                }
+              });
+            });
+          } catch (e) {
+            // Log error but continue navigation
+            debugPrint('Error fetching agent: $e');
+          }
+
+          // // Navigate to dashboard after a short delay
+          // Future.delayed(const Duration(seconds: 1), () {
+          //   // Check if this is a Google Sign-In
+          //   final isGoogleSignIn =
+          //       state.additionalData?['isGoogleSignIn'] == true;
+
+          //   if (isGoogleSignIn) {
+          //     // For Google Sign-In, use named route to preserve providers
+          //     Navigator.of(context).pushNamedAndRemoveUntil(
+          //       AppConstants.dashboardRoute,
+          //       (route) => false, // Remove all previous routes
+          //     );
+          //   } else {
+          //     // For regular login, use pushReplacementNamed
+          //     Navigator.pushReplacementNamed(
+          //       context,
+          //       AppConstants.dashboardRoute,
+          //     );
+          //   }
+          // });
         } else if (state.status == AuthStatus.hasMandatoryAgreements) {
           // context.go(AppRoutes.unsignedAgreements);
         } else if (state.status ==
