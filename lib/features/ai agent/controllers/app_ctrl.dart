@@ -294,10 +294,9 @@ class AppCtrl extends ChangeNotifier {
         );
       }
 
-      final String roomName = _agentModel?.livekitRoom ?? "moinc_room";
-      final String agentName = _agentModel?.agentName ?? "Maya";
-      final String agentId =
-          _agentModel?.agentId ?? "1d1b9e95-f4cd-46d7-985e-fb4884bb08e7";
+      final String roomName = _agentModel?.livekitRoom ?? "";
+      final String agentName = _agentModel?.agentName ?? "";
+      final String agentId = _agentModel?.agentId ?? "";
 
       _logger.info("Requesting token for room: $roomName, agent: $agentName");
 

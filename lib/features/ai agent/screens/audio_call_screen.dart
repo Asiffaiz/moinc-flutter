@@ -885,9 +885,17 @@ class _CallMeBottomSheetState extends State<_CallMeBottomSheet> {
           Navigator.pop(context);
         }
         if (context.mounted) {
+          // CustomToast.showCustomeToast(
+          //   'Error: ${result['message']}',
+          //   AppTheme.errorColor,
+          // );
+
+          widget.appCtrl.disableAgentControlFor30Seconds();
+
+          // Show success message
           CustomToast.showCustomeToast(
-            'Error: ${result['message']}',
-            AppTheme.errorColor,
+            'Please wait, your agent will be available in 30 seconds',
+            AppTheme.primaryColor,
           );
         }
       }
