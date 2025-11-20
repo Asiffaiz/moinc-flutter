@@ -10,7 +10,7 @@ class AgentModel {
   final String sipNumber;
   final String numberId;
   final String accountSid;
-
+  final String partnerAccountNo;
   AgentModel({
     required this.agentId,
     required this.agentName,
@@ -20,6 +20,7 @@ class AgentModel {
     required this.sipNumber,
     required this.numberId,
     required this.accountSid,
+    required this.partnerAccountNo,
   });
 
   factory AgentModel.fromJson(Map<String, dynamic> json) {
@@ -36,6 +37,7 @@ class AgentModel {
       sipNumber: json['sip_number'] as String? ?? '',
       numberId: json['number_id'] as String? ?? '',
       accountSid: json['account_sid'] as String? ?? '',
+      partnerAccountNo: json['agent_accountno'] as String? ?? '',
     );
   }
 

@@ -19,8 +19,10 @@ class CallLogsService {
   Future<TwilioCallLogResponse> fetchCallLogs({
     int page = 1,
     int limit = 25,
+    String? partnerAccountNo,
+
   }) async {
-    return await _callLogsRepository.fetchCallLogs(page: page, limit: limit);
+    return await _callLogsRepository.fetchCallLogs(page: page, limit: limit, partnerAccountNo: partnerAccountNo);
   }
 
   // Convert API response to CallLog model via repository

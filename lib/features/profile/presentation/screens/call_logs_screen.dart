@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/ai%20agent/controllers/app_ctrl.dart'
+    as app_ctrl;
 import 'package:moinc/features/profile/data/services/call_logs_service.dart';
 import 'package:moinc/features/profile/domain/models/call_log_model.dart';
 import 'package:moinc/features/profile/presentation/screens/call_log_detail_screen.dart';
+import 'package:provider/provider.dart';
 
 class CallLogsScreen extends StatefulWidget {
   const CallLogsScreen({super.key});
@@ -64,9 +67,12 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
     });
 
     try {
+      final appCtrl = context.read<app_ctrl.AppCtrl>();
+      final partnerAccountNo = appCtrl.publicAgentModel?.partnerAccountNo ?? "";
       final response = await _callLogsService.fetchCallLogs(
         page: _currentPage,
         limit: _itemsPerPage,
+        partnerAccountNo: partnerAccountNo,
       );
       final logs = _callLogsService.convertApiResponseToCallLogs(response);
 
