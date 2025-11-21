@@ -33,6 +33,7 @@ class CallLogsRepositoryImpl implements CallLogsRepository {
       accountNo = prefs.getString(_accountNoKey) ?? '';
 
       final response = await _apiClient.postWithoutToken(_apiUrl, {
+        'client_accountno': accountNo,
         'accountno': partnerAccountNo,
         'page': page,
         'limit': limit,

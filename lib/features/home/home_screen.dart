@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen>
             // const DocumentsScreen(),
 
             // Reports Tab
-            // _buildReportsTab(),
+            _buildReportsTab(),
             const CallLogsScreen(),
             // Profile Tab
             _buildProfileTab(),
@@ -152,11 +152,11 @@ class _HomeScreenState extends State<HomeScreen>
             //   activeIcon: Icon(Icons.folder),
             //   label: 'Documents',
             // ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.analytics_outlined),
-            //   activeIcon: Icon(Icons.analytics),
-            //   label: 'Reports',
-            // ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.analytics_outlined),
+              activeIcon: Icon(Icons.analytics),
+              label: 'Reports',
+            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.call_outlined),
               activeIcon: Icon(Icons.call),
