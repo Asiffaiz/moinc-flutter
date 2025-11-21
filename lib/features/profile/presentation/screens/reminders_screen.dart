@@ -58,8 +58,8 @@ class _RemindersScreenState extends State<RemindersScreen> {
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
         title: const Text('My Reminders'),
-        backgroundColor: AppTheme.secondaryColor,
-        foregroundColor: AppTheme.primaryColor,
+        backgroundColor: AppTheme.primaryColor,
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.sort),
@@ -84,7 +84,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
   void _showSortOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.secondaryColor,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -99,7 +99,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                 child: Text(
                   'Sort Reminders By',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppTheme.textColor,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -148,7 +148,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
           const SizedBox(height: 16),
           Text(
             'No reminders',
-            style: AppTheme.headingSmall.copyWith(color: Colors.white),
+            style: AppTheme.headingSmall.copyWith(color: AppTheme.textColor),
           ),
           const SizedBox(height: 8),
           Text(
@@ -210,7 +210,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppTheme.secondaryColor,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color:
@@ -250,7 +250,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                           child: Text(
                             reminder.title,
                             style: TextStyle(
-                              color: Colors.white,
+                              color: AppTheme.textColor,
                               fontSize: 16,
                               fontWeight:
                                   reminder.isCompleted
@@ -320,7 +320,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                                   color:
                                       isToday
                                           ? AppTheme.primaryColor
-                                          : Colors.white.withOpacity(0.5),
+                                          : AppTheme.lightTextColor,
                                   fontSize: 12,
                                   fontWeight:
                                       isToday
@@ -417,7 +417,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.secondaryColor,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -436,7 +436,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                     child: Text(
                       reminder.title,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppTheme.textColor,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -445,7 +445,10 @@ class _RemindersScreenState extends State<RemindersScreen> {
                   if (reminder.isImportant)
                     const Icon(Icons.star, color: AppTheme.primaryColor),
                   IconButton(
-                    icon: const Icon(Icons.close, color: AppTheme.lightTextColor),
+                    icon: const Icon(
+                      Icons.close,
+                      color: AppTheme.lightTextColor,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -478,14 +481,14 @@ class _RemindersScreenState extends State<RemindersScreen> {
                   Text(
                     'Created on ${DateFormat('MMM d, yyyy').format(reminder.createdAt)}',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.6),
+                      color: AppTheme.lightTextColor,
                       fontSize: 14,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              Divider(color: Colors.white.withOpacity(0.1)),
+              Divider(color: Colors.grey.withOpacity(0.2)),
               const SizedBox(height: 16),
               Text(
                 'Description',
@@ -538,7 +541,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                     label: const Text('Edit'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryColor,
-                      foregroundColor: Colors.black,
+                      foregroundColor: Colors.white,
                     ),
                   ),
                 ],

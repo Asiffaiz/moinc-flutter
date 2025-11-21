@@ -56,8 +56,8 @@ class _AlertsScreenState extends State<AlertsScreen> {
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
         title: const Text('Alerts'),
-        backgroundColor: AppTheme.secondaryColor,
-        foregroundColor: AppTheme.primaryColor,
+        backgroundColor: AppTheme.primaryColor,
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.done_all),
@@ -99,7 +99,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
           const SizedBox(height: 16),
           Text(
             'No alerts',
-            style: AppTheme.headingSmall.copyWith(color: Colors.white),
+            style: AppTheme.headingSmall.copyWith(color: AppTheme.textColor),
           ),
           const SizedBox(height: 8),
           Text(
@@ -155,7 +155,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppTheme.secondaryColor,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color:
@@ -196,7 +196,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
                           child: Text(
                             alert.title,
                             style: TextStyle(
-                              color: Colors.white,
+                              color: AppTheme.textColor,
                               fontSize: 16,
                               fontWeight:
                                   alert.isRead
@@ -239,7 +239,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
                               'MMM d, yyyy • h:mm a',
                             ).format(alert.timestamp),
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.5),
+                              color: AppTheme.lightTextColor,
                               fontSize: 12,
                             ),
                           ),
@@ -293,7 +293,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
   void _showAlertDetails(BuildContext context, AlertModel alert) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.secondaryColor,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -312,14 +312,17 @@ class _AlertsScreenState extends State<AlertsScreen> {
                     child: Text(
                       alert.title,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppTheme.textColor,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: AppTheme.lightTextColor),
+                    icon: const Icon(
+                      Icons.close,
+                      color: AppTheme.lightTextColor,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -327,13 +330,10 @@ class _AlertsScreenState extends State<AlertsScreen> {
               const SizedBox(height: 16),
               Text(
                 DateFormat('MMMM d, yyyy • h:mm a').format(alert.timestamp),
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.5),
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: AppTheme.lightTextColor, fontSize: 14),
               ),
               const SizedBox(height: 16),
-              Divider(color: Colors.white.withOpacity(0.1)),
+              Divider(color: Colors.grey.withOpacity(0.2)),
               const SizedBox(height: 16),
               Text(
                 alert.message,
@@ -359,7 +359,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
                     onPressed: () => Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryColor,
-                      foregroundColor: Colors.black,
+                      foregroundColor: Colors.white,
                     ),
                     child: const Text('Close'),
                   ),
