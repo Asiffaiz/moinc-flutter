@@ -123,7 +123,7 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                         title: Text(
                           description,
                           style: AppTheme.bodyMedium.copyWith(
-                            color: Colors.white,
+                            color: AppTheme.textColor,
                           ),
                         ),
                         onTap: () async {
@@ -206,7 +206,10 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
               suffixIcon:
                   widget.controller.text.isNotEmpty
                       ? IconButton(
-                        icon: const Icon(Icons.clear, color: AppTheme.textColor),
+                        icon: const Icon(
+                          Icons.clear,
+                          color: AppTheme.textColor,
+                        ),
                         onPressed: _clearText,
                       )
                       : null,

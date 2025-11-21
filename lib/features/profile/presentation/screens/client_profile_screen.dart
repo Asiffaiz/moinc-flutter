@@ -117,8 +117,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
           'Please enter an address',
           AppTheme.errorColor,
         );
-     
-    
+
         return;
       }
 
@@ -198,7 +197,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
             'Profile updated successfully',
             AppTheme.primaryColor,
           );
-       
+
           context.read<UserCubit>().updateName(state.profile!['name'] ?? '');
         } else if (state.status == ProfileStatus.error) {
           setState(() {
@@ -309,7 +308,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                       style: const TextStyle(color: AppTheme.textColor),
                       decoration: const InputDecoration(
                         hintText: AppStrings.fullName,
-                        hintStyle: TextStyle(color: Colors.white60),
+                        hintStyle: TextStyle(color: AppTheme.lightTextColor),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -332,7 +331,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                       style: const TextStyle(color: AppTheme.textColor),
                       decoration: const InputDecoration(
                         hintText: AppStrings.companyName,
-                        hintStyle: TextStyle(color: Colors.white60),
+                        hintStyle: TextStyle(color: AppTheme.lightTextColor),
                       ),
                     ),
                     // const SizedBox(height: 16),
@@ -401,7 +400,9 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                           style: const TextStyle(color: AppTheme.textColor),
                           decoration: const InputDecoration(
                             hintText: 'Enter PO Box number',
-                            hintStyle: TextStyle(color: Colors.white60),
+                            hintStyle: TextStyle(
+                              color: AppTheme.lightTextColor,
+                            ),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -424,7 +425,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                       style: const TextStyle(color: AppTheme.textColor),
                       decoration: const InputDecoration(
                         hintText: AppStrings.apartment,
-                        hintStyle: TextStyle(color: Colors.white60),
+                        hintStyle: TextStyle(color: AppTheme.lightTextColor),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -435,7 +436,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                       style: const TextStyle(color: AppTheme.textColor),
                       decoration: const InputDecoration(
                         hintText: AppStrings.city,
-                        hintStyle: TextStyle(color: Colors.white60),
+                        hintStyle: TextStyle(color: AppTheme.lightTextColor),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -457,7 +458,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                       style: const TextStyle(color: AppTheme.textColor),
                       decoration: const InputDecoration(
                         hintText: AppStrings.state,
-                        hintStyle: TextStyle(color: Colors.white60),
+                        hintStyle: TextStyle(color: AppTheme.lightTextColor),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -474,7 +475,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                       style: const TextStyle(color: AppTheme.textColor),
                       decoration: const InputDecoration(
                         hintText: AppStrings.zipCode,
-                        hintStyle: TextStyle(color: Colors.white60),
+                        hintStyle: TextStyle(color: AppTheme.lightTextColor),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -648,7 +649,7 @@ class _PhoneNumberFieldState extends State<_PhoneNumberField> {
         labelText: 'Phone Number',
         labelStyle: const TextStyle(color: AppTheme.lightTextColor),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        hintStyle: const TextStyle(color: Colors.white60),
+        hintStyle: const TextStyle(color: AppTheme.lightTextColor),
       ),
       initialCountryCode: initialCountryCode,
       // countries: supportedCountries,

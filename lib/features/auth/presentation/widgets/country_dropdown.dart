@@ -120,8 +120,8 @@ class _CountryDropdownState extends State<CountryDropdown> {
                       fontSize: 14,
                       color:
                           _selectedCountry != null
-                              ? Colors.white
-                              : Colors.white70,
+                              ? AppTheme.textColor
+                              : AppTheme.lightTextColor,
                     ),
                   ),
                 ),
@@ -164,7 +164,7 @@ class _CountryDropdownState extends State<CountryDropdown> {
                       prefixIcon: const Icon(
                         Icons.search,
                         size: 20,
-                        color: Colors.white,
+                        color: AppTheme.textColor,
                       ),
                       filled: true,
                       fillColor: AppTheme.secondaryColor,
@@ -203,7 +203,7 @@ class _CountryDropdownState extends State<CountryDropdown> {
                           country,
                           style: const TextStyle(
                             fontSize: 14,
-                            color: Colors.white,
+                            color: AppTheme.textColor,
                           ),
                         ),
                         onTap: () {

@@ -50,7 +50,7 @@ class _ProfileScreenHomeState extends State<ProfileScreenHome> {
             // Main List
             Card(
               margin: const EdgeInsets.all(16.0),
-              color: AppTheme.secondaryColor,
+              color: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
                 side: BorderSide(color: AppTheme.primaryColor.withOpacity(0.3)),
@@ -165,7 +165,7 @@ class _ProfileScreenHomeState extends State<ProfileScreenHome> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       decoration: BoxDecoration(
-        color: AppTheme.secondaryColor,
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -185,7 +185,7 @@ class _ProfileScreenHomeState extends State<ProfileScreenHome> {
                 return Text(
                   state.name.isNotEmpty ? state.name[0].toUpperCase() : 'U',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -207,7 +207,7 @@ class _ProfileScreenHomeState extends State<ProfileScreenHome> {
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: AppTheme.textColor,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -263,7 +263,7 @@ class _ProfileScreenHomeState extends State<ProfileScreenHome> {
                 child: Text(
                   title,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppTheme.textColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
@@ -284,7 +284,7 @@ class _ProfileScreenHomeState extends State<ProfileScreenHome> {
                   child: Text(
                     badge.toString(),
                     style: const TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
@@ -318,8 +318,11 @@ class _ProfileScreenHomeState extends State<ProfileScreenHome> {
       context: context,
       builder:
           (context) => AlertDialog(
-            backgroundColor: AppTheme.secondaryColor,
-            title: const Text('Logout', style: TextStyle(color: AppTheme.textColor)),
+            backgroundColor: Colors.white,
+            title: const Text(
+              'Logout',
+              style: TextStyle(color: AppTheme.textColor),
+            ),
             content: const Text(
               'Are you sure you want to logout?',
               style: TextStyle(color: AppTheme.lightTextColor),
@@ -357,7 +360,7 @@ class _ProfileScreenHomeState extends State<ProfileScreenHome> {
                 ),
                 child: const Text(
                   'Logout',
-                  style: TextStyle(color: AppTheme.textColor),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],
