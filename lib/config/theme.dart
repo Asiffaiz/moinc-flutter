@@ -5,32 +5,34 @@ class AppTheme {
   // Private constructor to prevent instantiation
   AppTheme._();
 
-  // Colors
-  static const Color primaryColor = Color(0xFFD4AF37); // Moinc gold
-  static const Color secondaryColor = Color(0xFF001A36); // Moinc navy blue
-  static const Color backgroundColor = Color(0xFF001A36); // Navy background
+  // Colors - New Business Theme
+  static const Color primaryColor = Color(0xFF7755FF); // Purple primary
+  static const Color secondaryColor = Color(0xFFFFFFFF); // White
+  static const Color backgroundColor = Color(0xFFFFFFFF); // White background
   static const Color darkBackgroundColor = Color(
-    0xFF001A36,
-  ); // Dark navy background
-  static const Color textColor = Color(0xFF333333); // Dark text
-  static const Color lightTextColor = Color(0xFF7A7A7A); // Light text
+    0xFFF5F5F5,
+  ); // Light gray background
+  static const Color textColor = Color(0xFF1A1A1A); // Dark text
+  static const Color lightTextColor = Color(0xFF666666); // Gray text
   static const Color errorColor = Color(0xFFE53935); // Error red
   static const Color successColor = Color(0xFF43A047); // Success green
   static const Color warningColor = Color(0xFFFFB300); // Warning yellow
-  static const Color cardColor = Color(0xFF001A36); // Card dark navy
-  static const Color dividerColor = Color(0xFFE0E0E0); // Divider grey
+  static const Color cardColor = Color(0xFFFFFFFF); // White cards
+  static const Color dividerColor = Color(0xFFE5E5E5); // Light gray divider
+  static const Color lightGrayColor = Color(0xFFF5F5F5); // Light gray
+  static const Color grayColor = Color(0xFFE5E5E5); // Gray borders
 
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [primaryColor, Color(0xFFC4A030)], // Gold gradient
+    colors: [primaryColor, Color(0xFF5533DD)], // Purple gradient
   );
 
   static const LinearGradient secondaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [secondaryColor, Color(0xFF00142A)], // Navy blue gradient
+    colors: [lightGrayColor, Color(0xFFFFFFFF)], // Light gray to white
   );
 
   // Text Styles
@@ -73,24 +75,24 @@ class AppTheme {
   static TextStyle get buttonText => GoogleFonts.poppins(
     fontSize: 16,
     fontWeight: FontWeight.w600,
-    color: Colors.black,
+    color: Colors.white,
   );
 
   // Button Styles
   static ButtonStyle get primaryButtonStyle => ElevatedButton.styleFrom(
     backgroundColor: primaryColor,
-    foregroundColor: Colors.black,
+    foregroundColor: Colors.white,
     padding: const EdgeInsets.symmetric(vertical: 16),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
   );
 
   static ButtonStyle get secondaryButtonStyle => ElevatedButton.styleFrom(
-    backgroundColor: secondaryColor,
+    backgroundColor: Colors.white,
     foregroundColor: primaryColor,
     padding: const EdgeInsets.symmetric(vertical: 16),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-      side: const BorderSide(color: primaryColor),
+      borderRadius: BorderRadius.circular(8),
+      side: const BorderSide(color: grayColor),
     ),
   );
 
@@ -108,41 +110,41 @@ class AppTheme {
       prefixIcon:
           prefixIcon != null
               ? IconTheme(
-                data: const IconThemeData(color: Colors.white),
+                data: const IconThemeData(color: textColor),
                 child: prefixIcon,
               )
               : null,
       suffixIcon:
           suffixIcon != null
               ? IconTheme(
-                data: const IconThemeData(color: Colors.white),
+                data: const IconThemeData(color: textColor),
                 child: suffixIcon,
               )
               : null,
       filled: true,
-      fillColor: secondaryColor,
+      fillColor: Colors.white,
 
-      labelStyle: bodyMedium.copyWith(color: Colors.white),
-      hintStyle: bodyMedium.copyWith(color: Colors.white70),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      labelStyle: bodyMedium.copyWith(color: Colors.black54),
+      hintStyle: bodyMedium.copyWith(color: Colors.black38),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: primaryColor, width: 1),
+        borderRadius: BorderRadius.circular(8),
+        borderSide: const BorderSide(color: grayColor),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: primaryColor, width: 1),
+        borderRadius: BorderRadius.circular(8),
+        borderSide: const BorderSide(color: grayColor),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         borderSide: const BorderSide(color: primaryColor, width: 2),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         borderSide: const BorderSide(color: errorColor, width: 2),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         borderSide: const BorderSide(color: errorColor, width: 2),
       ),
     );
@@ -151,12 +153,13 @@ class AppTheme {
   // Card Decoration
   static BoxDecoration get cardDecoration => BoxDecoration(
     color: cardColor,
-    borderRadius: BorderRadius.circular(16),
+    borderRadius: BorderRadius.circular(12),
+    border: Border.all(color: grayColor, width: 1),
     boxShadow: [
       BoxShadow(
         color: Colors.black.withOpacity(0.05),
-        blurRadius: 10,
-        offset: const Offset(0, 4),
+        blurRadius: 8,
+        offset: const Offset(0, 2),
       ),
     ],
   );
@@ -166,27 +169,26 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme(
-        brightness: Brightness.dark, // Dark theme for dark backgrounds
+        brightness: Brightness.light, // Light theme
         primary: primaryColor,
-        onPrimary: Colors.black,
-        secondary: secondaryColor,
-        onSecondary: primaryColor,
+        onPrimary: Colors.white,
+        secondary: lightGrayColor,
+        onSecondary: textColor,
         error: errorColor,
         onError: Colors.white,
         surface: cardColor,
-        onSurface:
-            Colors.white, // Text color on surface (for toolbar menu items)
+        onSurface: textColor, // Dark text on white surface
         background: backgroundColor,
-        onBackground: Colors.white,
+        onBackground: textColor,
       ),
       scaffoldBackgroundColor: backgroundColor,
       appBarTheme: AppBarTheme(
-        backgroundColor: secondaryColor,
-        foregroundColor: primaryColor,
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        titleTextStyle: headingSmall.copyWith(color: primaryColor),
-        iconTheme: IconThemeData(color: primaryColor),
+        titleTextStyle: headingSmall.copyWith(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(style: primaryButtonStyle),
       outlinedButtonTheme: OutlinedButtonThemeData(style: secondaryButtonStyle),
@@ -198,38 +200,38 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: secondaryColor,
-        labelStyle: bodyMedium.copyWith(color: Colors.white),
-        hintStyle: bodyMedium.copyWith(color: Colors.white70),
+        fillColor: Colors.white,
+        labelStyle: bodyMedium.copyWith(color: Colors.black54),
+        hintStyle: bodyMedium.copyWith(color: Colors.black38),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
-          vertical: 16,
+          vertical: 18,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: primaryColor, width: 1),
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: grayColor),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: primaryColor, width: 1),
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: grayColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: primaryColor, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: errorColor, width: 2),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: errorColor, width: 2),
         ),
       ),
       cardTheme: CardTheme(
         color: cardColor,
-        elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       dividerTheme: const DividerThemeData(
         color: dividerColor,

@@ -218,7 +218,7 @@ class _ProfileScreenHomeState extends State<ProfileScreenHome> {
                 Text(
                   userEmail,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
+                    color: AppTheme.lightTextColor,
                     fontSize: 14,
                   ),
                   maxLines: 1,
@@ -319,10 +319,10 @@ class _ProfileScreenHomeState extends State<ProfileScreenHome> {
       builder:
           (context) => AlertDialog(
             backgroundColor: AppTheme.secondaryColor,
-            title: const Text('Logout', style: TextStyle(color: Colors.white)),
+            title: const Text('Logout', style: TextStyle(color: AppTheme.textColor)),
             content: const Text(
               'Are you sure you want to logout?',
-              style: TextStyle(color: Colors.white70),
+              style: TextStyle(color: AppTheme.lightTextColor),
             ),
             actions: [
               TextButton(
@@ -357,7 +357,7 @@ class _ProfileScreenHomeState extends State<ProfileScreenHome> {
                 ),
                 child: const Text(
                   'Logout',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: AppTheme.textColor),
                 ),
               ),
             ],

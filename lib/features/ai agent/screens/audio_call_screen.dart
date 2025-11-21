@@ -180,7 +180,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(30),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.8)),
+            border: Border.all(color: AppTheme.lightTextColor),
             boxShadow: [
               BoxShadow(
                 color: AppTheme.secondaryColor.withValues(alpha: 0.3),
@@ -227,7 +227,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: AppTheme.secondaryColor),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.transparent,
@@ -247,7 +247,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: AppTheme.textColor,
                           ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -256,7 +256,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                     ),
                     const Text(
                       'How can I help you today?',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+                      style: TextStyle(fontSize: 18, color: AppTheme.textColor),
                     ),
                     const SizedBox(height: 40),
                     // Audio Visualizer - Enhanced Design

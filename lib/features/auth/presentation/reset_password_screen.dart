@@ -167,7 +167,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         AppStrings.passwordDifferentText,
                         style: Theme.of(
                           context,
-                        ).textTheme.bodyLarge?.copyWith(color: Colors.white70),
+                        ).textTheme.bodyLarge?.copyWith(color: AppTheme.lightTextColor),
                       ),
                       const SizedBox(height: 32),
 
@@ -190,7 +190,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               Expanded(
                                 child: Text(
                                   _errorMessage!,
-                                  style: const TextStyle(color: Colors.white),
+                                  style: const TextStyle(color: AppTheme.textColor),
                                 ),
                               ),
                             ],

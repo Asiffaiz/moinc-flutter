@@ -65,7 +65,7 @@ class _CompactAIAgentState extends State<CompactAIAgent>
           const SizedBox(height: 16),
           const Text(
             'Ask me anything or get help with your tasks',
-            style: TextStyle(color: Colors.white70, fontSize: 14),
+            style: TextStyle(color: AppTheme.lightTextColor, fontSize: 14),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),

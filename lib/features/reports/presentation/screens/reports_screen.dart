@@ -119,7 +119,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             child: Text(
                               state.message,
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: AppTheme.textColor,
                                 fontSize: 16,
                               ),
                               textAlign: TextAlign.center,
@@ -130,7 +130,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             onPressed: _refreshReports,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppTheme.primaryColor,
-                              foregroundColor: Colors.black,
+                              foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 24,
                                 vertical: 12,
@@ -169,7 +169,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           const SizedBox(height: 16),
                           const Text(
                             'Something went wrong. Please try again',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: TextStyle(
+                              color: AppTheme.textColor,
+                              fontSize: 16,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 8),
@@ -181,7 +184,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               child: Text(
                                 state.errorMessage,
                                 style: const TextStyle(
-                                  color: Colors.white70,
+                                  color: AppTheme.lightTextColor,
                                   fontSize: 12,
                                 ),
                                 textAlign: TextAlign.center,
@@ -196,7 +199,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppTheme.primaryColor,
-                              foregroundColor: Colors.black,
+                              foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 24,
                                 vertical: 12,
@@ -237,14 +240,17 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       children: [
                         const Text(
                           'No reports found',
-                          style: TextStyle(color: Colors.white70, fontSize: 16),
+                          style: TextStyle(
+                            color: AppTheme.lightTextColor,
+                            fontSize: 16,
+                          ),
                         ),
                         const SizedBox(height: 24),
                         ElevatedButton(
                           onPressed: _refreshReports,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.primaryColor,
-                            foregroundColor: Colors.black,
+                            foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 24,
                               vertical: 12,
@@ -319,7 +325,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: AppTheme.textColor,
                         ),
                       ),
                     ),
@@ -420,7 +426,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Colors.white70,
+            color: AppTheme.lightTextColor,
           ),
         ),
         const SizedBox(width: 8),

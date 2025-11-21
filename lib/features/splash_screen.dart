@@ -190,7 +190,7 @@ class _SplashScreenState extends State<SplashScreen>
                           Text(
                             'Your Personal AI Assistant',
                             style: AppTheme.bodyLarge.copyWith(
-                              color: Colors.white.withOpacity(0.8),
+                              color: AppTheme.lightTextColor,
                             ),
                           ),
                           const SizedBox(height: 60),

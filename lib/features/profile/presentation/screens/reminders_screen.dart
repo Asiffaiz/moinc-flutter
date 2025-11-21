@@ -127,7 +127,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
   Widget _buildSortOption(BuildContext context, String title, IconData icon) {
     return ListTile(
       leading: Icon(icon, color: AppTheme.primaryColor),
-      title: Text(title, style: const TextStyle(color: Colors.white)),
+      title: Text(title, style: const TextStyle(color: AppTheme.textColor)),
       onTap: () {
         Navigator.pop(context);
         // Implement sorting logic
@@ -153,7 +153,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
           const SizedBox(height: 8),
           Text(
             'You don\'t have any reminders set up yet',
-            style: AppTheme.bodyMedium.copyWith(color: Colors.white70),
+            style: AppTheme.bodyMedium.copyWith(color: AppTheme.lightTextColor),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -203,7 +203,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
           color: AppTheme.errorColor.withOpacity(0.8),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Icon(Icons.delete, color: Colors.white),
+        child: const Icon(Icons.delete, color: AppTheme.textColor),
       ),
       onDismissed: (direction) {
         _deleteReminder(reminder.id);
@@ -282,7 +282,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                           Text(
                             reminder.description,
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.8),
+                              color: AppTheme.lightTextColor,
                               fontSize: 14,
                               decoration:
                                   reminder.isCompleted
@@ -445,7 +445,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                   if (reminder.isImportant)
                     const Icon(Icons.star, color: AppTheme.primaryColor),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white70),
+                    icon: const Icon(Icons.close, color: AppTheme.lightTextColor),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -460,7 +460,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                       'EEEE, MMMM d, yyyy • h:mm a',
                     ).format(reminder.reminderDate),
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
+                      color: AppTheme.lightTextColor,
                       fontSize: 14,
                     ),
                   ),
@@ -498,7 +498,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
               const SizedBox(height: 8),
               Text(
                 reminder.description,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
+                style: const TextStyle(color: AppTheme.textColor, fontSize: 16),
               ),
               const SizedBox(height: 24),
               Row(

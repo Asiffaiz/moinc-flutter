@@ -216,7 +216,7 @@ class _CustomDialerScreenState extends State<CustomDialerScreen> {
                       IconButton(
                         icon: const Icon(
                           Icons.backspace_outlined,
-                          color: Colors.white70,
+                          color: AppTheme.lightTextColor,
                         ),
                         onPressed: _removeDigit,
                       ),
@@ -367,7 +367,7 @@ class _CustomDialerScreenState extends State<CustomDialerScreen> {
                     _getLetters(digit),
                     style: TextStyle(
                       fontSize: 10,
-                      color: Colors.white.withOpacity(0.7),
+                      color: AppTheme.lightTextColor,
                     ),
                   ),
               ],
@@ -436,7 +436,7 @@ class _ActiveCallScreenState extends State<ActiveCallScreen> {
                     _getCallStateText(callService.callState),
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.white.withOpacity(0.7),
+                      color: AppTheme.lightTextColor,
                     ),
                   ),
                   const SizedBox(height: 8),

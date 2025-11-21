@@ -22,7 +22,7 @@ class SocialAuthButtons extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'or continue with',
-                style: TextStyle(color: Colors.white70, fontSize: 12),
+                style: TextStyle(color: AppTheme.lightTextColor, fontSize: 12),
               ),
             ),
             Expanded(child: Divider(color: Colors.white30)),
@@ -117,7 +117,7 @@ class _AppleSignInButton extends StatelessWidget {
           const SizedBox(width: 8),
           const Text(
             'Sign up with Apple',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            style: TextStyle(color: AppTheme.textColor, fontWeight: FontWeight.w500),
           ),
         ],
       ),

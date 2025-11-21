@@ -160,7 +160,7 @@ class _CountryDropdownState extends State<CountryDropdown> {
                     controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Search country...',
-                      hintStyle: TextStyle(color: Colors.white70),
+                      hintStyle: TextStyle(color: AppTheme.lightTextColor),
                       prefixIcon: const Icon(
                         Icons.search,
                         size: 20,

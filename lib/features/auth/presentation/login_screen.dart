@@ -299,7 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Text(
                         //   'Sign in to continue',
                         //   style: AppTheme.bodyMedium.copyWith(
-                        //     color: Colors.white70,
+                        //     color: AppTheme.lightTextColor,
                         //   ),
                         // ),
                       ],
@@ -317,13 +317,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         formLabel(
                           AppStrings.emailAddress,
                           isRequired: false,
-                          textColor: Colors.white,
+                          textColor: AppTheme.textColor,
                         ),
                         SizedBox(height: 10),
                         TextFormField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: AppTheme.textColor),
                           decoration: AppTheme.inputDecoration(
                             labelText: 'Email',
 
@@ -331,7 +331,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             prefixIcon: const Icon(
                               Icons.email_outlined,
-                              color: Colors.white,
+                              color: AppTheme.textColor,
                             ),
                           ),
                         ),
@@ -341,26 +341,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         formLabel(
                           AppStrings.password,
                           isRequired: false,
-                          textColor: Colors.white,
+                          textColor: AppTheme.textColor,
                         ),
                         SizedBox(height: 10),
                         TextFormField(
                           controller: _passwordController,
                           obscureText: !_isPasswordVisible,
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: AppTheme.textColor),
                           decoration: AppTheme.inputDecoration(
                             labelText: 'Password',
                             hintText: 'Enter your password',
                             prefixIcon: const Icon(
                               Icons.lock_outline,
-                              color: Colors.white,
+                              color: AppTheme.textColor,
                             ),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _isPasswordVisible
                                     ? Icons.visibility_outlined
                                     : Icons.visibility_off_outlined,
-                                color: Colors.white,
+                                color: AppTheme.textColor,
                               ),
                               onPressed: _togglePasswordVisibility,
                             ),
@@ -412,7 +412,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Text(
                                   'Remember me',
                                   style: AppTheme.bodySmall.copyWith(
-                                    color: Colors.white,
+                                    color: AppTheme.textColor,
                                   ),
                                 ),
                               ],

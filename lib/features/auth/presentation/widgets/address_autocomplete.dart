@@ -190,23 +190,23 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
           child: TextFormField(
             controller: widget.controller,
             focusNode: _focusNode,
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: AppTheme.textColor),
             decoration: InputDecoration(
               labelText: widget.label,
               errorText: widget.errorText,
               filled: true,
               fillColor: AppTheme.secondaryColor,
-              labelStyle: TextStyle(color: Colors.white),
-              hintStyle: TextStyle(color: Colors.white70),
+              labelStyle: TextStyle(color: AppTheme.textColor),
+              hintStyle: TextStyle(color: AppTheme.lightTextColor),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 18,
               ),
-              prefixIcon: Icon(Icons.location_on, color: Colors.white),
+              prefixIcon: Icon(Icons.location_on, color: AppTheme.textColor),
               suffixIcon:
                   widget.controller.text.isNotEmpty
                       ? IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.white),
+                        icon: const Icon(Icons.clear, color: AppTheme.textColor),
                         onPressed: _clearText,
                       )
                       : null,
@@ -242,7 +242,7 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                 const SizedBox(width: 8),
                 Text(
                   'Loading address details...',
-                  style: TextStyle(color: Colors.white70),
+                  style: TextStyle(color: AppTheme.lightTextColor),
                 ),
               ],
             ),

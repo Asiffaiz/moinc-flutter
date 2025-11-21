@@ -306,7 +306,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _fullNameController,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: AppTheme.textColor),
                       decoration: const InputDecoration(
                         hintText: AppStrings.fullName,
                         hintStyle: TextStyle(color: Colors.white60),
@@ -329,7 +329,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _companyNameController,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: AppTheme.textColor),
                       decoration: const InputDecoration(
                         hintText: AppStrings.companyName,
                         hintStyle: TextStyle(color: Colors.white60),
@@ -398,7 +398,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     _isPoBox
                         ? TextFormField(
                           controller: _addressController,
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: AppTheme.textColor),
                           decoration: const InputDecoration(
                             hintText: 'Enter PO Box number',
                             hintStyle: TextStyle(color: Colors.white60),
@@ -421,7 +421,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _apartmentController,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: AppTheme.textColor),
                       decoration: const InputDecoration(
                         hintText: AppStrings.apartment,
                         hintStyle: TextStyle(color: Colors.white60),
@@ -432,7 +432,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _cityController,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: AppTheme.textColor),
                       decoration: const InputDecoration(
                         hintText: AppStrings.city,
                         hintStyle: TextStyle(color: Colors.white60),
@@ -454,7 +454,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _stateController,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: AppTheme.textColor),
                       decoration: const InputDecoration(
                         hintText: AppStrings.state,
                         hintStyle: TextStyle(color: Colors.white60),
@@ -471,7 +471,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                     SizedBox(height: 10),
                     TextFormField(
                       controller: _zipCodeController,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: AppTheme.textColor),
                       decoration: const InputDecoration(
                         hintText: AppStrings.zipCode,
                         hintStyle: TextStyle(color: Colors.white60),
@@ -642,11 +642,11 @@ class _PhoneNumberFieldState extends State<_PhoneNumberField> {
 
     return IntlPhoneField(
       controller: _controller,
-      style: const TextStyle(color: Colors.white),
-      dropdownTextStyle: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: AppTheme.textColor),
+      dropdownTextStyle: const TextStyle(color: AppTheme.textColor),
       decoration: InputDecoration(
         labelText: 'Phone Number',
-        labelStyle: const TextStyle(color: Colors.white70),
+        labelStyle: const TextStyle(color: AppTheme.lightTextColor),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         hintStyle: const TextStyle(color: Colors.white60),
       ),

@@ -78,8 +78,8 @@ class _HomeScreenState extends State<HomeScreen>
           axisAlignment: -1.0,
           child: AppBar(
             title: const Text('${AppConstants.appName} AI'),
-            backgroundColor: AppTheme.secondaryColor,
-            foregroundColor: AppTheme.primaryColor,
+            backgroundColor: AppTheme.primaryColor,
+            foregroundColor: Colors.white,
             actions: [
               IconButton(
                 icon: const Icon(Icons.notifications_outlined),
@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen>
                 'assets/icons/ic_home.png',
                 height: 24,
                 width: 24,
-                color: Colors.white,
+                color: AppTheme.textColor,
               ),
               activeIcon: Image.asset(
                 'assets/icons/ic_home.png',
@@ -170,9 +170,9 @@ class _HomeScreenState extends State<HomeScreen>
               label: 'Profile',
             ),
           ],
-          backgroundColor: AppTheme.secondaryColor,
+          backgroundColor: Colors.white,
           selectedItemColor: AppTheme.primaryColor,
-          unselectedItemColor: Colors.white70,
+          unselectedItemColor: AppTheme.lightTextColor,
         ),
       ),
     );
@@ -203,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen>
     //         const SizedBox(height: 8),
     //         Text(
     //           'Your personal AI assistant',
-    //           style: TextStyle(fontSize: 18, color: Colors.white70),
+    //           style: TextStyle(fontSize: 18, color: AppTheme.lightTextColor),
     //         ),
     //         const SizedBox(height: 24),
     //

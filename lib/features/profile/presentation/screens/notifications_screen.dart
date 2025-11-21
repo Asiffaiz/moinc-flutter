@@ -51,7 +51,7 @@ class NotificationsScreen extends StatelessWidget {
               //   'We\'re working hard to bring you an amazing notifications experience. Stay tuned!',
               //   style: TextStyle(
               //     fontSize: 16,
-              //     color: Colors.white.withOpacity(0.7),
+              //     color: AppTheme.lightTextColor,
               //     height: 1.5,
               //   ),
               //   textAlign: TextAlign.center,

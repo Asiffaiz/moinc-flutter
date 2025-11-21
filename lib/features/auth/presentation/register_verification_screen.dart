@@ -267,7 +267,7 @@ class _RegisterVerificationScreenState
                 children: [
                   Text(
                     'Enter the 4-digit verification code sent to your email to reset your password.',
-                    style: AppTheme.bodyLarge.copyWith(color: Colors.white70),
+                    style: AppTheme.bodyLarge.copyWith(color: AppTheme.lightTextColor),
                   ),
                   const SizedBox(height: 32),
 
@@ -446,7 +446,7 @@ class _RegisterVerificationScreenState
                       Text(
                         _isExpired ? "Code expired. " : "Didn't receive code? ",
                         style: AppTheme.bodyMedium.copyWith(
-                          color: Colors.white70,
+                          color: AppTheme.lightTextColor,
                         ),
                       ),
                       TextButton(

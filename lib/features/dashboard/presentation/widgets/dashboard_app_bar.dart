@@ -61,7 +61,7 @@
 //             builder: (context, state) {
 //               return Text(
 //                 state.name,
-//                 style: const TextStyle(fontSize: 14, color: Colors.white70),
+//                 style: const TextStyle(fontSize: 14, color: AppTheme.lightTextColor),
 //               );
 //             },
 //           ),
@@ -72,13 +72,13 @@
 //           isDesktop
 //               ? null
 //               : IconButton(
-//                 // icon: const Icon(Icons.grid_view_rounded, color: Colors.white),
-//                 icon: const Icon(Icons.menu_rounded, color: Colors.white),
+//                 // icon: const Icon(Icons.grid_view_rounded, color: AppTheme.textColor),
+//                 icon: const Icon(Icons.menu_rounded, color: AppTheme.textColor),
 //                 onPressed: onMenuTap,
 //               ),
 //       actions: [
 //         IconButton(
-//           icon: const Icon(Icons.notifications_outlined, color: Colors.white),
+//           icon: const Icon(Icons.notifications_outlined, color: AppTheme.textColor),
 //           onPressed: () {
 //             // Handle notifications
 //           },

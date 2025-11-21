@@ -89,7 +89,7 @@
 //                 Text(
 //                   userEmail,
 //                   style: TextStyle(
-//                     color: Colors.white.withOpacity(0.9),
+//                     color: AppTheme.lightTextColor,
 //                     fontSize: 14,
 //                   ),
 //                 ),

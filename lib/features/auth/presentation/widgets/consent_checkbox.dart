@@ -72,7 +72,7 @@ class ConsentCheckbox extends StatelessWidget {
     if (links == null || links!.isEmpty) {
       return Text(
         text,
-        style: const TextStyle(fontSize: 14, color: Colors.white),
+        style: const TextStyle(fontSize: 14, color: AppTheme.textColor),
       );
     }
 
@@ -87,7 +87,7 @@ class ConsentCheckbox extends StatelessWidget {
       textSpans.add(
         TextSpan(
           text: parts[i],
-          style: const TextStyle(fontSize: 14, color: Colors.white),
+          style: const TextStyle(fontSize: 14, color: AppTheme.textColor),
         ),
       );
 

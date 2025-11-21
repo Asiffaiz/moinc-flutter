@@ -164,12 +164,12 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
           const SizedBox(height: 16),
           Text(
             'Failed to load call logs',
-            style: TextStyle(color: Colors.white, fontSize: 18),
+            style: const TextStyle(color: AppTheme.textColor, fontSize: 18),
           ),
           const SizedBox(height: 8),
           Text(
             _errorMessage,
-            style: TextStyle(color: Colors.white70),
+            style: const TextStyle(color: AppTheme.lightTextColor),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -199,14 +199,14 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
                 children: [
                   const Text(
                     'No call logs found',
-                    style: TextStyle(color: Colors.white70),
+                    style: TextStyle(color: AppTheme.lightTextColor),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: _refreshCallLogs,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryColor,
-                      foregroundColor: Colors.black,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
                         vertical: 12,
@@ -311,7 +311,7 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
         title: Text(
           log.userName,
           style: const TextStyle(
-            color: Colors.white,
+            color: AppTheme.textColor,
             fontWeight: FontWeight.w500,
             fontSize: 16,
           ),
@@ -321,8 +321,8 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
           children: [
             Text(
               log.userEmail,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
+              style: const TextStyle(
+                color: AppTheme.lightTextColor,
                 fontSize: 14,
               ),
             ),
@@ -336,8 +336,8 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
           children: [
             Text(
               log.formattedDate,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
+              style: const TextStyle(
+                color: AppTheme.lightTextColor,
                 fontSize: 12,
               ),
             ),
@@ -355,8 +355,8 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
             else if (log.status == CallStatus.completed)
               Text(
                 log.formattedDuration,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                style: const TextStyle(
+                  color: AppTheme.lightTextColor,
                   fontSize: 12,
                 ),
               ),
@@ -431,7 +431,7 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
         title: Text(
           log.callerName ?? 'Unknown',
           style: const TextStyle(
-            color: Colors.white,
+            color: AppTheme.textColor,
             fontWeight: FontWeight.w500,
             fontSize: 16,
           ),
@@ -441,8 +441,8 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
           children: [
             Text(
               log.phoneNumber,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
+              style: const TextStyle(
+                color: AppTheme.lightTextColor,
                 fontSize: 14,
               ),
             ),
@@ -456,7 +456,7 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
                       log.status == CallStatus.missed ||
                               log.status == CallStatus.failed
                           ? Colors.red
-                          : Colors.white.withOpacity(0.7),
+                          : AppTheme.lightTextColor,
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -466,7 +466,7 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
                         log.status == CallStatus.missed ||
                                 log.status == CallStatus.failed
                             ? Colors.red
-                            : Colors.white.withOpacity(0.7),
+                            : AppTheme.lightTextColor,
                     fontSize: 12,
                   ),
                 ),
@@ -480,8 +480,8 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
           children: [
             Text(
               log.formattedDate,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
+              style: const TextStyle(
+                color: AppTheme.lightTextColor,
                 fontSize: 12,
               ),
             ),
@@ -499,8 +499,8 @@ class _CallLogsScreenState extends State<CallLogsScreen> {
             else if (log.status == CallStatus.completed)
               Text(
                 log.formattedDuration,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                style: const TextStyle(
+                  color: AppTheme.lightTextColor,
                   fontSize: 12,
                 ),
               ),

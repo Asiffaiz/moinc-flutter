@@ -115,14 +115,14 @@ class _DocumentUploadDialogState extends State<DocumentUploadDialog> {
                 const SizedBox(height: 8),
                 const Text(
                   'Upload PDF or DOC files to train your AI agent',
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                  style: TextStyle(color: AppTheme.lightTextColor, fontSize: 14),
                 ),
                 const SizedBox(height: 24),
                 _buildFileSelector(),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _titleController,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: AppTheme.textColor),
                   decoration: AppTheme.inputDecoration(
                     labelText: 'Document Title',
                     hintText: 'Enter a title for this document',
@@ -137,7 +137,7 @@ class _DocumentUploadDialogState extends State<DocumentUploadDialog> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _descriptionController,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: AppTheme.textColor),
                   decoration: AppTheme.inputDecoration(
                     labelText: 'Description (Optional)',
                     hintText: 'Enter a description for this document',
@@ -157,7 +157,7 @@ class _DocumentUploadDialogState extends State<DocumentUploadDialog> {
                   Center(
                     child: Text(
                       'Uploading... ${(_uploadProgress * 100).toInt()}%',
-                      style: const TextStyle(color: Colors.white70),
+                      style: const TextStyle(color: AppTheme.lightTextColor),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -169,7 +169,7 @@ class _DocumentUploadDialogState extends State<DocumentUploadDialog> {
                         onPressed: () => Navigator.of(context).pop(),
                         child: const Text(
                           'Cancel',
-                          style: TextStyle(color: Colors.white70),
+                          style: TextStyle(color: AppTheme.lightTextColor),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -227,7 +227,7 @@ class _DocumentUploadDialogState extends State<DocumentUploadDialog> {
                       const SizedBox(height: 12),
                       const Text(
                         'Click to select a file',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        style: TextStyle(color: AppTheme.textColor, fontSize: 16),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -275,7 +275,7 @@ class _DocumentUploadDialogState extends State<DocumentUploadDialog> {
                           const Text(
                             '3.2 MB',
                             style: TextStyle(
-                              color: Colors.white70,
+                              color: AppTheme.lightTextColor,
                               fontSize: 12,
                             ),
                           ),
@@ -288,7 +288,7 @@ class _DocumentUploadDialogState extends State<DocumentUploadDialog> {
                           _selectedFileName = null;
                         });
                       },
-                      icon: const Icon(Icons.close, color: Colors.white70),
+                      icon: const Icon(Icons.close, color: AppTheme.lightTextColor),
                     ),
                   ],
                 ),

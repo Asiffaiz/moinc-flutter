@@ -104,7 +104,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
           const SizedBox(height: 8),
           Text(
             'You don\'t have any alerts at the moment',
-            style: AppTheme.bodyMedium.copyWith(color: Colors.white70),
+            style: AppTheme.bodyMedium.copyWith(color: AppTheme.lightTextColor),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -148,7 +148,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
           color: AppTheme.errorColor.withOpacity(0.8),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Icon(Icons.delete, color: Colors.white),
+        child: const Icon(Icons.delete, color: AppTheme.textColor),
       ),
       onDismissed: (direction) {
         _deleteAlert(alert.id);
@@ -227,7 +227,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
                           Text(
                             alert.message,
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.8),
+                              color: AppTheme.lightTextColor,
                               fontSize: 14,
                             ),
                             maxLines: 2,
@@ -319,7 +319,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white70),
+                    icon: const Icon(Icons.close, color: AppTheme.lightTextColor),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -337,7 +337,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
               const SizedBox(height: 16),
               Text(
                 alert.message,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
+                style: const TextStyle(color: AppTheme.textColor, fontSize: 16),
               ),
               const SizedBox(height: 24),
               Row(

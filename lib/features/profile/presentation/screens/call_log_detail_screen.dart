@@ -394,7 +394,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                         Text(
                           callerSubtitle,
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
+                            color: AppTheme.lightTextColor,
                             fontSize: 16,
                           ),
                         ),
@@ -583,7 +583,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                               Text(
                                 '${widget.callLog.formattedDuration}',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: AppTheme.lightTextColor,
                                   fontSize: 16,
                                 ),
                               ),
@@ -596,7 +596,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                             Text(
                               formattedTime,
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.7),
+                                color: AppTheme.lightTextColor,
                                 fontSize: 16,
                               ),
                             ),
@@ -695,7 +695,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                     children: [
                       // Text(
                       //   "URL: ${(widget.callLog as TwilioCallLog).recordingUrl ?? ''}",
-                      //   style: TextStyle(color: Colors.white),
+                      //   style: TextStyle(color: AppTheme.textColor),
                       // ),
                       // Audio player title
                       Row(
@@ -765,7 +765,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                                     _position.inSeconds.toDouble(),
                                   ),
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: AppTheme.lightTextColor,
                                   ),
                                   textAlign: TextAlign.center, // Center text
                                 ),
@@ -843,7 +843,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                                     _duration.inSeconds.toDouble(),
                                   ),
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: AppTheme.lightTextColor,
                                   ),
                                   textAlign: TextAlign.center, // Center text
                                 ),
@@ -882,7 +882,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                 //   child: Text(
                 //     widget.callLog.formattedDate,
                 //     style: TextStyle(
-                //       color: Colors.white.withOpacity(0.9),
+                //       color: AppTheme.lightTextColor,
                 //       fontWeight: FontWeight.w500,
                 //     ),
                 //   ),
@@ -1037,7 +1037,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                           padding: EdgeInsets.all(16.0),
                           child: Text(
                             'No transcription available for this call',
-                            style: TextStyle(color: Colors.white70),
+                            style: TextStyle(color: AppTheme.lightTextColor),
                           ),
                         ),
                       )
@@ -1067,7 +1067,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
           Text(
             label,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
+              color: AppTheme.lightTextColor,
               fontSize: 16,
             ),
           ),
@@ -1112,7 +1112,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
       child: Text(
         text,
         style: TextStyle(
-          color: Colors.white.withOpacity(0.9),
+          color: AppTheme.lightTextColor,
           fontSize: 16,
           height: 1.5,
         ),

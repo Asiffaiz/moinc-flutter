@@ -71,7 +71,7 @@ class DocumentItem extends StatelessWidget {
                             Text(
                               document.fileName,
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.7),
+                                color: AppTheme.lightTextColor,
                                 fontSize: 13,
                               ),
                               maxLines: 1,
@@ -112,7 +112,7 @@ class DocumentItem extends StatelessWidget {
                       child: Text(
                         document.description!,
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
+                          color: AppTheme.lightTextColor,
                           fontSize: 13,
                         ),
                         maxLines: 2,
@@ -351,18 +351,18 @@ class DocumentItem extends StatelessWidget {
             backgroundColor: AppTheme.secondaryColor,
             title: const Text(
               'Delete Document',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: AppTheme.textColor),
             ),
             content: Text(
               'Are you sure you want to delete "${document.title}"? This action cannot be undone.',
-              style: const TextStyle(color: Colors.white70),
+              style: const TextStyle(color: AppTheme.lightTextColor),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: const Text(
                   'Cancel',
-                  style: TextStyle(color: Colors.white70),
+                  style: TextStyle(color: AppTheme.lightTextColor),
                 ),
               ),
               ElevatedButton(
@@ -415,7 +415,7 @@ class DocumentItem extends StatelessWidget {
                         Text(
                           document.fileName,
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
+                            color: AppTheme.lightTextColor,
                             fontSize: 14,
                           ),
                         ),
@@ -458,7 +458,7 @@ class DocumentItem extends StatelessWidget {
                       Navigator.pop(context);
                       _confirmDelete(context);
                     },
-                    icon: const Icon(Icons.delete, color: Colors.white70),
+                    icon: const Icon(Icons.delete, color: AppTheme.lightTextColor),
                     style: IconButton.styleFrom(
                       backgroundColor: Colors.white.withOpacity(0.1),
                     ),
@@ -492,7 +492,7 @@ class DocumentItem extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
+              style: const TextStyle(color: AppTheme.textColor, fontSize: 14),
             ),
           ),
         ],

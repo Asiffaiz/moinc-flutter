@@ -156,14 +156,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                         Text(
                           AppStrings.verificationProcessText,
                           style: Theme.of(context).textTheme.bodyLarge
-                              ?.copyWith(color: Colors.white70),
+                              ?.copyWith(color: AppTheme.lightTextColor),
                         ),
                         const SizedBox(height: 32),
 
                         TextFormField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: AppTheme.textColor),
                           decoration: AppTheme.inputDecoration(
                             labelText: AppStrings.email,
                             hintText: 'Enter your email address',

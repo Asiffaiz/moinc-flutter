@@ -211,7 +211,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     'Enter the 4-digit verification code sent to your email to reset your password.',
                     style: Theme.of(
                       context,
-                    ).textTheme.bodyLarge?.copyWith(color: Colors.white70),
+                    ).textTheme.bodyLarge?.copyWith(color: AppTheme.lightTextColor),
                   ),
                   const SizedBox(height: 32),
 
@@ -234,7 +234,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           Expanded(
                             child: Text(
                               _errorMessage!,
-                              style: const TextStyle(color: Colors.white),
+                              style: const TextStyle(color: AppTheme.textColor),
                             ),
                           ),
                         ],
@@ -262,7 +262,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           Expanded(
                             child: Text(
                               _successMessage!,
-                              style: const TextStyle(color: Colors.white),
+                              style: const TextStyle(color: AppTheme.textColor),
                             ),
                           ),
                         ],

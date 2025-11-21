@@ -117,7 +117,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       padding: const EdgeInsets.all(16.0),
       child: TextField(
         controller: _searchController,
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(color: AppTheme.textColor),
         decoration: AppTheme.inputDecoration(
           hintText: 'Search documents...',
           prefixIcon: const Icon(Icons.search),
@@ -161,7 +161,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
           const SizedBox(height: 8),
           Text(
             'Upload PDF or DOC files to train your AI agent',
-            style: AppTheme.bodyMedium.copyWith(color: Colors.white70),
+            style: AppTheme.bodyMedium.copyWith(color: AppTheme.lightTextColor),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -197,7 +197,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               const SizedBox(height: 8),
               Text(
                 'Try a different search term',
-                style: AppTheme.bodyMedium.copyWith(color: Colors.white70),
+                style: AppTheme.bodyMedium.copyWith(color: AppTheme.lightTextColor),
               ),
             ],
           ),

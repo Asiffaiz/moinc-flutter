@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:intl_phone_field/countries.dart';
+import 'package:moinc/config/theme.dart';
 
 class PhoneNumberField extends StatefulWidget {
   final Function(String, String) onPhoneNumberChanged;
@@ -55,7 +56,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
 
     return IntlPhoneField(
       controller: _controller,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: AppTheme.textColor),
 
       decoration: InputDecoration(
         // labelText: 'Phone Number',

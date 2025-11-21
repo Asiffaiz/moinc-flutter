@@ -401,7 +401,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: AppStrings.fullName,
                           filled: true,
                           fillColor: AppTheme.secondaryColor,
-                          hintStyle: TextStyle(color: Colors.white70),
+                          hintStyle: TextStyle(color: AppTheme.lightTextColor),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
@@ -424,7 +424,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                         ),
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppTheme.textColor),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Full Name is required';
@@ -446,7 +446,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: AppStrings.companyName,
                           filled: true,
                           fillColor: AppTheme.secondaryColor,
-                          hintStyle: TextStyle(color: Colors.white70),
+                          hintStyle: TextStyle(color: AppTheme.lightTextColor),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
@@ -469,7 +469,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                         ),
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppTheme.textColor),
                       ),
                       const SizedBox(height: 16),
                       formLabel(
@@ -485,7 +485,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: AppStrings.emailAddress,
                           filled: true,
                           fillColor: AppTheme.secondaryColor,
-                          hintStyle: TextStyle(color: Colors.white70),
+                          hintStyle: TextStyle(color: AppTheme.lightTextColor),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
@@ -508,7 +508,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                         ),
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppTheme.textColor),
                         // validator: Validators.validateEmail,
                         validator: Validators.validateEmail,
                       ),
@@ -541,7 +541,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             _isPoBox ? 'PO Box' : 'Street Address',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white70,
+                              color: AppTheme.lightTextColor,
                             ),
                           ),
                           Transform.scale(
@@ -584,7 +584,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               hintText: 'Enter PO Box number',
                               filled: true,
                               fillColor: AppTheme.secondaryColor,
-                              hintStyle: TextStyle(color: Colors.white70),
+                              hintStyle: TextStyle(color: AppTheme.lightTextColor),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
@@ -607,7 +607,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                               ),
                             ),
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: AppTheme.textColor),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'PO Box is required';
@@ -630,7 +630,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: AppStrings.apartment,
                           filled: true,
                           fillColor: AppTheme.secondaryColor,
-                          hintStyle: TextStyle(color: Colors.white70),
+                          hintStyle: TextStyle(color: AppTheme.lightTextColor),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
@@ -653,7 +653,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                         ),
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppTheme.textColor),
                       ),
                       const SizedBox(height: 16),
                       formLabel(
@@ -663,7 +663,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       SizedBox(height: 10),
                       TextFormField(
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppTheme.textColor),
                         controller: _cityController,
                         decoration: const InputDecoration(
                           hintText: AppStrings.city,
@@ -683,7 +683,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       SizedBox(height: 10),
                       TextFormField(
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppTheme.textColor),
                         controller: _stateController,
                         decoration: const InputDecoration(
                           hintText: AppStrings.state,
@@ -703,7 +703,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       SizedBox(height: 10),
                       TextFormField(
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppTheme.textColor),
                         controller: _zipCodeController,
                         decoration: const InputDecoration(
                           hintText: AppStrings.zipCode,
@@ -856,7 +856,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             children: [
                               Text(
                                 AppStrings.alreadyHaveAccount,
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: AppTheme.textColor),
                               ),
                               SizedBox(width: 4),
                               Text(

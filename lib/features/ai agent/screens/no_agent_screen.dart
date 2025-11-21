@@ -8,7 +8,7 @@ class NoAgentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: AppTheme.secondaryColor),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
@@ -29,7 +29,7 @@ class NoAgentScreen extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppTheme.textColor,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -39,9 +39,9 @@ class NoAgentScreen extends StatelessWidget {
                   // Description
                   Text(
                     'Your AI assistant is currently not assigned to your account.',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
-                      color: Colors.white.withValues(alpha: 0.8),
+                      color: AppTheme.lightTextColor,
                       height: 1.5,
                     ),
                     textAlign: TextAlign.center,
@@ -161,15 +161,15 @@ class NoAgentScreen extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: AppTheme.textColor,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 description,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
-                  color: Colors.white.withValues(alpha: 0.7),
+                  color: AppTheme.lightTextColor,
                   height: 1.4,
                 ),
               ),
@@ -184,12 +184,9 @@ class NoAgentScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: AppTheme.lightGrayColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
-          width: 1,
-        ),
+        border: Border.all(color: AppTheme.grayColor, width: 1),
       ),
       child: Row(
         children: [
@@ -198,10 +195,7 @@ class NoAgentScreen extends StatelessWidget {
           Expanded(
             child: Text(
               'Need help? Contact our support team',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.white.withValues(alpha: 0.8),
-              ),
+              style: const TextStyle(fontSize: 14, color: AppTheme.textColor),
             ),
           ),
         ],
