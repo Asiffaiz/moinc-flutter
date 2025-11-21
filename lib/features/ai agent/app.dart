@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'controllers/app_ctrl.dart';
-import 'screens/agent_screen.dart';
 import 'screens/audio_call_screen.dart';
-import 'screens/welcome_screen.dart';
-import 'ui/color_pallette.dart' show LKColorPaletteLight, LKColorPaletteDark;
-import 'widgets/app_layout_switcher.dart';
+import 'screens/no_agent_screen.dart';
 
 final appCtrl = AppCtrl();
 
@@ -16,10 +13,18 @@ class VoiceAssistantApp extends StatelessWidget {
   @override
   Widget build(BuildContext ctx) => Builder(
     builder:
-        (ctx) => Selector<AppCtrl, AppScreenState>(
-          selector: (ctx, appCtx) => appCtx.appScreenState,
-          builder: (ctx, screen, _) {
+        (ctx) => Selector<AppCtrl, bool>(
+          selector: (ctx, appCtx) => appCtx.publicAgentModel != null,
+          builder: (ctx, hasAgent, _) {
+            // Show NoAgentScreen if no agent is assigned
+            if (!hasAgent) {
+              return const NoAgentScreen();
+            }
+
+            // Show AudioCallScreen if agent is assigned
             return const AudioCallScreen();
+
+            // Original code for reference (currently not used)
             // if (screen == AppScreenState.audioCall) {
             //   return const AudioCallScreen();
             // }

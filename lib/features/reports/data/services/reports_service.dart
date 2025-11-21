@@ -85,6 +85,8 @@ class ReportsService {
             reportsData.map((item) => ReportsModel.fromJson(item)).toList();
         // Convert API models to domain models
         return apiReportsData;
+      } else if (response.statusCode == 200 && response.data['status'] == 404) {
+        return [];
       } else {
         throw Exception(
           response.data['message'] ?? 'Failed to get reports data',
