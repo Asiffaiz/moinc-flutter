@@ -466,30 +466,30 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 20),
 
                         // Register Option
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Don\'t have an account?',
-                              style: AppTheme.bodyMedium.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: _navigateToRegister,
-                              child: Text(
-                                'Register',
-                                style: AppTheme.bodyMedium.copyWith(
-                                  color: AppTheme.primaryColor,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Social auth buttons
-                        const SocialAuthButtons(),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   crossAxisAlignment: CrossAxisAlignment.center,
+                        //   children: [
+                        //     Text(
+                        //       'Don\'t have an account?',
+                        //       style: AppTheme.bodyMedium.copyWith(
+                        //         color: Colors.white,
+                        //       ),
+                        //     ),
+                        //     TextButton(
+                        //       onPressed: _navigateToRegister,
+                        //       child: Text(
+                        //         'Register',
+                        //         style: AppTheme.bodyMedium.copyWith(
+                        //           color: AppTheme.primaryColor,
+                        //           fontWeight: FontWeight.w600,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // // Social auth buttons
+                        // const SocialAuthButtons(),
                       ],
                     ),
                   ),
