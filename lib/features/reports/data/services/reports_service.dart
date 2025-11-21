@@ -68,6 +68,16 @@ class ReportsService {
         'accountno': accountNo,
       });
 
+      print(response.data);
+
+      // Check for 404 status with client_not_found message (no reports scenario)
+      if (response.statusCode == 404 ||
+          (response.data['status'] == 404 &&
+              response.data['message'] == 'integration_missing')) {
+        // Return empty list for "no reports" scenario
+        return [];
+      }
+
       if (response.statusCode == 200 && response.data['status'] == 200) {
         // Parse API response into ApiAgreementModel objects
         final List<dynamic> reportsData = response.data['data'] ?? [];
@@ -77,7 +87,7 @@ class ReportsService {
         return apiReportsData;
       } else {
         throw Exception(
-          response.data['message'] ?? 'Failed to get dashboard data',
+          response.data['message'] ?? 'Failed to get reports data',
         );
       }
     } catch (e) {

@@ -25,7 +25,17 @@ class ReportsBloc extends Bloc<ReportsEvent, ReportsState> {
 
       final reportsData = await _reportsRepository.getReportsData();
 
-      emit(ReportsLoaded(reportsData: reportsData));
+      // Check if no reports found (empty list)
+      if (reportsData.isEmpty) {
+        emit(
+          ReportsNoData(
+            message:
+                'You don\'t have any assigned reports yet. Reports will appear here once they are available.',
+          ),
+        );
+      } else {
+        emit(ReportsLoaded(reportsData: reportsData));
+      }
     } catch (e) {
       emit(ReportsError(errorMessage: e.toString()));
     }

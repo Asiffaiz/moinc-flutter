@@ -21,6 +21,15 @@ final class ReportsLoaded extends ReportsState {
   const ReportsLoaded({required super.reportsData});
 }
 
+final class ReportsNoData extends ReportsState {
+  final String message;
+
+  const ReportsNoData({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
 final class ReportsError extends ReportsState {
   final String errorMessage;
 

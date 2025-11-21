@@ -6,57 +6,6 @@ import 'package:moinc/features/reports/domain/models/reports_model.dart';
 import 'package:moinc/features/reports/presentation/bloc/reports_bloc.dart';
 import 'package:moinc/features/reports/presentation/screens/report_webview_screen.dart';
 import 'package:moinc/utils/custom_toast.dart';
-import 'package:moinc/widgets/custom_error_dialog.dart';
-import 'package:moinc/widgets/dashboard_shimmer.dart';
-
-// Dummy data for reports
-final List<ReportsModel> dummyReports = [
-  ReportsModel(
-    id: 1,
-    title: 'Monthly Performance Report',
-    createdAt: DateTime.now().subtract(const Duration(days: 5)),
-    publishedAt: DateTime.now().subtract(const Duration(days: 3)),
-    status: 'processed',
-    reportStatus: 1,
-    url: 'https://moinc.ai/reports/monthly-performance',
-  ),
-  ReportsModel(
-    id: 2,
-    title: 'User Engagement Analytics',
-    createdAt: DateTime.now().subtract(const Duration(days: 10)),
-    publishedAt: DateTime.now().subtract(const Duration(days: 8)),
-    status: 'processed',
-    reportStatus: 1,
-    url: 'https://moinc.ai/reports/user-engagement',
-  ),
-  ReportsModel(
-    id: 3,
-    title: 'AI Usage Statistics',
-    createdAt: DateTime.now().subtract(const Duration(days: 15)),
-    publishedAt: DateTime.now().subtract(const Duration(days: 12)),
-    status: 'processing',
-    reportStatus: 0,
-    url: 'https://moinc.ai/reports/ai-usage',
-  ),
-  ReportsModel(
-    id: 4,
-    title: 'Quarterly Financial Summary',
-    createdAt: DateTime.now().subtract(const Duration(days: 30)),
-    publishedAt: DateTime.now().subtract(const Duration(days: 25)),
-    status: 'processed',
-    reportStatus: 1,
-    url: 'https://moinc.ai/reports/quarterly-financial',
-  ),
-  ReportsModel(
-    id: 5,
-    title: 'User Feedback Analysis',
-    createdAt: DateTime.now().subtract(const Duration(days: 20)),
-    publishedAt: DateTime.now().subtract(const Duration(days: 18)),
-    status: 'processed',
-    reportStatus: 0,
-    url: 'https://moinc.ai/reports/user-feedback',
-  ),
-];
 
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
@@ -69,24 +18,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   void initState() {
     super.initState();
-    // Load from API in production
-    // context.read<ReportsBloc>().add(LoadReportsData());
-    _showDummyData();
-
-    // For development, we can use the dummy data directly
-    // Uncomment the line below to use dummy data instead of API
-    // _showDummyData();
+    // Load reports from API
+    context.read<ReportsBloc>().add(LoadReportsData());
   }
 
-  // Method to show dummy data for development
-  void _showDummyData() {
-    Future.delayed(Duration.zero, () {
-      if (mounted) {
-        context.read<ReportsBloc>().emit(
-          ReportsLoaded(reportsData: dummyReports),
-        );
-      }
-    });
+  // Refresh reports from API
+  Future<void> _refreshReports() async {
+    context.read<ReportsBloc>().add(LoadReportsData());
   }
 
   @override
@@ -111,19 +49,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
       // ),
       body: BlocConsumer<ReportsBloc, ReportsState>(
         listener: (context, state) {
-          if (state is ReportsError) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              CustomErrorDialog.show(
-                context: context,
-                onRetry: () {
-                  // Your retry logic here
-                  Navigator.pop(context);
-                  context.read<ReportsBloc>().add(LoadReportsData());
-                },
-              );
-            });
-          }
-
           if (state is ReportUrlLoaded) {
             Navigator.push(
               context,
@@ -145,7 +70,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
         builder: (context, state) {
           // Show loading indicator
           if (state is ReportsLoading) {
-            return const DashboardShimmer();
+            return const Center(
+              child: CircularProgressIndicator(color: AppTheme.primaryColor),
+            );
           }
 
           // Show URL loading indicator but keep the list visible in background
@@ -153,25 +80,134 @@ class _ReportsScreenState extends State<ReportsScreen> {
             if (state.reportsData.isNotEmpty) {
               return Stack(
                 children: [
-                  _buildUnsignedAgreementsList(state.reportsData),
+                  RefreshIndicator(
+                    onRefresh: _refreshReports,
+                    color: AppTheme.primaryColor,
+                    child: _buildUnsignedAgreementsList(state.reportsData),
+                  ),
                   const Center(child: CircularProgressIndicator()),
                 ],
               );
             }
-            // return const DashboardShimmer();
+            return const Center(
+              child: CircularProgressIndicator(color: AppTheme.primaryColor),
+            );
           }
 
-          // Show error message
-          if (state is ReportsError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+          // Show "no reports" message (user-friendly)
+          if (state is ReportsNoData) {
+            return RefreshIndicator(
+              onRefresh: _refreshReports,
+              color: AppTheme.primaryColor,
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 children: [
-                  Text(
-                    'Something went wrong Please try again',
-                    style: const TextStyle(color: Colors.red, fontSize: 16),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.description_outlined,
+                            size: 60,
+                            color: AppTheme.primaryColor.withOpacity(0.5),
+                          ),
+                          const SizedBox(height: 24),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: Text(
+                              state.message,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          ElevatedButton(
+                            onPressed: _refreshReports,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.primaryColor,
+                              foregroundColor: Colors.black,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 12,
+                              ),
+                            ),
+                            child: const Text('Refresh'),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                ],
+              ),
+            );
+          }
+
+          // Show error message with retry button
+          if (state is ReportsError) {
+            return RefreshIndicator(
+              onRefresh: _refreshReports,
+              color: AppTheme.primaryColor,
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            color: Colors.red,
+                            size: 60,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Something went wrong. Please try again',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 8),
+                          if (state.errorMessage.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                              ),
+                              child: Text(
+                                state.errorMessage,
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          const SizedBox(height: 24),
+                          ElevatedButton(
+                            onPressed: () {
+                              context.read<ReportsBloc>().add(
+                                LoadReportsData(),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.primaryColor,
+                              foregroundColor: Colors.black,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 12,
+                              ),
+                            ),
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             );
@@ -179,14 +215,50 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
           // Display reports data from any state that has it
           if (state.reportsData.isNotEmpty) {
-            return _buildUnsignedAgreementsList(state.reportsData);
+            return RefreshIndicator(
+              onRefresh: _refreshReports,
+              color: AppTheme.primaryColor,
+              child: _buildUnsignedAgreementsList(state.reportsData),
+            );
           }
 
-          // Fallback if no reports are available
-          // Show dummy data if there are no reports from API
-          return _buildUnsignedAgreementsList(dummyReports);
-          // If you want to show a "no reports" message instead, uncomment below
-          // return Center(child: Text('No reports found', style: TextStyle(color: Colors.white, fontSize: 16)));
+          // Show empty state if no reports are available
+          return RefreshIndicator(
+            onRefresh: _refreshReports,
+            color: AppTheme.primaryColor,
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'No reports found',
+                          style: TextStyle(color: Colors.white70, fontSize: 16),
+                        ),
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: _refreshReports,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.primaryColor,
+                            foregroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                          ),
+                          child: const Text('Refresh'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
         },
       ),
     );
@@ -194,6 +266,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   Widget _buildUnsignedAgreementsList(List<ReportsModel> reports) {
     return ListView.builder(
+      physics: const AlwaysScrollableScrollPhysics(), // Enable pull-to-refresh
       padding: const EdgeInsets.all(16),
       itemCount: reports.length,
       itemBuilder: (context, index) {
@@ -363,56 +436,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-  Widget _buildDescription(String description) {
-    return Text(
-      description,
-      maxLines: 3,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: Colors.grey.shade700,
-      ),
-    );
-  }
-
-  Widget _buildStatusColumn({
-    required String title,
-    required String value,
-    required IconData icon,
-    required Color color,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade700,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Icon(icon, size: 14, color: color),
-            const SizedBox(width: 4),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 12,
-                color: color,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
   Widget _buildActionButton({
     required IconData? icon,
     required String label,
@@ -481,35 +504,5 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
       ),
     );
-  }
-
-  IconData _getStatusIcon(String status) {
-    switch (status) {
-      case 'processed':
-        return Icons.check_circle_outline;
-      case 'processing':
-        return Icons.hourglass_empty;
-      case 'approved':
-        return Icons.verified;
-      case 'rejected':
-        return Icons.cancel_outlined;
-      default:
-        return Icons.check_circle_outline;
-    }
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'processed':
-        return Colors.blue;
-      case 'processing':
-        return Colors.orange;
-      case 'approved':
-        return Colors.blue;
-      case 'rejected':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/ai%20agent/app.dart';
 import 'package:moinc/features/home/home_screen.dart';
 import 'package:moinc/utils/custom_toast.dart';
 
@@ -67,7 +68,7 @@ class _RegisterVerificationScreenState
     setState(() {
       _timeLeft = 60; // Reset to 60 seconds
       _isExpired = false;
-      
+
       // Note: We don't clear PIN fields here anymore
       // PIN fields are only cleared explicitly during resend
     });
@@ -173,11 +174,13 @@ class _RegisterVerificationScreenState
         } else if (state.status == AuthStatus.hasMandatoryAgreements) {
           // context.go(AppRoutes.unsignedAgreements);
         } else if (state.status == AuthStatus.registeredSuccessfully) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-            (route) => false,
-          );
+          appCtrl.fetchAgent().then((value) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              (route) => false,
+            );
+          });
         } else if (state.status == AuthStatus.registerCodeResent) {
           // For resend code success
           setState(() {
@@ -185,13 +188,13 @@ class _RegisterVerificationScreenState
             _isLoading = false; // Ensure main button doesn't show loader
             _successMessage = null; // Don't show message in widget
           });
-          
+
           // Show toast for success
           CustomToast.showCustomeToast(
             'Verification code resent successfully',
             AppTheme.successColor,
           );
-          
+
           // Clear PIN fields after resend
           for (var controller in _codeControllers) {
             controller.clear();
@@ -200,7 +203,7 @@ class _RegisterVerificationScreenState
           if (_focusNodes.isNotEmpty) {
             _focusNodes[0].requestFocus();
           }
-          
+
           // Call _startTimer() outside of setState to ensure proper timer initialization
           Future.delayed(Duration.zero, () {
             if (mounted) {
@@ -212,10 +215,11 @@ class _RegisterVerificationScreenState
             _errorMessage = null; // Don't show message in widget
             _isResending = false; // Ensure resend loader is stopped on error
           });
-          
+
           // Show toast message for error
           CustomToast.showCustomeToast(
-            state.errorMessage ?? 'Invalid verification code. Please try again.',
+            state.errorMessage ??
+                'Invalid verification code. Please try again.',
             AppTheme.errorColor,
           );
         } else if (state.errorMessage == "already_created" &&
@@ -406,16 +410,18 @@ class _RegisterVerificationScreenState
                               ? null
                               : _verifyCode,
                       style: AppTheme.primaryButtonStyle.copyWith(
-                        backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                          // Don't change color when disabled due to loading
-                          if (states.contains(MaterialState.disabled) && _isLoading) {
-                            return AppTheme.primaryColor;
-                          }
-                          if (states.contains(MaterialState.disabled)) {
-                            return Colors.grey.shade700;
-                          }
-                          return AppTheme.primaryColor;
-                        }),
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>((states) {
+                              // Don't change color when disabled due to loading
+                              if (states.contains(MaterialState.disabled) &&
+                                  _isLoading) {
+                                return AppTheme.primaryColor;
+                              }
+                              if (states.contains(MaterialState.disabled)) {
+                                return Colors.grey.shade700;
+                              }
+                              return AppTheme.primaryColor;
+                            }),
                       ),
                       child:
                           _isLoading
