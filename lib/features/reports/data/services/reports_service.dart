@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:moinc/features/auth/network/api_client.dart';
 import 'package:moinc/features/auth/network/api_endpoints.dart';
 import 'package:moinc/features/reports/domain/models/reports_model.dart';
@@ -67,13 +68,12 @@ class ReportsService {
         'email': email,
         'accountno': accountNo,
       });
-
-      print(response.data);
+      if (kDebugMode) {
+        print(response.data);
+      }
 
       // Check for 404 status with client_not_found message (no reports scenario)
-      if (response.statusCode == 404 ||
-          (response.data['status'] == 404 &&
-              response.data['message'] == 'integration_missing')) {
+      if (response.statusCode == 404) {
         // Return empty list for "no reports" scenario
         return [];
       }
