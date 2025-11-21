@@ -380,72 +380,73 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                     const Spacer(),
 
                     // Glassmorphic Dial In and Call Me buttons
-                    // Text(
-                    //   "Please wait, your agent will be available in 30 seconds",
-                    //   style: TextStyle(color: Colors.white, fontSize: 16),
-                    // ),
-                    context.read<app_ctrl.AppCtrl>().publicAgentModel != null
-                        ? context
-                                    .read<app_ctrl.AppCtrl>()
-                                    .publicAgentModel!
-                                    .userFormEnabled !=
-                                "No"
-                            ? SingleChildScrollView(
-                              child: Visibility(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 24.0,
-                                  ),
-                                  child:
-                                      isCallActive
-                                          ? const ControlBar()
-                                          : Row(
-                                            children: [
-                                              Expanded(
-                                                child: _buildGlassmorphicButton(
-                                                  isDisabled:
-                                                      context
-                                                          .watch<
-                                                            app_ctrl.AppCtrl
-                                                          >()
-                                                          .isDiabledAgentControl,
-                                                  icon: const Icon(
-                                                    Icons.dialpad_rounded,
-                                                    color: Colors.white,
-                                                    size: 20,
-                                                  ),
-                                                  label: 'Dial In',
-                                                  onPressed: _dialIn,
-                                                ),
-                                              ),
-                                              const SizedBox(width: 16),
-                                              Expanded(
-                                                child: _buildGlassmorphicButton(
-                                                  isDisabled:
-                                                      context
-                                                          .watch<
-                                                            app_ctrl.AppCtrl
-                                                          >()
-                                                          .isDiabledAgentControl,
-                                                  icon: const Icon(
-                                                    Icons.call,
-                                                    color: Colors.white,
-                                                    size: 20,
-                                                  ),
-                                                  label: 'Call Me',
-                                                  onPressed:
-                                                      () => _showCallMeDialog(
-                                                        context,
-                                                      ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                ),
-                              ),
-                            )
-                            : const SizedBox.shrink()
-                        : const SizedBox.shrink(),
+
+                    //========> This working code is commented due to clinet demand <=========
+
+                    // context.read<app_ctrl.AppCtrl>().publicAgentModel != null
+                    //     ? context
+                    //                 .read<app_ctrl.AppCtrl>()
+                    //                 .publicAgentModel!
+                    //                 .userFormEnabled !=
+                    //             "No"
+                    //         ? SingleChildScrollView(
+                    //           child: Visibility(
+                    //             child: Padding(
+                    //               padding: const EdgeInsets.symmetric(
+                    //                 horizontal: 24.0,
+                    //               ),
+                    //               child:
+                    //                   isCallActive
+                    //                       ? const ControlBar()
+                    //                       : Row(
+                    //                         children: [
+                    //                           Expanded(
+                    //                             child: _buildGlassmorphicButton(
+                    //                               isDisabled:
+                    //                                   context
+                    //                                       .watch<
+                    //                                         app_ctrl.AppCtrl
+                    //                                       >()
+                    //                                       .isDiabledAgentControl,
+                    //                               icon: const Icon(
+                    //                                 Icons.dialpad_rounded,
+                    //                                 color: Colors.white,
+                    //                                 size: 20,
+                    //                               ),
+                    //                               label: 'Dial In',
+                    //                               onPressed: _dialIn,
+                    //                             ),
+                    //                           ),
+                    //                           const SizedBox(width: 16),
+                    //                           Expanded(
+                    //                             child: _buildGlassmorphicButton(
+                    //                               isDisabled:
+                    //                                   context
+                    //                                       .watch<
+                    //                                         app_ctrl.AppCtrl
+                    //                                       >()
+                    //                                       .isDiabledAgentControl,
+                    //                               icon: const Icon(
+                    //                                 Icons.call,
+                    //                                 color: Colors.white,
+                    //                                 size: 20,
+                    //                               ),
+                    //                               label: 'Call Me',
+                    //                               onPressed:
+                    //                                   () => _showCallMeDialog(
+                    //                                     context,
+                    //                                   ),
+                    //                             ),
+                    //                           ),
+                    //                         ],
+                    //                       ),
+                    //             ),
+                    //           ),
+                    //         )
+                    //         : const SizedBox.shrink()
+                    //     : const SizedBox.shrink(),
+
+                    //========> This working code is commented due to clinet demand <=========
                     const SizedBox(height: 24),
                   ],
                 ),
