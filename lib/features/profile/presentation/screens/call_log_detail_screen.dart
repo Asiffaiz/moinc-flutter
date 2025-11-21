@@ -305,12 +305,12 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
               expandedHeight: 200.0,
               floating: false,
               pinned: true,
-              backgroundColor: AppTheme.secondaryColor,
+              backgroundColor: AppTheme.primaryColor,
               stretch: true,
               flexibleSpace: FlexibleSpaceBar(
                 collapseMode: CollapseMode.parallax,
                 background: Container(
-                  color: AppTheme.secondaryColor,
+                  color: AppTheme.primaryColor,
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -322,8 +322,8 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                           backgroundColor:
                               widget.callLog.status == CallStatus.missed ||
                                       widget.callLog.status == CallStatus.failed
-                                  ? Colors.red.withOpacity(0.2)
-                                  : AppTheme.primaryColor.withOpacity(0.2),
+                                  ? Colors.white.withOpacity(0.2)
+                                  : Colors.white.withOpacity(0.2),
                           child:
                               isUnknown
                                   ? Icon(
@@ -333,8 +333,8 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                                                     CallStatus.missed ||
                                                 widget.callLog.status ==
                                                     CallStatus.failed
-                                            ? Colors.red
-                                            : AppTheme.primaryColor,
+                                            ? Colors.white
+                                            : Colors.white,
                                     size: 40,
                                   )
                                   :
@@ -359,8 +359,8 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                                                     CallStatus.missed ||
                                                 widget.callLog.status ==
                                                     CallStatus.failed
-                                            ? Colors.red
-                                            : AppTheme.primaryColor,
+                                            ? Colors.white
+                                            : Colors.white,
                                     size: 40,
                                   ),
 
@@ -394,7 +394,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                         Text(
                           callerSubtitle,
                           style: TextStyle(
-                            color: AppTheme.lightTextColor,
+                            color: Colors.white.withOpacity(0.8),
                             fontSize: 16,
                           ),
                         ),
@@ -413,7 +413,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                     horizontal: 40,
                     vertical: 8,
                   ),
-                  color: AppTheme.secondaryColor,
+                  color: Colors.white,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -440,8 +440,8 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                               style: TextStyle(
                                 color:
                                     _tabController.index == 0
-                                        ? Colors.black
-                                        : Colors.white,
+                                        ? Colors.white
+                                        : AppTheme.textColor,
                                 fontWeight:
                                     _tabController.index == 0
                                         ? FontWeight.bold
@@ -476,8 +476,8 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                               style: TextStyle(
                                 color:
                                     _tabController.index == 1
-                                        ? Colors.black
-                                        : Colors.white,
+                                        ? Colors.white
+                                        : AppTheme.textColor,
                                 fontWeight:
                                     _tabController.index == 1
                                         ? FontWeight.bold
@@ -532,7 +532,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                   width: 1,
                 ),
               ),
-              color: AppTheme.secondaryColor,
+              color: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
@@ -574,7 +574,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                               Text(
                                 callDirection,
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  color: AppTheme.textColor,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 18,
                                 ),
@@ -639,7 +639,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                     const Text(
                       'Audio Recording',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppTheme.textColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
@@ -671,10 +671,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                   padding: const EdgeInsets.all(20.0),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [
-                        AppTheme.secondaryColor,
-                        AppTheme.secondaryColor.withOpacity(0.8),
-                      ],
+                      colors: [Colors.white, Colors.white],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
@@ -731,7 +728,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                           ),
                           activeTrackColor: AppTheme.primaryColor,
                           inactiveTrackColor: Colors.grey.withOpacity(0.3),
-                          thumbColor: Colors.white,
+                          thumbColor: AppTheme.primaryColor,
                           overlayColor: AppTheme.primaryColor.withOpacity(0.2),
                         ),
                         child: Slider(
@@ -865,7 +862,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                 const Text(
                   'Call Details',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppTheme.textColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
@@ -899,7 +896,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                   width: 1,
                 ),
               ),
-              color: AppTheme.secondaryColor,
+              color: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
@@ -991,7 +988,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                 const Text(
                   'Call Transcription',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppTheme.textColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
@@ -1025,7 +1022,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                   width: 1,
                 ),
               ),
-              color: AppTheme.secondaryColor,
+              color: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
@@ -1066,10 +1063,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: AppTheme.lightTextColor,
-              fontSize: 16,
-            ),
+            style: TextStyle(color: AppTheme.lightTextColor, fontSize: 16),
           ),
           if (statusColor != null)
             Container(
@@ -1091,7 +1085,7 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
             Text(
               value,
               style: const TextStyle(
-                color: Colors.white,
+                color: AppTheme.textColor,
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
               ),
