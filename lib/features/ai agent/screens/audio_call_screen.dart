@@ -174,16 +174,16 @@ class _AudioCallScreenState extends State<AudioCallScreen>
             gradient: LinearGradient(
               colors: [
                 AppTheme.primaryColor,
-                AppTheme.primaryColor.withOpacity(0.8),
+                AppTheme.primaryColor.withValues(alpha: 0.8),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(30),
-            border: Border.all(color: Colors.white.withOpacity(0.8)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.8)),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.secondaryColor.withOpacity(0.3),
+                color: AppTheme.secondaryColor.withValues(alpha: 0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -193,8 +193,8 @@ class _AudioCallScreenState extends State<AudioCallScreen>
             color: Colors.transparent,
             child: InkWell(
               onTap: isDisabled ? null : onPressed,
-              splashColor: Colors.white.withOpacity(0.2),
-              highlightColor: Colors.white.withOpacity(0.1),
+              splashColor: Colors.white.withValues(alpha: 0.2),
+              highlightColor: Colors.white.withValues(alpha: 0.1),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 12,
@@ -259,42 +259,74 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                     const SizedBox(height: 40),
-                    // Audio Visualizer
-                    Container(
-                      height: 180,
-                      width: 180,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color.fromARGB(255, 62, 166, 214),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.purple.shade200.withOpacity(0.2),
-                            blurRadius: 15,
-                            spreadRadius: 4,
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Builder(
-                          builder: (context) {
-                            // Get connection state from AppCtrl for reliable state
-                            final connectionState =
-                                context
-                                    .watch<app_ctrl.AppCtrl>()
-                                    .connectionState;
-                            final isActive =
-                                connectionState ==
-                                    app_ctrl.ConnectionState.connected ||
-                                connectionState ==
-                                    app_ctrl.ConnectionState.connecting;
+                    // Audio Visualizer - Enhanced Design
+                    Builder(
+                      builder: (context) {
+                        final connectionState =
+                            context.watch<app_ctrl.AppCtrl>().connectionState;
+                        final isActive =
+                            connectionState ==
+                                app_ctrl.ConnectionState.connected ||
+                            connectionState ==
+                                app_ctrl.ConnectionState.connecting;
 
-                            return AnimatedBuilder(
-                              animation: _animationController,
-                              builder: (context, child) {
-                                return Stack(
+                        return AnimatedBuilder(
+                          animation: _animationController,
+                          builder: (context, child) {
+                            return Container(
+                              height: 200,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: RadialGradient(
+                                  colors: [
+                                    AppTheme.primaryColor.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                    AppTheme.primaryColor.withValues(
+                                      alpha: 0.1,
+                                    ),
+                                    Colors.transparent,
+                                  ],
+                                  stops: const [0.0, 0.5, 1.0],
+                                ),
+                              ),
+                              child: Center(
+                                child: Stack(
                                   alignment: Alignment.center,
                                   children: [
-                                    // Animated circles for audio visualization
+                                    // Outer glow ring
+                                    Container(
+                                      height: 180,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            AppTheme.primaryColor.withValues(
+                                              alpha: 0.6,
+                                            ),
+                                            const Color.fromARGB(
+                                              255,
+                                              62,
+                                              166,
+                                              214,
+                                            ).withValues(alpha: 0.8),
+                                          ],
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: AppTheme.primaryColor
+                                                .withValues(alpha: 0.4),
+                                            blurRadius: 20,
+                                            spreadRadius: 5,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // Animated pulse rings (when active)
                                     if (isActive)
                                       ...List.generate(3, (index) {
                                         return AnimatedOpacity(
@@ -304,33 +336,58 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                                           ),
                                           child: Container(
                                             width:
-                                                120 +
-                                                (index * 30 * _animation.value),
+                                                140 +
+                                                (index * 25 * _animation.value),
                                             height:
-                                                120 +
-                                                (index * 30 * _animation.value),
+                                                140 +
+                                                (index * 25 * _animation.value),
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              color: Colors.white.withOpacity(
-                                                0.1 - (index * 0.03),
+                                              border: Border.all(
+                                                color: Colors.white.withValues(
+                                                  alpha: 0.3 - (index * 0.08),
+                                                ),
+                                                width: 2,
                                               ),
                                             ),
                                           ),
                                         );
                                       }),
-                                    // Mic icon
-                                    Icon(
-                                      isActive ? Icons.mic : Icons.mic_none,
-                                      size: 80,
-                                      color: Colors.black,
+                                    // Inner circle with mic icon
+                                    Container(
+                                      height: 140,
+                                      width: 140,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: const Color.fromARGB(
+                                          255,
+                                          62,
+                                          166,
+                                          214,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(
+                                              alpha: 0.2,
+                                            ),
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Icon(
+                                        isActive ? Icons.mic : Icons.mic_none,
+                                        size: 70,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ],
-                                );
-                              },
+                                ),
+                              ),
                             );
                           },
-                        ),
-                      ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 40),
                     // Talk Now / Cancel Button
@@ -555,7 +612,9 @@ class _CallMeBottomSheetState extends State<_CallMeBottomSheet> {
                             color: AppTheme.primaryColor,
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.primaryColor.withOpacity(0.3),
+                                color: AppTheme.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                                 blurRadius: 10,
                                 spreadRadius: 2,
                               ),
