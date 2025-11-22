@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen>
           sizeFactor: _appBarAnimation,
           axisAlignment: -1.0,
           child: AppBar(
-            title: const Text('${AppConstants.appName} AI'),
+            title: const Text('${AppConstants.appName} Ai'),
             backgroundColor: AppTheme.primaryColor,
             foregroundColor: Colors.white,
             actions: [

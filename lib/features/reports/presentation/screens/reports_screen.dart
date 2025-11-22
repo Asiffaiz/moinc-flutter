@@ -464,14 +464,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
           child: Row(
             children: [
               icon != null
-                  ? Icon(icon, size: 16, color: Colors.black)
+                  ? Icon(icon, size: 16, color: Colors.white)
                   : const SizedBox(),
               const SizedBox(width: 4),
               Text(
                 label,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.black,
+                  color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
               ),

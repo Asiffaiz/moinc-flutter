@@ -3,7 +3,7 @@ class AppConstants {
   AppConstants._();
 
   // App name
-  static const String appName = 'Moinc';
+  static const String appName = 'Convoso';
 
   // Routes
   static const String splashRoute = '/';

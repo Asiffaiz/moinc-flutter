@@ -280,11 +280,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Logo
                         Center(
                           child: SizedBox(
-                            width: 110,
-                            height: 110,
+                            width: 140,
+                            height: 140,
                             child: Image.asset(
-                              'assets/images/logo1.png',
+                              'assets/images/splash_logo.png',
                               fit: BoxFit.contain,
+                              color: AppTheme.primaryColor,
                             ),
                           ),
                         ),

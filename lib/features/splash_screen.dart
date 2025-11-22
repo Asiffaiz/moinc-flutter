@@ -140,73 +140,52 @@ class _SplashScreenState extends State<SplashScreen>
         }
       },
       child: Scaffold(
-        backgroundColor: AppTheme.secondaryColor,
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                AppTheme.secondaryColor,
-                Color(0xFF00142A), // Darker shade of navy blue
-              ],
+        body: Stack(
+          children: [
+            // Background Image
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/splash_background.png',
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: SafeArea(
-            child: Center(
-              child: AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, child) {
-                  return FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: ScaleTransition(
-                      scale: _scaleAnimation,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Logo
-                          Center(
-                            child: SizedBox(
-                              width: 180,
-                              height: 180,
+            // Content
+            SafeArea(
+              child: Center(
+                child: AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, child) {
+                    return FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Logo
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
                               child: Image.asset(
-                                'assets/images/logo1.png',
+                                'assets/images/splash_logo.png',
+                                width: MediaQuery.of(context).size.width * 0.7,
                                 fit: BoxFit.contain,
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 40),
-                          // App name
-                          Text(
-                            AppConstants.appName,
-                            style: AppTheme.headingLarge.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.5,
+                            const SizedBox(height: 60),
+                            // Loading indicator
+                            const SpinKitThreeBounce(
+                              color: AppTheme.primaryColor,
+                              size: 30.0,
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          // Tagline
-                          Text(
-                            'Your Personal AI Assistant',
-                            style: AppTheme.bodyLarge.copyWith(
-                              color: AppTheme.lightTextColor,
-                            ),
-                          ),
-                          const SizedBox(height: 60),
-                          // Loading indicator
-                          const SpinKitThreeBounce(
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

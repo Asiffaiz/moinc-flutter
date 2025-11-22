@@ -22,7 +22,7 @@
 
 
     <application
-        android:label="moinc"
+        android:label="Convoso Ai"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
