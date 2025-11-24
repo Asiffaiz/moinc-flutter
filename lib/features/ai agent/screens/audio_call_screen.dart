@@ -504,6 +504,7 @@ class _AudioCallScreenState extends State<AudioCallScreen>
                     //     : const SizedBox.shrink(),
 
                     //========> This working code is commented due to clinet demand <=========
+                    isCallActive ? const ControlBar() : const SizedBox.shrink(),
                     const SizedBox(height: 24),
                   ],
                 ),
