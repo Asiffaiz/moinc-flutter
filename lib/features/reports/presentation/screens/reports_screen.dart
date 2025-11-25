@@ -299,10 +299,38 @@ class _ReportsScreenState extends State<ReportsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 43, 68, 78),
+                      border: Border.all(
+                        color:
+                            report.status == 'processed'
+                                ? Colors.green
+                                : Colors.orange,
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      capitalize(report.status),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+
                 Row(
                   children: [
                     Image.asset(
@@ -349,53 +377,20 @@ class _ReportsScreenState extends State<ReportsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildActionButton(
-                      icon: null,
-                      labelColor: Colors.white,
-                      label: capitalize(report.status),
-                      fillColor: const Color.fromARGB(255, 43, 68, 78),
-                      color:
-                          report.status == 'processed'
-                              ? Colors.green
-                              : Colors.orange,
-                      onPressed: () {},
-                    ),
-
-                    _buildActionButton(
-                      icon: null,
-                      labelColor: Colors.white,
-                      fillColor: Colors.green,
-                      label:
-                          report.reportStatus == 1
-                              ? 'Published'
-                              : 'Unpublished',
-                      color:
-                          report.reportStatus == 1
-                              ? Colors.green
-                              : Colors.orange,
-                      onPressed: () {},
-                    ),
-
-                    _buildActionButton(
-                      icon: Icons.visibility,
-                      labelColor: Colors.black,
-                      fillColor: Colors.transparent,
-                      label: 'View',
-                      color: AppTheme.primaryColor,
-                      onPressed:
-                          report.status == 'processed' &&
-                                  report.reportStatus == 1
-                              ? () {
-                                context.read<ReportsBloc>().add(
-                                  GetReportUrl(reportId: report.id),
-                                );
-                              }
-                              : null,
-                    ),
-                  ],
+                _buildActionButton(
+                  icon: Icons.visibility,
+                  labelColor: Colors.black,
+                  fillColor: Colors.transparent,
+                  label: 'View',
+                  color: AppTheme.primaryColor,
+                  onPressed:
+                      report.status == 'processed' && report.reportStatus == 1
+                          ? () {
+                            context.read<ReportsBloc>().add(
+                              GetReportUrl(reportId: report.id),
+                            );
+                          }
+                          : null,
                 ),
               ],
             ),
@@ -456,6 +451,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             borderRadius: BorderRadius.circular(4),
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               icon != null
                   ? Icon(icon, size: 16, color: Colors.black)
@@ -464,7 +460,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 16,
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
                 ),

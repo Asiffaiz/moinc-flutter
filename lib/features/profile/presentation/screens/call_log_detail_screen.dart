@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -960,26 +961,34 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
       transcript = (widget.callLog as TwilioCallLog).transcript;
     }
 
-    // If no transcript available, show a message
+    // If no transcript available, show empty list
     if (transcript == null || transcript.isEmpty) {
-      // Simple dummy text for demonstration
-      transcript = "No transcription available for this call.";
+      return _buildTranscriptionContent([]);
     }
 
-    // Create a simple transcription data with just the text
-    final List<Map<String, dynamic>> transcriptionData = [
-      {
-        'speaker': '', // Empty speaker
-        'text': transcript,
-        'timestamp': '', // Empty timestamp
-      },
-    ];
+    List<Map<String, dynamic>> transcriptionData = [];
+
+    try {
+      // Try to parse as JSON
+      final List<dynamic> parsed = jsonDecode(transcript);
+      transcriptionData =
+          parsed.map((e) => Map<String, dynamic>.from(e)).toList();
+    } catch (e) {
+      // Fallback for plain text
+      transcriptionData = [
+        {
+          'speaker': '', // Empty speaker
+          'text': transcript,
+        },
+      ];
+    }
 
     return _buildTranscriptionContent(transcriptionData);
   }
 
   Widget _buildTranscriptionContent(List<Map<String, dynamic>> transcription) {
     return ListView(
+      shrinkWrap: true,
       padding: const EdgeInsets.all(16.0),
       children: [
         Column(
@@ -1044,9 +1053,8 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                     else
                       for (final entry in transcription)
                         _buildTranscriptionEntry(
-                          entry['speaker'],
-                          entry['text'],
-                          entry['timestamp'],
+                          entry['speaker'] ?? '',
+                          entry['text'] ?? '',
                         ),
                   ],
                 ),
@@ -1101,21 +1109,62 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
     );
   }
 
-  Widget _buildTranscriptionEntry(
-    String speaker,
-    String text,
-    String timestamp,
-  ) {
-    // Simplified version - just show the transcription text
+  Widget _buildTranscriptionEntry(String speaker, String text) {
+    // If speaker is empty, it's a simple text transcription (old format)
+    if (speaker.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.9),
+            fontSize: 16,
+            height: 1.5,
+          ),
+        ),
+      );
+    }
+
+    final isAgent = speaker.toLowerCase() == 'agent';
+    final isCustomer = speaker.toLowerCase() == 'customer';
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: Colors.white.withOpacity(0.9),
-          fontSize: 16,
-          height: 1.5,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4.0),
+            child: Text(
+              speaker,
+              style: TextStyle(
+                color:
+                    isAgent
+                        ? AppTheme.primaryColor
+                        : (isCustomer ? Colors.blue : Colors.white70),
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white.withOpacity(0.1)),
+            ),
+            child: Text(
+              text,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.9),
+                fontSize: 16,
+                height: 1.5,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
