@@ -14,6 +14,7 @@ import 'package:moinc/features/auth/presentation/signup_screen.dart';
 
 import 'package:moinc/utils/custom_toast.dart';
 import 'package:moinc/utils/form_label.dart';
+import 'package:moinc/utils/validators.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -120,12 +121,12 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.apiAuthenticated) {
-          setState(() {
-            _isLoading = false;
-          });
-
           try {
             appCtrl.fetchAgent().then((value) {
+              setState(() {
+                _isLoading = false;
+              });
+
               // Navigate to dashboard after a short delay
               Future.delayed(Duration.zero, () {
                 // Check if this is a Google Sign-In
@@ -148,6 +149,9 @@ class _LoginScreenState extends State<LoginScreen> {
               });
             });
           } catch (e) {
+            setState(() {
+              _isLoading = false;
+            });
             // Log error but continue navigation
             debugPrint('Error fetching agent: $e');
           }
@@ -342,6 +346,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: AppTheme.textColor,
                               ),
                             ),
+                            validator: Validators.validateEmail,
                           ),
                           const SizedBox(height: 20),
 
