@@ -119,12 +119,12 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.apiAuthenticated) {
-          setState(() {
-            _isLoading = false;
-          });
-
           try {
             appCtrl.fetchAgent().then((value) {
+              setState(() {
+                _isLoading = false;
+              });
+
               // Navigate to dashboard after a short delay
               Future.delayed(Duration.zero, () {
                 // Check if this is a Google Sign-In
@@ -147,6 +147,10 @@ class _LoginScreenState extends State<LoginScreen> {
               });
             });
           } catch (e) {
+            setState(() {
+              _isLoading = false;
+            });
+
             // Log error but continue navigation
             debugPrint('Error fetching agent: $e');
           }
