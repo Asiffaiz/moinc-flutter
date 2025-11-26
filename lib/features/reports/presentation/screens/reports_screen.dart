@@ -424,9 +424,7 @@ class ReportsScreenState extends State<ReportsScreen> {
             }
 
             // If dashboard report found and it's processed, fetch URL and show inline
-            if (dashboardReport != null &&
-                dashboardReport.status == 'processed' &&
-                dashboardReport.reportStatus == 1) {
+            if (dashboardReport != null) {
               _hasShownDashboardReport = true; // Mark as shown
               _isLoadingDashboardUrl =
                   true; // Mark that we're loading dashboard URL
