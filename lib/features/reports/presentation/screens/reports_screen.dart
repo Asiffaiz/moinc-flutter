@@ -337,53 +337,71 @@ class ReportsScreenState extends State<ReportsScreen> {
 
     // Show dashboard webview inline if enabled
     if (_showDashboardWebView && _dashboardWebViewController != null) {
-      return Scaffold(
-        backgroundColor: AppTheme.backgroundColor,
-        body: Stack(
-          children: [
-            WebViewWidget(controller: _dashboardWebViewController!),
-            if (_isWebViewLoading) DashboardShimmer(),
-            // Custom back button positioned at top
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 1,
-              left: 8,
-              child: SafeArea(
-                child: Material(
-                  color: Colors.black.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(8),
-                  child: InkWell(
-                    onTap: _showReportsList,
+      return WillPopScope(
+        onWillPop: () async {
+          // Handle hardware back button
+          // First check if webview can go back
+          if (await _dashboardWebViewController!.canGoBack()) {
+            _dashboardWebViewController!.goBack();
+            return false; // Don't pop the route
+          } else {
+            // If webview can't go back, show reports list
+            _showReportsList();
+            return false; // Don't pop the route, we're handling it manually
+          }
+        },
+        child: Scaffold(
+          backgroundColor: AppTheme.backgroundColor,
+          body: Stack(
+            children: [
+              WebViewWidget(controller: _dashboardWebViewController!),
+              if (_isWebViewLoading) DashboardShimmer(),
+              // Custom back button positioned at top
+              Positioned(
+                top: MediaQuery.of(context).padding.top + 1,
+                left: 8,
+                child: SafeArea(
+                  child: Material(
+                    color: Colors.black.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.arrow_back, color: Colors.white, size: 18),
-                          SizedBox(width: 4),
-                          Text(
-                            'Back',
-                            style: TextStyle(
+                    child: InkWell(
+                      onTap: _showReportsList,
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.arrow_back,
                               color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                              size: 18,
                             ),
-                          ),
-                        ],
+                            SizedBox(width: 4),
+                            Text(
+                              'Back',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
