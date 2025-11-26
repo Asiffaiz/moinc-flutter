@@ -8,6 +8,7 @@ class ReportsModel extends Equatable {
   final int reportStatus;
   final String status;
   final String url;
+  final String isDashboard;
 
   const ReportsModel({
     required this.id,
@@ -17,6 +18,7 @@ class ReportsModel extends Equatable {
     required this.reportStatus,
     required this.status,
     required this.url,
+    required this.isDashboard,
   });
 
   factory ReportsModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class ReportsModel extends Equatable {
       reportStatus: json['report_status'] ?? 0,
       status: json['status'] ?? '',
       url: json['url'] ?? '',
+      isDashboard: json['is_dashboard'] ?? '',
     );
   }
 
@@ -41,5 +44,6 @@ class ReportsModel extends Equatable {
     reportStatus,
     status,
     url,
+    isDashboard,
   ];
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:moinc/config/constants.dart';
 import 'package:moinc/config/theme.dart';
 import 'package:moinc/features/dashboard/presentation/widgets/dashboard_home_content.dart';
-import 'package:moinc/features/documents/presentation/screens/documents_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/call_logs_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/notifications_screen.dart';
 import 'package:moinc/features/profile/presentation/screens/profile_screen_home.dart';
@@ -24,6 +23,9 @@ class _HomeScreenState extends State<HomeScreen>
   late Animation<double> _appBarAnimation;
 
   app_ctrl.ConnectionState? _previousConnectionState;
+  
+  // GlobalKey to access ReportsScreen
+  final GlobalKey<State<ReportsScreen>> _reportsScreenKey = GlobalKey<State<ReportsScreen>>();
 
   @override
   void initState() {
@@ -124,12 +126,21 @@ class _HomeScreenState extends State<HomeScreen>
       bottomNavigationBar: SizeTransition(
         sizeFactor: _appBarAnimation,
         axisAlignment: 1.0,
-        child: BottomNavigationBar(
+          child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
             setState(() {
               _currentIndex = index;
             });
+            // Load reports when Reports tab is selected (index 2)
+            if (index == 2) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                final state = _reportsScreenKey.currentState;
+                if (state != null && state is ReportsScreenState) {
+                  state.loadReportsIfNeeded();
+                }
+              });
+            }
           },
           type: BottomNavigationBarType.fixed,
           items: [
@@ -179,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildReportsTab() {
-    return const ReportsScreen();
+    return ReportsScreen(key: _reportsScreenKey);
   }
 
   Widget _buildDashboardTab() {

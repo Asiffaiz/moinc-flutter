@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -6,20 +8,54 @@ import 'package:moinc/features/reports/domain/models/reports_model.dart';
 import 'package:moinc/features/reports/presentation/bloc/reports_bloc.dart';
 import 'package:moinc/features/reports/presentation/screens/report_webview_screen.dart';
 import 'package:moinc/utils/custom_toast.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class ReportsScreen extends StatefulWidget {
-  const ReportsScreen({super.key});
+  const ReportsScreen({super.key, this.autoLoad = false});
+
+  final bool autoLoad;
 
   @override
-  State<ReportsScreen> createState() => _ReportsScreenState();
+  State<ReportsScreen> createState() => ReportsScreenState();
 }
 
-class _ReportsScreenState extends State<ReportsScreen> {
+class ReportsScreenState extends State<ReportsScreen> {
+  bool _hasLoaded = false;
+  bool _hasShownDashboardReport =
+      false; // Track if dashboard report has been shown
+  bool _showDashboardWebView = false; // Track if we should show webview inline
+  bool _isLoadingDashboardUrl = false; // Track if we're loading dashboard URL
+  String? _dashboardReportUrl;
+  WebViewController? _dashboardWebViewController;
+  bool _isWebViewLoading = false;
+  Timer? _sessionTimer;
+  int _remainingSeconds = 10 * 60; // 10 minutes
+  bool _isDialogShown = false;
+  OverlayEntry? _overlayEntry;
+
   @override
   void initState() {
     super.initState();
-    // Load reports from API
-    context.read<ReportsBloc>().add(LoadReportsData());
+    // Only load reports if autoLoad is true
+    if (widget.autoLoad) {
+      _loadReports();
+    }
+  }
+
+  @override
+  void dispose() {
+    _sessionTimer?.cancel();
+    _overlayEntry?.remove();
+    super.dispose();
+  }
+
+  // Load reports from API
+  void _loadReports() {
+    if (!_hasLoaded) {
+      _hasLoaded = true;
+      context.read<ReportsBloc>().add(LoadReportsData());
+    }
   }
 
   // Refresh reports from API
@@ -27,37 +63,401 @@ class _ReportsScreenState extends State<ReportsScreen> {
     context.read<ReportsBloc>().add(LoadReportsData());
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  // Public method to load reports (called when tab becomes visible)
+  void loadReportsIfNeeded() {
+    if (!_hasLoaded) {
+      _loadReports();
+    }
+  }
+
+  // Initialize dashboard webview
+  void _initDashboardWebView() {
+    if (_dashboardReportUrl == null) return;
+
+    _dashboardWebViewController =
+        WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..setNavigationDelegate(
+            NavigationDelegate(
+              onPageStarted: (String url) {
+                setState(() {
+                  _isWebViewLoading = true;
+                });
+              },
+              onPageFinished: (String url) {
+                setState(() {
+                  _isWebViewLoading = false;
+                });
+              },
+              onWebResourceError: (WebResourceError error) {
+                debugPrint('WebView error: ${error.description}');
+              },
+            ),
+          )
+          ..loadRequest(Uri.parse(_dashboardReportUrl!));
+
+    _startSessionTimer();
+  }
+
+  // Start session timer for dashboard webview
+  void _startSessionTimer() {
+    if (_sessionTimer != null && _sessionTimer!.isActive) {
+      _sessionTimer!.cancel();
+    }
+
+    _remainingSeconds = 10 * 60; // 10 minutes
+    _isDialogShown = false;
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+
+    _sessionTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted && _showDashboardWebView) {
+        setState(() {
+          _remainingSeconds--;
+        });
+
+        // Show warning when 30 seconds left
+        if (_remainingSeconds == 30 && !_isDialogShown) {
+          _showExpiryWarningOverlay();
+        }
+
+        // Auto-refresh when time is up
+        if (_remainingSeconds <= 0 && !_isDialogShown) {
+          timer.cancel();
+          _refreshDashboardWebView();
+        }
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  // Refresh dashboard webview
+  void _refreshDashboardWebView() {
+    _sessionTimer?.cancel();
+    _remainingSeconds = 10 * 60;
+    _isDialogShown = false;
+    _dashboardWebViewController?.reload();
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted && _showDashboardWebView) {
+        _startSessionTimer();
+      }
+    });
+  }
+
+  // Show expiry warning overlay
+  void _showExpiryWarningOverlay() {
+    _isDialogShown = true;
+    OverlayState? overlayState = Overlay.of(context);
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => _buildSessionExpiryOverlay(),
+    );
+
+    overlayState.insert(_overlayEntry!);
+  }
+
+  // Build session expiry overlay
+  Widget _buildSessionExpiryOverlay() {
+    final minutes = (_remainingSeconds ~/ 60).toString().padLeft(2, '0');
+    final seconds = (_remainingSeconds % 60).toString().padLeft(2, '0');
+    final formattedTime = "$minutes:$seconds";
+    final screenSize = MediaQuery.of(context).size;
+
+    return Material(
+      type: MaterialType.transparency,
+      child: Container(
+        width: screenSize.width,
+        height: screenSize.height,
+        color: Colors.black.withOpacity(0.5),
+        child: Center(
+          child: Container(
+            width: screenSize.width * 0.9,
+            constraints: const BoxConstraints(maxWidth: 400),
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 20,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.timer, color: Colors.grey, size: 24),
+                      SizedBox(width: 10),
+                      Text(
+                        'Session Expiring Soon',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Icon(Icons.access_time, size: 50, color: Colors.blueGrey),
+                const SizedBox(height: 16),
+                const Text(
+                  'Your session will expire in:',
+                  style: TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  formattedTime,
+                  style: const TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Do you want to stay signed in and extend your session?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _overlayEntry?.remove();
+                              _overlayEntry = null;
+                              _isDialogShown = false;
+                              setState(() {
+                                _showDashboardWebView = false;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.redAccent,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.close, size: 16),
+                                SizedBox(width: 8),
+                                Text('Close', style: TextStyle(fontSize: 14)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: SizedBox(
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _overlayEntry?.remove();
+                              _overlayEntry = null;
+                              _isDialogShown = false;
+                              _refreshDashboardWebView();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.primaryColor,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.refresh, size: 16),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Extend Session',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Switch back to reports list
+  void _showReportsList() {
+    setState(() {
+      _showDashboardWebView = false;
+    });
+    _sessionTimer?.cancel();
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  // Build black shade shimmer loader
+  Widget _buildBlackShimmer() {
+    return Container(
+      color: Colors.black,
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade900,
+        highlightColor: Colors.grey.shade700,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.black,
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    // Show loading when fetching dashboard URL (don't show reports list)
+    if (_isLoadingDashboardUrl) {
+      return Scaffold(
+        backgroundColor: AppTheme.backgroundColor,
+        body: const Center(
+          child: CircularProgressIndicator(color: AppTheme.primaryColor),
+        ),
+      );
+    }
+
+    // Show dashboard webview inline if enabled
+    if (_showDashboardWebView && _dashboardWebViewController != null) {
+      return Scaffold(
+        backgroundColor: AppTheme.backgroundColor,
+        body: Stack(
+          children: [
+            WebViewWidget(controller: _dashboardWebViewController!),
+            if (_isWebViewLoading) _buildBlackShimmer(),
+            // Custom back button positioned at top
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 8,
+              left: 8,
+              child: SafeArea(
+                child: Material(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(8),
+                  child: InkWell(
+                    onTap: _showReportsList,
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.arrow_back, color: Colors.white, size: 18),
+                          SizedBox(width: 4),
+                          Text(
+                            'Back',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   title: const Text('Reports'),
-      //   backgroundColor: AppTheme.secondaryColor,
-      //   foregroundColor: AppTheme.primaryColor,
-      //   // leading: CustomBackButton(
-      //   //   onTap: () {
-      //   //     Navigator.pop(context); // Go back
-      //   //   },
-      //   // ),
-      // ),
       body: BlocConsumer<ReportsBloc, ReportsState>(
         listener: (context, state) {
+          // Check for dashboard report when reports are loaded (first time only)
+          if (state is ReportsLoaded && !_hasShownDashboardReport) {
+            // Find report with isDashboard = "Yes"
+            ReportsModel? dashboardReport;
+            try {
+              dashboardReport = state.reportsData.firstWhere(
+                (report) => report.isDashboard.toLowerCase() == 'yes',
+              );
+            } catch (e) {
+              // No dashboard report found, continue with normal flow
+              dashboardReport = null;
+            }
+
+            // If dashboard report found and it's processed, fetch URL and show inline
+            if (dashboardReport != null &&
+                dashboardReport.status == 'processed' &&
+                dashboardReport.reportStatus == 1) {
+              _hasShownDashboardReport = true; // Mark as shown
+              _isLoadingDashboardUrl =
+                  true; // Mark that we're loading dashboard URL
+              // Automatically fetch URL for dashboard report
+              context.read<ReportsBloc>().add(
+                GetReportUrl(reportId: dashboardReport.id),
+              );
+            }
+          }
+
           if (state is ReportUrlLoaded) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (context) =>
-                        ReportWebViewScreen(url: state.url, title: state.title),
-              ),
-            );
+            // Check if this is from dashboard report (first time) or manual selection
+            if (_isLoadingDashboardUrl) {
+              // This is dashboard report, show inline
+              _isLoadingDashboardUrl = false;
+              setState(() {
+                _dashboardReportUrl = state.url;
+                _showDashboardWebView = true;
+              });
+              _initDashboardWebView();
+            } else {
+              // This is a manual selection, navigate to webview screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => ReportWebViewScreen(
+                        url: state.url,
+                        title: state.title,
+                      ),
+                ),
+              );
+            }
           }
 
           if (state is ReportUrlError) {
