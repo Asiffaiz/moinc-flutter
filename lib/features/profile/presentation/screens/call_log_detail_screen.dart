@@ -1041,89 +1041,140 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                 ),
               ),
               color: AppTheme.secondaryColor,
-              child:
-                  summary != null && summary.isNotEmpty
-                      ? Theme(
-                        data: Theme.of(
-                          context,
-                        ).copyWith(dividerColor: Colors.transparent),
-                        child: ExpansionTile(
-                          initiallyExpanded: false,
-                          tilePadding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 12,
-                          ),
-                          childrenPadding: const EdgeInsets.only(
-                            bottom: 20,
-                            left: 20,
-                            right: 20,
-                          ),
-                          title: const Text(
-                            'Summary',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              summary,
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
-                                fontSize: 14,
-                                height: 1.5,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Material(
+                  color: Colors.transparent,
+                  clipBehavior: Clip.antiAlias,
+                  child:
+                      summary != null && summary.isNotEmpty
+                          ? Theme(
+                            data: Theme.of(
+                              context,
+                            ).copyWith(dividerColor: Colors.transparent),
+                            child: ExpansionTile(
+                              initiallyExpanded: false,
+                              tilePadding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 12,
                               ),
-                              maxLines: 10,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          iconColor: AppTheme.primaryColor,
-                          collapsedIconColor: AppTheme.primaryColor,
-                          children: [
-                            if (transcription.isEmpty)
-                              const Padding(
-                                padding: EdgeInsets.all(16.0),
+                              childrenPadding: const EdgeInsets.only(
+                                bottom: 20,
+                                left: 20,
+                                right: 20,
+                                top: 8,
+                              ),
+                              controlAffinity: ListTileControlAffinity.trailing,
+                              
+                              title: const Text(
+                                'Summary',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              subtitle: Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 8.0,
+                                  right: 24.0,
+                                ),
                                 child: Text(
-                                  'No transcription available for this call',
-                                  style: TextStyle(color: Colors.white70),
-                                ),
-                              )
-                            else
-                              ...transcription.map(
-                                (entry) => _buildTranscriptionEntry(
-                                  entry['speaker'] ?? '',
-                                  entry['text'] ?? '',
+                                  summary,
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.9),
+                                    fontSize: 14,
+                                    height: 1.5,
+                                  ),
+                                  // maxLines: 10,
+                                  // overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                          ],
-                        ),
-                      )
-                      : Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (transcription.isEmpty)
-                              const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Text(
-                                    'No transcription available for this call',
-                                    style: TextStyle(color: Colors.white70),
+                              iconColor: AppTheme.primaryColor,
+                              collapsedIconColor: AppTheme.primaryColor,
+                              children: [
+                                // Title for expanded section
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 16.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        'Full Transcription',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      // Container(
+                                      //   padding: const EdgeInsets.symmetric(
+                                      //     horizontal: 12,
+                                      //     vertical: 6,
+                                      //   ),
+                                      //   decoration: BoxDecoration(
+                                      //     color: AppTheme.primaryColor
+                                      //         .withOpacity(0.1),
+                                      //     borderRadius: BorderRadius.circular(
+                                      //       16,
+                                      //     ),
+                                      //   ),
+                                      //   child: Text(
+                                      //     widget.callLog.formattedDuration,
+                                      //     style: TextStyle(
+                                      //       color: AppTheme.primaryColor,
+                                      //       fontWeight: FontWeight.bold,
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                    ],
                                   ),
                                 ),
-                              )
-                            else
-                              for (final entry in transcription)
-                                _buildTranscriptionEntry(
-                                  entry['speaker'] ?? '',
-                                  entry['text'] ?? '',
-                                ),
-                          ],
-                        ),
-                      ),
+                                if (transcription.isEmpty)
+                                  const Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: Text(
+                                      'No transcription available for this call',
+                                      style: TextStyle(color: Colors.white70),
+                                    ),
+                                  )
+                                else
+                                  ...transcription.map(
+                                    (entry) => _buildTranscriptionEntry(
+                                      entry['speaker'] ?? '',
+                                      entry['text'] ?? '',
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          )
+                          : Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (transcription.isEmpty)
+                                  const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                      child: Text(
+                                        'No transcription available for this call',
+                                        style: TextStyle(color: Colors.white70),
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  for (final entry in transcription)
+                                    _buildTranscriptionEntry(
+                                      entry['speaker'] ?? '',
+                                      entry['text'] ?? '',
+                                    ),
+                              ],
+                            ),
+                          ),
+                ),
+              ),
             ),
           ],
         ),
