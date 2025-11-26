@@ -23,9 +23,10 @@ class _HomeScreenState extends State<HomeScreen>
   late Animation<double> _appBarAnimation;
 
   app_ctrl.ConnectionState? _previousConnectionState;
-  
+
   // GlobalKey to access ReportsScreen
-  final GlobalKey<State<ReportsScreen>> _reportsScreenKey = GlobalKey<State<ReportsScreen>>();
+  final GlobalKey<State<ReportsScreen>> _reportsScreenKey =
+      GlobalKey<State<ReportsScreen>>();
 
   @override
   void initState() {
@@ -126,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen>
       bottomNavigationBar: SizeTransition(
         sizeFactor: _appBarAnimation,
         axisAlignment: 1.0,
-          child: BottomNavigationBar(
+        child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
             setState(() {

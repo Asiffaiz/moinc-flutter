@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:moinc/config/theme.dart';
+import 'package:moinc/features/dashboard/presentation/widgets/dashboard_shimmer.dart';
 import 'package:moinc/features/reports/domain/models/reports_model.dart';
 import 'package:moinc/features/reports/presentation/bloc/reports_bloc.dart';
 import 'package:moinc/features/reports/presentation/screens/report_webview_screen.dart';
 import 'package:moinc/utils/custom_toast.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ReportsScreen extends StatefulWidget {
@@ -96,7 +96,7 @@ class ReportsScreenState extends State<ReportsScreen> {
           )
           ..loadRequest(Uri.parse(_dashboardReportUrl!));
 
-    _startSessionTimer();
+    //  _startSessionTimer();
   }
 
   // Start session timer for dashboard webview
@@ -140,7 +140,7 @@ class ReportsScreenState extends State<ReportsScreen> {
     _dashboardWebViewController?.reload();
     Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted && _showDashboardWebView) {
-        _startSessionTimer();
+        //  _startSessionTimer();
       }
     });
   }
@@ -323,22 +323,6 @@ class ReportsScreenState extends State<ReportsScreen> {
     _overlayEntry = null;
   }
 
-  // Build black shade shimmer loader
-  Widget _buildBlackShimmer() {
-    return Container(
-      color: Colors.black,
-      child: Shimmer.fromColors(
-        baseColor: Colors.grey.shade900,
-        highlightColor: Colors.grey.shade700,
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.black,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     // Show loading when fetching dashboard URL (don't show reports list)
@@ -358,10 +342,10 @@ class ReportsScreenState extends State<ReportsScreen> {
         body: Stack(
           children: [
             WebViewWidget(controller: _dashboardWebViewController!),
-            if (_isWebViewLoading) _buildBlackShimmer(),
+            if (_isWebViewLoading) DashboardShimmer(),
             // Custom back button positioned at top
             Positioned(
-              top: MediaQuery.of(context).padding.top + 8,
+              top: MediaQuery.of(context).padding.top + 1,
               left: 8,
               child: SafeArea(
                 child: Material(
@@ -373,7 +357,7 @@ class ReportsScreenState extends State<ReportsScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
-                        vertical: 8,
+                        vertical: 4,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.5),
@@ -468,8 +452,10 @@ class ReportsScreenState extends State<ReportsScreen> {
           }
         },
         builder: (context, state) {
-          // Show loading indicator
-          if (state is ReportsLoading) {
+          // Show loading indicator for initial state, when loading, or if reports haven't been loaded yet
+          if (state is ReportsInitial ||
+              state is ReportsLoading ||
+              (!_hasLoaded && state.reportsData.isEmpty)) {
             return const Center(
               child: CircularProgressIndicator(color: AppTheme.primaryColor),
             );
@@ -477,6 +463,13 @@ class ReportsScreenState extends State<ReportsScreen> {
 
           // Show URL loading indicator but keep the list visible in background
           if (state is ReportUrlLoading) {
+            // If loading dashboard URL, show only loading indicator (no reports list)
+            if (_isLoadingDashboardUrl) {
+              return const Center(
+                child: CircularProgressIndicator(color: AppTheme.primaryColor),
+              );
+            }
+            // For manual report selection, show list with loading overlay
             if (state.reportsData.isNotEmpty) {
               return Stack(
                 children: [

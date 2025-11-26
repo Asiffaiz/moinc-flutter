@@ -253,7 +253,7 @@ class _ReportWebViewScreenState extends State<ReportWebViewScreen> {
   void initState() {
     super.initState();
     _initWebView();
-    _startSessionTimer();
+    //  _startSessionTimer();
   }
 
   @override
@@ -312,7 +312,7 @@ class _ReportWebViewScreenState extends State<ReportWebViewScreen> {
     // Start a new timer after a short delay to ensure the page has started reloading
     Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) {
-        _startSessionTimer();
+        //  _startSessionTimer();
       }
     });
   }
