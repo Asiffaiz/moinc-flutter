@@ -957,13 +957,16 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
   Widget _buildTranscriptionTab() {
     // Check if this is a Twilio call with transcript
     String? transcript;
+    String? summary;
     if (widget.callLog is TwilioCallLog) {
-      transcript = (widget.callLog as TwilioCallLog).transcript;
+      final twilioLog = widget.callLog as TwilioCallLog;
+      transcript = twilioLog.transcript;
+      summary = twilioLog.summarizeTranscript;
     }
 
     // If no transcript available, show empty list
     if (transcript == null || transcript.isEmpty) {
-      return _buildTranscriptionContent([]);
+      return _buildTranscriptionContent([], summary: summary);
     }
 
     List<Map<String, dynamic>> transcriptionData = [];
@@ -983,10 +986,13 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
       ];
     }
 
-    return _buildTranscriptionContent(transcriptionData);
+    return _buildTranscriptionContent(transcriptionData, summary: summary);
   }
 
-  Widget _buildTranscriptionContent(List<Map<String, dynamic>> transcription) {
+  Widget _buildTranscriptionContent(
+    List<Map<String, dynamic>> transcription, {
+    String? summary,
+  }) {
     return ListView(
       shrinkWrap: true,
       padding: const EdgeInsets.all(16.0),
@@ -1035,30 +1041,89 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                 ),
               ),
               color: AppTheme.secondaryColor,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (transcription.isEmpty)
-                      const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            'No transcription available for this call',
-                            style: TextStyle(color: Colors.white70),
+              child:
+                  summary != null && summary.isNotEmpty
+                      ? Theme(
+                        data: Theme.of(
+                          context,
+                        ).copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          initiallyExpanded: false,
+                          tilePadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
                           ),
+                          childrenPadding: const EdgeInsets.only(
+                            bottom: 20,
+                            left: 20,
+                            right: 20,
+                          ),
+                          title: const Text(
+                            'Summary',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              summary,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 14,
+                                height: 1.5,
+                              ),
+                              maxLines: 10,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          iconColor: AppTheme.primaryColor,
+                          collapsedIconColor: AppTheme.primaryColor,
+                          children: [
+                            if (transcription.isEmpty)
+                              const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text(
+                                  'No transcription available for this call',
+                                  style: TextStyle(color: Colors.white70),
+                                ),
+                              )
+                            else
+                              ...transcription.map(
+                                (entry) => _buildTranscriptionEntry(
+                                  entry['speaker'] ?? '',
+                                  entry['text'] ?? '',
+                                ),
+                              ),
+                          ],
                         ),
                       )
-                    else
-                      for (final entry in transcription)
-                        _buildTranscriptionEntry(
-                          entry['speaker'] ?? '',
-                          entry['text'] ?? '',
+                      : Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (transcription.isEmpty)
+                              const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Text(
+                                    'No transcription available for this call',
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
+                                ),
+                              )
+                            else
+                              for (final entry in transcription)
+                                _buildTranscriptionEntry(
+                                  entry['speaker'] ?? '',
+                                  entry['text'] ?? '',
+                                ),
+                          ],
                         ),
-                  ],
-                ),
-              ),
+                      ),
             ),
           ],
         ),

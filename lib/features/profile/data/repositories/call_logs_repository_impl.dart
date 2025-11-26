@@ -157,6 +157,7 @@ class CallLogsRepositoryImpl implements CallLogsRepository {
                     ? '${response.baseUrl}get_recording.php?file=${_extractFilePath(callData.recording!)}'
                     : null,
             transcript: callData.transcript,
+            summarizeTranscript: callData.summarizeTranscript,
           );
         } catch (e) {
           // If there's an error processing a single call log, log it and return a placeholder

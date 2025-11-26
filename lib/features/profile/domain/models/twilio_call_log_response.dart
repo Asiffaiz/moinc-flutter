@@ -134,6 +134,7 @@ class TwilioCallLogData {
   final String accountno;
   final String compName;
   final String? transcript;
+  final String? summarizeTranscript;
   final String callerNumber;
   final String logType;
 
@@ -156,6 +157,7 @@ class TwilioCallLogData {
     required this.accountno,
     required this.compName,
     this.transcript,
+    this.summarizeTranscript,
     required this.callerNumber,
     required this.logType,
   });
@@ -180,6 +182,7 @@ class TwilioCallLogData {
       accountno: json['accountno'] as String? ?? '',
       compName: json['comp_name'] as String? ?? '',
       transcript: json['transcript'] as String?,
+      summarizeTranscript: json['summarized_transcript'] as String?,
       callerNumber: json['caller_number'] as String? ?? '',
       logType: json['log_type'] as String? ?? 'twillio',
     );
