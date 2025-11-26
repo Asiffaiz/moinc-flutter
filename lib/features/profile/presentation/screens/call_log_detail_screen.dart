@@ -30,6 +30,9 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
   Duration _position = Duration.zero;
   String? _audioUrl;
 
+  // Expansion state for transcription
+  bool _isTranscriptionExpanded = false;
+
   // Stream subscriptions
   StreamSubscription? _playerStateSubscription;
   StreamSubscription? _positionSubscription;
@@ -1065,14 +1068,33 @@ class _CallLogDetailScreenState extends State<CallLogDetailScreen>
                                 top: 8,
                               ),
                               controlAffinity: ListTileControlAffinity.trailing,
-                              
-                              title: const Text(
-                                'Summary',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
+                              trailing:
+                                  const SizedBox.shrink(), // Hide default icon
+                              onExpansionChanged: (expanded) {
+                                setState(() {
+                                  _isTranscriptionExpanded = expanded;
+                                });
+                              },
+                              title: Row(
+                                children: [
+                                  const Expanded(
+                                    child: Text(
+                                      'Summary',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(
+                                    _isTranscriptionExpanded
+                                        ? Icons.keyboard_arrow_up
+                                        : Icons.keyboard_arrow_down,
+                                    color: AppTheme.primaryColor,
+                                    size: 24,
+                                  ),
+                                ],
                               ),
                               subtitle: Padding(
                                 padding: const EdgeInsets.only(
