@@ -34,6 +34,7 @@ abstract class CallLog {
     }
   }
 
+
   String get formattedDuration {
     if (duration.inSeconds < 60) {
       return '${duration.inSeconds} sec';
