@@ -174,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen>
             BottomNavigationBarItem(
               icon: Icon(Icons.analytics_outlined),
               activeIcon: Icon(Icons.analytics),
-              label: 'Reports',
+              label: 'Analytics',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),
